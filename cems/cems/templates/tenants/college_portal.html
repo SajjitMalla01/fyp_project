@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="{{ college.name }} — College Event Management Portal">
+  <title>{{ college.name }} | CEMS Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: {
+        fontFamily: { sans: ['"DM Sans"','sans-serif'], serif: ['"Instrument Serif"','serif'], mono: ['"JetBrains Mono"','monospace'] },
+      }}
+    }
+  </script>
+  <style>
+    :root {
+      --pc: #2563eb;
+      --ac: #7c3aed;
+    }
+    .btn-primary { background: var(--pc); }
+    .btn-primary:hover { filter: brightness(1.1); }
+    .accent-text { color: var(--pc); }
+    .accent-border { border-color: var(--pc); }
+    .accent-bg { background: var(--pc); }
+  </style>
+</head>
+<body class="bg-slate-50 font-sans antialiased" data-pc="{{ college.primary_color }}" data-ac="{{ college.accent_color }}">
+<script>
+  document.documentElement.style.setProperty('--pc', document.body.getAttribute('data-pc'));
+  document.documentElement.style.setProperty('--ac', document.body.getAttribute('data-ac'));
+  document.head.insertAdjacentHTML('beforeend', '<style>.hero-grad{background:linear-gradient(135deg, ' + document.body.getAttribute('data-pc') + '15, ' + document.body.getAttribute('data-ac') + '15)}</style>');
+  document.head.insertAdjacentHTML('beforeend', '<style>.tag{background:' + document.body.getAttribute('data-pc') + '20;color:' + document.body.getAttribute('data-pc') + '}</style>');
+</script>
+
+  <!-- TOPBAR -->
+  <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-lg border-b border-slate-100 shadow-sm">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl flex items-center justify-center text-white font-black text-base shadow" style="background: var(--pc);">
+          {{ college.name|first|upper }}
+        </div>
+        <div>
+          <div class="font-serif italic text-lg text-slate-900 leading-none">{{ college.name }}</div>
+          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">CEMS Portal</div>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="{% url 'college_login' college.slug %}" class="text-sm font-semibold text-slate-700 px-4 py-2 rounded-xl hover:bg-slate-100 transition-colors">Sign In</a>
+        <a href="{% url 'college_register' college.slug %}" class="text-sm font-bold text-white px-5 py-2 rounded-xl shadow transition-all hover:brightness-110 btn-primary">Join</a>
+        <a href="{% url 'tenant_home' %}" class="hidden md:block text-xs text-slate-400 hover:text-slate-600 ml-4 transition-colors">← All Colleges</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero-grad border-b border-slate-100">
+    <div class="max-w-6xl mx-auto px-6 py-20 flex flex-col lg:flex-row items-center gap-12">
+      <div class="flex-1">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider tag mb-6">
+          <span class="w-1.5 h-1.5 rounded-full accent-bg"></span>
+          {{ college.name }} — Official Portal
+        </div>
+        <h1 class="font-serif italic text-5xl md:text-6xl text-slate-900 font-bold leading-tight mb-6">
+          Campus life,<br><span class="accent-text">beautifully organized.</span>
+        </h1>
+        <p class="text-slate-500 text-lg max-w-xl leading-relaxed mb-10">
+          Discover events, register in seconds, track your attendance, and connect with your college community — all in one place.
+        </p>
+        <div class="flex flex-wrap gap-4">
+          <a href="{% url 'college_register' college.slug %}" class="flex items-center gap-2 px-7 py-3.5 rounded-2xl text-white font-bold text-sm shadow-lg transition-all hover:-translate-y-0.5 btn-primary">
+            Create Account →
+          </a>
+          <a href="{% url 'college_login' college.slug %}" class="flex items-center gap-2 px-7 py-3.5 rounded-2xl text-slate-700 font-semibold text-sm bg-white border border-slate-200 hover:border-slate-400 transition-all shadow-sm">
+            Sign In
+          </a>
+        </div>
+      </div>
+      <!-- Stats pill -->
+      <div class="flex-shrink-0 grid grid-cols-2 gap-4">
+        <div class="bg-white rounded-2xl p-6 text-center shadow-sm border border-slate-100">
+          <div class="font-serif italic text-4xl font-bold accent-text">{{ college.get_event_count }}</div>
+          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1">Live Events</div>
+        </div>
+        <div class="bg-white rounded-2xl p-6 text-center shadow-sm border border-slate-100">
+          <div class="font-serif italic text-4xl font-bold accent-text">{{ college.get_user_count }}</div>
+          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1">Members</div>
+        </div>
+        <div class="col-span-2 bg-white rounded-2xl p-5 shadow-sm border border-slate-100 flex items-center gap-4">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl accent-bg text-white">📍</div>
+          <div>
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Location</div>
+            <div class="text-sm font-semibold text-slate-700">{{ college.address|default:"Kathmandu, Nepal" }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- UPCOMING EVENTS -->
+  <section class="max-w-6xl mx-auto px-6 py-16">
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <p class="text-xs font-bold uppercase tracking-widest accent-text mb-1">Happening Now</p>
+        <h2 class="font-serif italic text-3xl text-slate-900 font-bold">Upcoming Events</h2>
+      </div>
+      <a href="{% url 'event_list' %}?college_id={{ college.id }}" class="text-sm font-semibold accent-text hover:underline">View all →</a>
+    </div>
+
+    {% if upcoming_events %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for event in upcoming_events %}
+      <div class="group bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all overflow-hidden">
+        <div class="h-3" style="background: linear-gradient(90deg, var(--pc), var(--ac));"></div>
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-2xl">{{ event.emoji|default:"🎉" }}</span>
+            <span class="text-xs font-bold px-2.5 py-1 rounded-full tag">{{ event.category }}</span>
+          </div>
+          <h3 class="font-serif italic text-xl text-slate-900 font-bold mb-2">{{ event.title }}</h3>
+          <p class="text-slate-500 text-sm leading-relaxed mb-4">{{ event.description|truncatechars:90 }}</p>
+          <div class="flex items-center gap-4 text-xs text-slate-400 mb-5">
+            <span>📅 {{ event.date_time|date:"M d, H:i" }}</span>
+            <span>📍 {{ event.venue }}</span>
+          </div>
+          <a href="{% url 'college_login' college.slug %}?next=/events/{{ event.pk }}/"
+             class="block w-full text-center py-2.5 rounded-xl text-sm font-bold text-white btn-primary transition-all">
+            Register for this event
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-24 bg-white rounded-2xl border border-slate-100">
+      <div class="text-5xl mb-4">🗓️</div>
+      <h3 class="font-serif italic text-2xl text-slate-700 mb-2">No events yet</h3>
+      <p class="text-slate-400 text-sm">Check back soon — events will be listed here once published.</p>
+    </div>
+    {% endif %}
+  </section>
+
+  <!-- CTA FOOTER -->
+  <section class="py-16 px-6" style="background: linear-gradient(135deg, var(--pc), var(--ac));">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="font-serif italic text-4xl text-white font-bold mb-4">Ready to join {{ college.name }}?</h2>
+      <p class="text-white/70 mb-8">Create your account and start registering for events today.</p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="{% url 'college_register' college.slug %}" class="px-8 py-3.5 rounded-2xl bg-white text-slate-900 font-bold text-sm hover:bg-slate-100 transition-all shadow-lg">Create Account →</a>
+        <a href="{% url 'college_login' college.slug %}" class="px-8 py-3.5 rounded-2xl bg-white/10 border border-white/20 text-white font-semibold text-sm hover:bg-white/20 transition-all">Already a member? Sign In</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-slate-900 text-slate-400 py-8 text-center text-sm">
+    © 2026 {{ college.name }} · Powered by <span class="font-serif italic text-white">CEMS</span>
+  </footer>
+
+</body>
+</html>

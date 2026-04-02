@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Confirm Account Deletion{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto px-4 py-20 text-center">
+    <div class="p-12 glass rounded-[3rem] shadow-2xl border-rose-100">
+        <div class="w-20 h-20 bg-rose-100 text-rose-600 rounded-3xl flex items-center justify-center text-4xl mx-auto mb-8 animate-pulse shadow-glow">⚠️</div>
+        <h2 class="text-4xl font-extrabold tracking-tight mb-4">Are you absolutely sure?</h2>
+        <p class="text-slate-500 mb-8 font-medium italic">"Once your account is deleted, all your registrations, event history, and thoughts will be permanently erased. This action is irreversible."</p>
+        
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            <button type="submit" class="w-full py-5 bg-rose-600 text-white rounded-[2rem] font-black uppercase tracking-[0.2em] shadow-lg hover:bg-rose-700 transition-all">
+                Terminate Account
+            </button>
+            <a href="{% url 'profile' %}" class="block w-full py-5 text-slate-400 font-bold hover:text-slate-900 transition-all uppercase tracking-widest text-[0.6rem]">
+                No, Keep My Account Safe
+            </a>
+        </form>
+    </div>
+</div>
+{% endblock %}

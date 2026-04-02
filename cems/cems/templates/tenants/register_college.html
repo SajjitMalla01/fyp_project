@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Register College{% endblock %}
+{% block content %}
+<div class="container-md mx-auto">
+    <h1>Register New College</h1>
+    <div class="card card-raised">
+        <div class="card-header">
+            <div class="card-header-title"><div class="card-icon">🏫</div>College Details</div>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-row">
+                {% for field in form %}
+                <div class="form-group">
+                    <label class="form-label">{{ field.label }}{% if field.field.required %}<span class="required">*</span>{% endif %}</label>
+                    {{ field }}
+                    {% if field.help_text %}<span class="form-hint">{{ field.help_text }}</span>{% endif %}
+                    {% for error in field.errors %}<div class="invalid-feedback">⚠ {{ error }}</div>{% endfor %}
+                </div>
+                {% endfor %}
+                </div>
+                <div class="flex justify-end gap-3 mt-6 pt-4" style="border-top:1px solid var(--ink-100)">
+                    <a href="{% url 'admin_dashboard' %}" class="btn btn-ghost">Cancel</a>
+                    <button type="submit" class="btn btn-success">Register College</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

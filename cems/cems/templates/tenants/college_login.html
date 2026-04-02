@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In | {{ college.name }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['"DM Sans"','sans-serif'],serif:['"Instrument Serif"','serif']}}}}</script>
+  <style>
+    :root { --pc: #2563eb; --ac: #7c3aed; }
+    .btn-p { background: var(--pc); }
+    .btn-p:hover { filter: brightness(1.12); }
+    .accent-text { color: var(--pc); }
+  </style>
+</head>
+<body class="min-h-screen flex font-sans antialiased" data-pc="{{ college.primary_color }}" data-ac="{{ college.accent_color }}">
+<script>
+  document.documentElement.style.setProperty('--pc', document.body.getAttribute('data-pc'));
+  document.documentElement.style.setProperty('--ac', document.body.getAttribute('data-ac'));
+  document.head.insertAdjacentHTML('beforeend', '<style>.ring-brand:focus{outline:none;box-shadow:0 0 0 3px ' + document.body.getAttribute('data-pc') + '40;border-color:var(--pc)!important}</style>');
+</script>
+
+  <!-- LEFT BRAND PANEL -->
+  <div class="hidden lg:flex flex-col justify-between w-[420px] flex-shrink-0 p-12 relative overflow-hidden"
+       style="background: linear-gradient(135deg, var(--pc), var(--ac));">
+    <div class="absolute -top-32 -left-32 w-80 h-80 bg-white/5 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-32 -right-32 w-80 h-80 bg-black/10 rounded-full blur-3xl"></div>
+
+    <div class="relative z-10">
+      <a href="{% url 'college_portal' college.slug %}" class="flex items-center gap-3 mb-14">
+        <div class="w-10 h-10 rounded-xl bg-white/20 border border-white/30 flex items-center justify-center font-black text-white text-xl">
+          {{ college.name|first|upper }}
+        </div>
+        <div>
+          <div class="font-serif italic text-xl text-white">{{ college.name }}</div>
+          <div class="text-[9px] font-bold text-white/50 uppercase tracking-widest">Portal</div>
+        </div>
+      </a>
+      <h2 class="font-serif italic text-4xl text-white font-bold leading-tight mb-4">
+        Welcome back to your campus hub.
+      </h2>
+      <p class="text-white/60 text-sm leading-relaxed">
+        Sign in to manage your events, track registrations, and stay connected with {{ college.name }}.
+      </p>
+    </div>
+
+    <ul class="relative z-10 space-y-3 text-white/80 text-sm">
+      <li class="flex items-center gap-3">
+        <div class="w-5 h-5 rounded-md bg-white/20 flex items-center justify-center text-[10px]">✓</div>
+        Event Discovery
+      </li>
+      <li class="flex items-center gap-3">
+        <div class="w-5 h-5 rounded-md bg-white/20 flex items-center justify-center text-[10px]">✓</div>
+        Real-time Registrations
+      </li>
+      <li class="flex items-center gap-3">
+        <div class="w-5 h-5 rounded-md bg-white/20 flex items-center justify-center text-[10px]">✓</div>
+        Attendance Tracking
+      </li>
+      <li class="flex items-center gap-3">
+        <div class="w-5 h-5 rounded-md bg-white/20 flex items-center justify-center text-[10px]">✓</div>
+        Community Wall
+      </li>
+    </ul>
+  </div>
+
+  <!-- RIGHT FORM PANEL -->
+  <div class="flex-1 flex items-center justify-center p-6 bg-slate-50">
+    <div class="w-full max-w-md">
+
+      <!-- Mobile logo -->
+      <div class="flex lg:hidden items-center gap-3 mb-8 justify-center">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center font-black text-white text-xl btn-p">
+          {{ college.name|first|upper }}
+        </div>
+        <span class="font-serif italic text-2xl text-slate-900">{{ college.name }}</span>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-8">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="mb-5 p-3.5 rounded-xl text-sm font-medium
+          {% if message.tags == 'success' %}bg-emerald-50 text-emerald-700 border border-emerald-200
+          {% elif message.tags == 'error' %}bg-red-50 text-red-700 border border-red-200
+          {% else %}bg-blue-50 text-blue-700 border border-blue-200{% endif %}">
+          {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <h1 class="font-serif italic text-3xl font-bold text-slate-900 mb-1">Sign In</h1>
+        <p class="text-slate-400 text-sm mb-8">Access your <span class="font-semibold accent-text">{{ college.name }}</span> account.</p>
+
+        <form method="post" id="login-form">
+          {% csrf_token %}
+          {% if request.GET.next %}<input type="hidden" name="next" value="{{ request.GET.next }}">{% endif %}
+
+          <div class="mb-5">
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Username</label>
+            <input type="text" name="username" id="id_username" autocomplete="username" autofocus required
+              placeholder="your_username"
+              class="ring-brand w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-300 transition-all font-mono">
+          </div>
+
+          <div class="mb-6">
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Password</label>
+            <div class="relative">
+              <input type="password" name="password" id="id_password" autocomplete="current-password" required
+                placeholder="••••••••"
+                class="ring-brand w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-300 transition-all pr-12">
+              <button type="button" id="toggle-pw"
+                class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors text-lg">👁</button>
+            </div>
+          </div>
+
+          <button type="submit" id="login-btn"
+            class="btn-p w-full py-3.5 text-white font-bold rounded-xl shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all text-sm">
+            Sign In to {{ college.name }}
+          </button>
+        </form>
+
+        <div class="mt-6 pt-6 border-t border-slate-100 text-center space-y-2">
+          <p class="text-sm text-slate-500">
+            Don't have an account?
+            <a href="{% url 'college_register' college.slug %}" class="font-bold accent-text hover:underline">Register here</a>
+          </p>
+          <a href="{% url 'college_portal' college.slug %}" class="text-xs text-slate-300 hover:text-slate-500 transition-colors">
+            ← Back to {{ college.name }} Portal
+          </a>
+        </div>
+      </div>
+
+      <p class="mt-6 text-center text-xs text-slate-400">
+        Wrong college?
+        <a href="{% url 'tenant_home' %}" class="font-semibold hover:underline accent-text">Switch College</a>
+      </p>
+    </div>
+  </div>
+
+<script>
+  document.getElementById('toggle-pw').addEventListener('click', function() {
+    const inp = document.getElementById('id_password');
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+    this.textContent = inp.type === 'password' ? '👁' : '🙈';
+  });
+  document.getElementById('login-form').addEventListener('submit', function() {
+    const btn = document.getElementById('login-btn');
+    btn.textContent = 'Signing in…'; btn.disabled = true;
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %}My Registrations{% endblock %}
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <div class="mb-8">
+    <p class="text-xs font-bold uppercase tracking-widest text-brand mb-2">Account</p>
+    <h1 class="font-serif italic text-4xl font-bold text-ink-900">My Registrations</h1>
+  </div>
+
+  <!-- Stat Pills -->
+  <div class="grid grid-cols-3 gap-4 mb-10">
+    <div class="bg-white rounded-2xl border border-ink-100 shadow-sm p-5 text-center">
+      <p class="font-serif italic text-3xl font-bold text-ink-900">{{ registrations|length }}</p>
+      <p class="text-xs font-bold uppercase tracking-widest text-ink-400 mt-1">Total</p>
+    </div>
+    <div class="bg-white rounded-2xl border border-ink-100 shadow-sm p-5 text-center">
+      <p class="font-serif italic text-3xl font-bold text-brand">{{ upcoming_count|default:0 }}</p>
+      <p class="text-xs font-bold uppercase tracking-widest text-ink-400 mt-1">Upcoming</p>
+    </div>
+    <div class="bg-white rounded-2xl border border-ink-100 shadow-sm p-5 text-center">
+      <p class="font-serif italic text-3xl font-bold text-emerald-600">{{ attended_count|default:0 }}</p>
+      <p class="text-xs font-bold uppercase tracking-widest text-ink-400 mt-1">Attended</p>
+    </div>
+  </div>
+
+  {% if registrations %}
+  <div class="bg-white rounded-2xl border border-ink-100 shadow-sm overflow-hidden">
+    <div class="px-6 py-4 border-b border-ink-100 bg-ink-50">
+      <h2 class="font-serif italic text-xl font-bold text-ink-900">All Registrations</h2>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="bg-ink-900 text-white text-[0.65rem] uppercase font-bold tracking-wider">
+          <tr>
+            <th class="text-left px-6 py-4">Event</th>
+            <th class="text-left px-6 py-4">Date</th>
+            <th class="text-left px-6 py-4">Venue</th>
+            <th class="text-left px-6 py-4">Status</th>
+            <th class="text-left px-6 py-4">Registered</th>
+            <th class="text-left px-6 py-4">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-ink-100">
+          {% for reg in registrations %}
+          <tr class="hover:bg-ink-50 transition-colors">
+            <td class="px-6 py-4">
+              <div class="flex items-center gap-3">
+                <span class="text-2xl">{{ reg.event.emoji|default:'🎉' }}</span>
+                <div>
+                  <p class="font-bold text-ink-900">{{ reg.event.title }}</p>
+                  <p class="text-xs text-ink-400">{{ reg.event.get_category_display }}</p>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-4 font-mono text-xs text-ink-500">{{ reg.event.date_time|date:"M d, Y" }}</td>
+            <td class="px-6 py-4 text-xs text-ink-500 max-w-[150px] truncate">{{ reg.event.venue }}</td>
+            <td class="px-6 py-4">
+              <span class="inline-flex px-2.5 py-1 rounded-full text-[0.6rem] font-black uppercase tracking-wider
+                {% if reg.status == 'ATTENDED' %}bg-emerald-100 text-emerald-700
+                {% elif reg.status == 'REGISTERED' %}bg-blue-100 text-blue-700
+                {% else %}bg-gray-100 text-gray-600{% endif %}">
+                {{ reg.status }}
+              </span>
+            </td>
+            <td class="px-6 py-4 font-mono text-xs text-ink-400">{{ reg.registered_at|date:"M d, Y" }}</td>
+            <td class="px-6 py-4">
+              <div class="flex gap-2">
+                <a href="{% url 'event_detail' reg.event.pk %}" class="px-3 py-1.5 text-xs font-semibold text-ink-700 bg-ink-50 hover:bg-ink-100 rounded-lg border border-ink-200 transition-colors">View</a>
+                {% if reg.status == 'REGISTERED' %}
+                <a href="{% url 'cancel_registration' reg.pk %}" class="px-3 py-1.5 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 rounded-lg border border-red-200 transition-colors">Cancel</a>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% else %}
+  <div class="text-center py-28 bg-white rounded-2xl border border-ink-100">
+    <p class="text-6xl mb-5">🎟️</p>
+    <h3 class="font-serif italic text-2xl text-ink-800 mb-3">No Registrations Yet</h3>
+    <p class="text-ink-400 max-w-sm mx-auto mb-8">Explore upcoming events and register for ones that interest you.</p>
+    <a href="{% url 'event_list' %}" class="inline-block px-8 py-3 bg-brand text-white font-bold rounded-2xl shadow hover:bg-brand-dark transition-colors">Browse Events</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

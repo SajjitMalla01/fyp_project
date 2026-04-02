@@ -1,0 +1,345 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CEMS | Student Dashboard</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"DM Sans"', 'sans-serif'],
+            serif: ['"Instrument Serif"', 'serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: { primary: '#2563eb', accent: '#7c3aed', dark: '#0f172a' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  
+  <style>
+    body { background-color: #f8fafc; overflow: hidden; }
+    .sidebar { background: linear-gradient(180deg, #1e293b, #0f172a); }
+    .content-area { height: 100vh; overflow-y: auto; scroll-behavior: smooth; }
+    
+    .nav-item { transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; }
+    .nav-item.active { background: rgba(37,99,235,0.15); border-left: 3px solid #60a5fa; color: white !important; }
+    .nav-item:hover:not(.active) { background: rgba(255,255,255,0.05); text-decoration: none; }
+    
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        border-radius: 1rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .glass-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); }
+    
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="flex text-gray-800 font-sans antialiased">
+  
+  <!-- SIDEBAR -->
+  <aside class="sidebar w-64 h-screen flex-shrink-0 flex flex-col text-gray-300 shadow-xl relative z-20">
+    <div class="p-6 border-b border-gray-700/50 flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center text-white font-serif italic text-xl font-bold shadow-lg">C</div>
+      <div>
+        <h2 class="font-serif italic text-2xl font-bold text-white leading-none">CEMS</h2>
+        <span class="text-[0.65rem] font-bold uppercase tracking-widest text-blue-300">Student Portal</span>
+      </div>
+    </div>
+    
+    <div class="flex-1 py-6 flex flex-col gap-1 overflow-y-auto">
+      <div class="px-6 mb-2 text-xs font-bold uppercase tracking-wider text-gray-500">Menu</div>
+      <a class="nav-item active flex items-center px-6 py-2.5 text-sm font-medium w-full text-left" data-target="overview">
+        <span class="w-6 mr-2">🏠</span> Home
+      </a>
+      <a class="nav-item flex items-center px-6 py-2.5 text-sm font-medium w-full text-left" data-target="upcoming">
+        <span class="w-6 mr-2">📅</span> My Registrations
+      </a>
+      <a class="nav-item flex items-center px-6 py-2.5 text-sm font-medium w-full text-left" data-target="browse">
+        <span class="w-6 mr-2">🔍</span> Browse Events
+      </a>
+    </div>
+
+    <div class="p-4 border-t border-gray-700/50">
+      <div class="bg-gray-800/80 rounded-lg p-3 flex items-center gap-3">
+        <div class="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-white font-bold text-xs">
+          {{ user.username|first|upper }}
+        </div>
+        <div class="overflow-hidden">
+          <p class="text-xs font-semibold text-white truncate">{{ user.get_full_name|default:user.username }}</p>
+          <p class="text-[0.65rem] text-gray-400">Student</p>
+        </div>
+      </div>
+      <div class="flex mt-2">
+        <a href="{% url 'home' %}" class="flex-1 text-center py-2 text-xs font-semibold text-gray-400 hover:text-white transition-colors">Exit</a>
+        <form action="{% url 'logout' %}" method="post" class="flex-1">
+          {% csrf_token %}
+          <button type="submit" class="w-full text-center py-2 text-xs font-semibold text-red-400 hover:text-red-300 transition-colors">Logout</button>
+        </form>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN AREA -->
+  <main class="flex-1 flex flex-col content-area relative w-full bg-[#f0f4f8]">
+    <!-- Header -->
+    <header class="h-16 bg-white/80 backdrop-blur-md border-b border-gray-200 flex items-center justify-between px-8 sticky top-0 z-10 shadow-sm">
+      <h1 class="font-serif italic text-2xl font-bold text-gray-900" id="header-title">Home</h1>
+      <div class="flex items-center gap-4">
+        {% if current_college %}
+        <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-100">
+          🏛️ {{ current_college.name }}
+        </span>
+        {% endif %}
+        <a href="{% url 'profile' %}" class="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors flex items-center justify-center text-sm shadow cursor-pointer">👤</a>
+      </div>
+    </header>
+
+    <div class="p-8 pb-32 max-w-6xl mx-auto w-full">
+      <!-- MESSAGES -->
+      {% if messages %}
+      <div class="mb-6 space-y-2">
+        {% for message in messages %}
+        <div class="p-4 rounded-xl shadow-sm text-sm font-bold bg-white border-l-4 {% if message.tags == 'success' %}border-green-500 text-green-700{% elif message.tags == 'error' %}border-red-500 text-red-700{% else %}border-blue-500 text-blue-700{% endif %}">
+          {{ message }}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- WELCOME BANNER -->
+      <div class="bg-gradient-to-r from-emerald-600 to-teal-500 rounded-2xl p-8 text-white shadow-lg mb-8 relative overflow-hidden">
+        <div class="absolute right-0 top-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
+        <h2 class="font-serif italic text-3xl font-bold mb-2 relative z-10">Hello, {{ user.get_full_name|default:user.username }}! 🎓</h2>
+        <p class="text-emerald-100 max-w-xl text-sm relative z-10">Discover new events on campus and keep track of your registrations directly from your dashboard.</p>
+      </div>
+
+      <!-- TAB 1: OVERVIEW -->
+      <div id="overview" class="tab-content animate-fade-in block">
+        <!-- Dashboard Stats -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+          <div class="glass-card p-6 text-center border-t-4 border-t-blue-500">
+            <h3 class="font-serif italic text-4xl font-bold text-gray-900 mb-1">{{ upcoming_events|length|default:0 }}</h3>
+            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Upcoming Events</p>
+          </div>
+          <div class="glass-card p-6 text-center border-t-4 border-t-emerald-500">
+            <h3 class="font-serif italic text-4xl font-bold text-gray-900 mb-1">{{ attended_events|length|default:0 }}</h3>
+            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Attended</p>
+          </div>
+          <div class="glass-card p-6 text-center border-t-4 border-t-violet-500">
+            <h3 class="font-serif italic text-4xl font-bold text-gray-900 mb-1">{{ available_events|length|default:0 }}</h3>
+            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">New Events to Join</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Next Up -->
+          <div class="glass-card overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
+              <h3 class="font-serif italic text-xl font-bold text-gray-900">Next Up For You</h3>
+              <button onclick="document.querySelector('[data-target=\'upcoming\']').click()" class="text-xs font-bold text-brand-primary hover:underline">View All</button>
+            </div>
+            <div class="p-6">
+              {% if upcoming_events %}
+                {% for event in upcoming_events|slice:":3" %}
+                <div class="flex items-start gap-4 mb-4 last:mb-0 pb-4 last:pb-0 border-b border-gray-100 last:border-0">
+                  <div class="w-12 h-12 rounded-xl {{ event.gradient|default:'bg-gradient-to-br from-blue-600 to-indigo-500' }} flex items-center justify-center text-xl text-white shadow-sm flex-shrink-0">
+                    {{ event.emoji|default:'📅' }}
+                  </div>
+                  <div class="flex-1">
+                    <p class="font-bold text-gray-900 text-sm mb-0.5 line-clamp-1">{{ event.title }}</p>
+                    <p class="text-xs text-gray-500 font-mono">{{ event.date_time|date:"M d • h:i A" }}</p>
+                    <p class="text-[0.65rem] text-gray-400 mt-1 uppercase tracking-wider">{{ event.venue|truncatechars:20 }}</p>
+                  </div>
+                  <a href="{% url 'event_detail' event.pk %}" class="px-3 py-1.5 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg text-xs font-semibold text-gray-700 transition-colors">Details</a>
+                </div>
+                {% endfor %}
+              {% else %}
+                <div class="text-center py-8 text-gray-400">
+                  <p class="text-3xl mb-2">🎈</p>
+                  <p class="text-sm">You have no upcoming events.</p>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Featured Events from context -->
+          <div class="glass-card overflow-hidden">
+             <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
+              <h3 class="font-serif italic text-xl font-bold text-gray-900">Available to Join</h3>
+              <button onclick="document.querySelector('[data-target=\'browse\']').click()" class="text-xs font-bold text-emerald-600 hover:underline">Browse All</button>
+            </div>
+            <div class="p-6 grid grid-cols-1 gap-4">
+              {% if available_events %}
+                {% for event in available_events|slice:":2" %}
+                <a href="{% url 'event_detail' event.pk %}" class="block relative rounded-xl overflow-hidden group cursor-pointer border border-gray-200 hover:shadow-md transition-shadow">
+                  <div class="h-24 {{ event.gradient|default:'bg-gradient-to-br from-amber-400 to-orange-500' }} flex items-center justify-center text-4xl group-hover:scale-105 transition-transform duration-500">
+                    {{ event.emoji|default:'✨' }}
+                  </div>
+                  <div class="absolute inset-0 bg-black/40 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                  <div class="absolute bottom-0 left-0 w-full p-4">
+                    <div class="flex justify-between items-end">
+                      <div>
+                        <span class="px-2 py-0.5 rounded text-[0.55rem] font-bold uppercase tracking-wider bg-white/20 text-white backdrop-blur-sm shadow mb-1 inline-block">{{ event.get_category_display }}</span>
+                        <p class="font-bold text-white text-sm line-clamp-1">{{ event.title }}</p>
+                        <p class="text-[0.65rem] text-gray-300 font-mono">{{ event.date_time|date:"M d, Y" }}</p>
+                      </div>
+                      <span class="px-3 py-1 bg-white hover:bg-gray-100 text-gray-900 text-xs font-bold rounded-lg shadow transition-colors">Join</span>
+                    </div>
+                  </div>
+                </a>
+                {% endfor %}
+              {% else %}
+               <div class="text-center py-8 text-gray-400">
+                  <p class="text-4xl mb-2">🛌</p>
+                  <p class="text-sm">No new events available right now.</p>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: MY REGISTRATIONS -->
+      <div id="upcoming" class="tab-content animate-fade-in hidden">
+        <h2 class="font-serif italic text-2xl font-bold text-gray-900 mb-6">My Registrations</h2>
+        <div class="glass-card p-2 sm:p-0 overflow-hidden">
+          <div class="overflow-x-auto w-full">
+            <table class="w-full text-left text-sm text-gray-600">
+              <thead class="bg-gray-50 text-[0.7rem] uppercase font-bold text-gray-400 tracking-wider">
+                <tr>
+                  <th class="px-6 py-4">Event</th>
+                  <th class="px-6 py-4">Date & Time</th>
+                  <th class="px-6 py-4">Location</th>
+                  <th class="px-6 py-4 text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                {% if upcoming_events %}
+                  {% for event in upcoming_events %}
+                  <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="px-6 py-4 font-bold text-gray-900">
+                      <div class="flex items-center gap-3">
+                        <span class="text-2xl">{{ event.emoji|default:'🎟️' }}</span>
+                        <div class="line-clamp-1">{{ event.title }}</div>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 font-mono text-xs">
+                      {{ event.date_time|date:"M d, Y" }}<br>
+                      <span class="text-gray-400">{{ event.date_time|time:"h:i A" }}</span>
+                    </td>
+                    <td class="px-6 py-4 text-xs">{{ event.venue }}</td>
+                    <td class="px-6 py-4 text-center">
+                      <a href="{% url 'event_detail' event.pk %}" class="inline-block px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold rounded-lg transition-colors border border-blue-200">Manage</a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                {% else %}
+                  <tr><td colspan="4" class="px-6 py-12 text-center text-gray-400">You are not registered for any upcoming events.</td></tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: BROWSE EVENTS -->
+      <div id="browse" class="tab-content animate-fade-in hidden">
+         <h2 class="font-serif italic text-2xl font-bold text-gray-900 mb-6">Browse Available Events</h2>
+         
+         {% if available_events %}
+         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for event in available_events %}
+            <div class="glass-card overflow-hidden group hover:-translate-y-1 transition-all duration-300 flex flex-col">
+              <div class="h-32 {{ event.gradient|default:'bg-gradient-to-br from-blue-500 to-indigo-600' }} flex items-center justify-center text-4xl relative">
+                {{ event.emoji|default:'🎉' }}
+                <div class="absolute top-2 right-2 bg-white/95 px-2 py-0.5 rounded text-[0.55rem] font-bold text-gray-900 uppercase shadow">{{ event.date_time|date:"M d" }}</div>
+              </div>
+              <div class="p-5 flex flex-col flex-1">
+                <span class="text-[0.6rem] font-bold uppercase tracking-widest text-brand-primary mb-1 block">{{ event.get_category_display }}</span>
+                <h3 class="font-bold text-gray-900 text-base mb-2 line-clamp-2 leading-tight">{{ event.title }}</h3>
+                <div class="text-xs text-gray-500 mb-4 space-y-1 flex-1">
+                  <p>🕒 <span class="font-mono">{{ event.date_time|time:"h:i A" }}</span></p>
+                  <p class="truncate">📍 {{ event.venue }}</p>
+                </div>
+                <!-- Capacity Indicator Minimal -->
+                <div class="w-full flex justify-between items-center text-[0.65rem] font-bold text-gray-400 mb-3 uppercase tracking-wider">
+                  <span>{{ event.spots_left }} spots left</span>
+                </div>
+                <a href="{% url 'register_event' event.pk %}" class="block w-full text-center px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 border border-emerald-600 text-white shadow-sm text-sm font-bold rounded-xl transition-colors">Register Now</a>
+              </div>
+            </div>
+            {% endfor %}
+         </div>
+         {% else %}
+         <div class="glass-card text-center py-20">
+            <p class="text-6xl mb-4">🌵</p>
+            <p class="text-gray-500 font-serif italic text-2xl">It's quiet here...</p>
+            <p class="text-gray-400 text-sm mt-2">There are no new events available right now.</p>
+         </div>
+         {% endif %}
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Tab Router
+      const navItems = document.querySelectorAll('.nav-item');
+      const tabContents = document.querySelectorAll('.tab-content');
+      const headerTitle = document.getElementById('header-title');
+
+      function switchTab(target) {
+         navItems.forEach(n => n.classList.remove('active'));
+         // Highlight active tab
+         const activeNav = document.querySelector(`.nav-item[data-target="${target}"]`);
+         if(activeNav) activeNav.classList.add('active');
+         
+         // Update Title
+         if(target === 'overview') headerTitle.textContent = 'Home';
+         else if(target === 'upcoming') headerTitle.textContent = 'My Registrations';
+         else if(target === 'browse') headerTitle.textContent = 'Browse Events';
+         
+         // Hide all, show target
+         tabContents.forEach(t => t.classList.add('hidden', 'opacity-0'));
+         const targetEl = document.getElementById(target);
+         targetEl.classList.remove('hidden');
+         
+         // Simple fade loop
+         setTimeout(() => {
+           targetEl.classList.remove('opacity-0');
+           targetEl.classList.add('opacity-100');
+         }, 50);
+      }
+
+      navItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.preventDefault();
+          const target = item.getAttribute('data-target');
+          if (target) switchTab(target);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% block title %}Sign In{% endblock %}
+
+{% block content %}
+<div class="min-h-[calc(100vh-64px)] flex items-stretch bg-ink-50">
+
+  <!-- LEFT BRAND PANEL -->
+  <div
+    class="hidden lg:flex w-[480px] flex-shrink-0 flex-col justify-between bg-gradient-to-br from-ink-900 via-blue-950 to-ink-900 p-12 relative overflow-hidden">
+    <div class="absolute -top-32 -left-32 w-80 h-80 bg-brand/20 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -bottom-32 -right-32 w-80 h-80 bg-brand-accent/20 rounded-full blur-3xl pointer-events-none">
+    </div>
+
+    <div class="relative z-10">
+      <div class="flex items-center gap-3 mb-16">
+        <div
+          class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand to-brand-accent flex items-center justify-center text-white font-bold text-xl shadow-lg">
+          C</div>
+        <span class="font-serif italic text-3xl text-white">CEMS</span>
+      </div>
+      <h2 class="font-serif italic text-4xl text-white font-bold leading-tight mb-4">Welcome back to your campus hub.
+      </h2>
+      <p class="text-blue-200/70 leading-relaxed text-sm">Sign in to manage events, track registrations, and stay
+        connected with everything happening on campus.</p>
+    </div>
+
+    <!-- Feature list -->
+    <ul class="relative z-10 space-y-4">
+      <li class="flex items-center gap-3 text-blue-100/80 text-sm">
+        <div
+          class="w-6 h-6 rounded-lg bg-brand/30 border border-brand/40 flex items-center justify-center text-blue-300 text-xs">
+          ✓</div>
+        Event Discovery
+      </li>
+      <li class="flex items-center gap-3 text-blue-100/80 text-sm">
+        <div
+          class="w-6 h-6 rounded-lg bg-brand/30 border border-brand/40 flex items-center justify-center text-blue-300 text-xs">
+          ✓</div>
+        Real-time Registrations
+      </li>
+      <li class="flex items-center gap-3 text-blue-100/80 text-sm">
+        <div
+          class="w-6 h-6 rounded-lg bg-brand/30 border border-brand/40 flex items-center justify-center text-blue-300 text-xs">
+          ✓</div>
+        Attendance Tracking
+      </li>
+      <li class="flex items-center gap-3 text-blue-100/80 text-sm">
+        <div
+          class="w-6 h-6 rounded-lg bg-brand/30 border border-brand/40 flex items-center justify-center text-blue-300 text-xs">
+          ✓</div>
+        Multi-College Support
+      </li>
+    </ul>
+  </div>
+
+  <!-- RIGHT FORM PANEL -->
+  <div class="flex-1 flex items-center justify-center p-6 bg-ink-50">
+    <div class="w-full max-w-md">
+      <!-- Mobile logo -->
+      <div class="flex lg:hidden items-center gap-2 mb-8 justify-center">
+        <div
+          class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand to-brand-accent flex items-center justify-center text-white font-bold text-lg">
+          C</div>
+        <span class="font-serif italic text-2xl text-ink-900">CEMS</span>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-xl border border-ink-100 p-8">
+        <h1 class="font-serif italic text-3xl font-bold text-ink-900 mb-1">Sign In</h1>
+        <p class="text-ink-400 text-sm mb-8">Enter your credentials to access your dashboard.</p>
+
+        <form method="post" action="{% url 'login' %}" id="login-form">
+          {% csrf_token %}
+          <!-- Username -->
+          <div class="mb-5">
+            <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2"
+              for="id_username">Username</label>
+            <input type="text" id="id_username" name="username" autocomplete="username" autofocus required
+              placeholder="your_username"
+              class="w-full px-4 py-3 bg-ink-50 border border-ink-200 rounded-xl text-sm text-ink-800 placeholder-ink-300 focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all font-mono">
+          </div>
+
+          <!-- Password -->
+          <div class="mb-6">
+            <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2"
+              for="id_password">Password</label>
+            <div class="relative">
+              <input type="password" id="id_password" name="password" autocomplete="current-password" required
+                placeholder="••••••••"
+                class="w-full px-4 py-3 bg-ink-50 border border-ink-200 rounded-xl text-sm text-ink-800 placeholder-ink-300 focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all pr-12">
+              <button type="button" id="toggle-pw"
+                class="absolute right-4 top-1/2 -translate-y-1/2 text-ink-400 hover:text-ink-700 transition-colors text-lg select-none">👁</button>
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" id="login-btn"
+            class="w-full py-3.5 bg-gradient-to-r from-brand to-blue-600 text-white font-bold rounded-xl shadow-md shadow-brand/30 hover:shadow-lg hover:shadow-brand/40 hover:-translate-y-0.5 active:translate-y-0 transition-all text-sm">
+            Sign In to CEMS
+          </button>
+        </form>
+
+        <div class="mt-6 pt-6 border-t border-ink-100 text-center space-y-2">
+          <p class="text-sm text-ink-500">Don't have an account? <a href="{% url 'register' %}"
+              class="font-semibold text-brand hover:underline">Register here</a></p>
+          <a href="{% url 'admin_gateway' %}"
+            class="inline-block text-xs font-bold text-ink-300 hover:text-brand uppercase transition-colors">🏛️ College
+            Administrator? Reach your Gateway here</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Toggle password visibility
+  document.getElementById('toggle-pw').addEventListener('click', function () {
+    const inp = document.getElementById('id_password');
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+    this.textContent = inp.type === 'password' ? '👁' : '🙈';
+  });
+  // Loading states
+  document.getElementById('login-form').addEventListener('submit', function () {
+    const btn = document.getElementById('login-btn');
+    btn.textContent = 'Signing in…';
+    btn.disabled = true;
+  });
+</script>
+{% endblock %}

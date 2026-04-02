@@ -1,0 +1,226 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CEMS - College Event Management System">
+  <title>CEMS | {% block title %}Home{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"DM Sans"', 'sans-serif'],
+            serif: ['"Instrument Serif"', 'serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            ink: { 900:'#0d1117',800:'#161b22',700:'#21262d',600:'#30363d',500:'#484f58',400:'#6e7681',300:'#8b949e',200:'#c9d1d9',100:'#e6edf3',50:'#f6f8fa' },
+            brand: { 
+              DEFAULT: 'var(--brand, #2563eb)', 
+              dark: 'var(--brand-dark, #1d4ed8)', 
+              light: 'var(--brand-light, #eff6ff)', 
+              accent: 'var(--brand-accent, #7c3aed)', 
+              'accent-light': '#ede9fe' 
+            },
+          },
+          animation: {
+            'fade-up': 'fadeUp 0.5s ease both',
+            'fade-in': 'fadeIn 0.3s ease both',
+          },
+          keyframes: {
+            fadeUp: { from:{ opacity:'0', transform:'translateY(16px)' }, to:{ opacity:'1', transform:'translateY(0)' } },
+            fadeIn: { from:{ opacity:'0' }, to:{ opacity:'1' } },
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-ink-50 font-sans text-ink-700 antialiased min-h-screen flex flex-col" {% if current_college %}data-pc="{{ current_college.primary_color }}" data-ac="{{ current_college.accent_color }}"{% endif %}>
+<script>
+  if (document.body.hasAttribute('data-pc')) {
+    document.documentElement.style.setProperty('--brand', document.body.getAttribute('data-pc'));
+    document.documentElement.style.setProperty('--brand-accent', document.body.getAttribute('data-ac'));
+  }
+</script>
+
+<!-- NAVBAR -->
+<nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-ink-100 shadow-sm">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <!-- Brand -->
+      <a href="{% url 'home' %}{% if current_college %}?college_id={{ current_college.id }}{% endif %}" class="flex items-center gap-2.5 group">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand to-brand-accent flex items-center justify-center text-white font-bold text-lg shadow-md group-hover:shadow-brand/40 transition-shadow">C</div>
+        <div class="flex flex-col">
+          <span class="font-serif italic text-2xl text-ink-900 leading-none tracking-tight">CEMS</span>
+          {% if current_college %}<span class="text-[10px] font-bold text-brand uppercase tracking-wider">{{ current_college.name }}</span>{% endif %}
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <div class="hidden md:flex items-center gap-1">
+        {% if all_colleges and user.is_superuser %}
+        <!-- COLLEGE SWITCHER -->
+        <div class="relative group mr-4">
+          <button class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-ink-50 border border-ink-200 text-xs font-bold text-ink-600 hover:border-brand transition-all">
+            🏛️ Switch College <span class="text-[10px] opacity-40">▼</span>
+          </button>
+          <div class="absolute left-0 top-full mt-1 w-56 bg-white rounded-xl shadow-xl border border-ink-100 py-2 hidden group-hover:block animate-fade-in z-50">
+            {% for c in all_colleges %}
+            <a href="{% url 'switch_college' c.id %}" class="flex items-center justify-between px-4 py-2.5 text-xs font-semibold text-ink-700 hover:bg-brand/5 hover:text-brand transition-colors {% if current_college.id == c.id %}bg-brand/5 text-brand{% endif %}">
+              {{ c.name }}
+              {% if current_college.id == c.id %}<span>✓</span>{% endif %}
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        <a href="{% url 'home' %}{% if current_college %}?college_id={{ current_college.id }}{% endif %}" class="px-4 py-2 text-sm font-medium text-ink-600 hover:text-ink-900 hover:bg-ink-50 rounded-lg transition-colors">Home</a>
+        <a href="{% url 'event_list' %}{% if current_college %}?college_id={{ current_college.id }}{% endif %}" class="px-4 py-2 text-sm font-medium text-ink-600 hover:text-ink-900 hover:bg-ink-50 rounded-lg transition-colors">Events</a>
+        {% if user.is_authenticated %}
+          {% if user.profile.role == 'ADMIN' or user.is_superuser %}
+            <a href="{% url 'admin_dashboard' %}{% if current_college %}?college_id={{ current_college.id }}{% endif %}" class="px-4 py-2 text-sm font-medium text-ink-600 hover:text-ink-900 hover:bg-ink-50 rounded-lg transition-colors">Dashboard</a>
+          {% elif user.profile.role == 'STAFF' %}
+            <a href="{% url 'staff_dashboard' %}{% if current_college %}?college_id={{ current_college.id }}{% endif %}" class="px-4 py-2 text-sm font-medium text-ink-600 hover:text-ink-900 hover:bg-ink-50 rounded-lg transition-colors">Dashboard</a>
+          {% else %}
+            <a href="{% url 'student_dashboard' %}{% if current_college %}?college_id={{ current_college.id }}{% endif %}" class="px-4 py-2 text-sm font-medium text-ink-600 hover:text-ink-900 hover:bg-ink-50 rounded-lg transition-colors">My Dashboard</a>
+          {% endif %}
+          <div class="w-px h-5 bg-ink-200 mx-1"></div>
+          <a href="{% url 'profile' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-ink-200 hover:border-ink-300 text-sm font-medium text-ink-700 transition-colors">
+            <div class="w-6 h-6 rounded-full bg-gradient-to-br from-brand to-brand-accent text-white flex items-center justify-center text-xs font-bold">{{ user.username|first|upper }}</div>
+            {{ user.username }}
+          </a>
+          <form action="{% url 'logout' %}" method="post" class="inline">
+            {% csrf_token %}
+            <button type="submit" class="ml-1 px-3 py-1.5 text-sm font-medium text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors">Logout</button>
+          </form>
+        {% else %}
+          {% if current_college %}
+            <a href="{% url 'login_college_scoped' current_college.slug %}" class="px-4 py-2 text-sm font-medium text-ink-700 hover:text-ink-900 hover:bg-ink-50 rounded-lg transition-colors">Login</a>
+            <a href="{% url 'register_college_scoped' current_college.slug %}" class="px-5 py-2 text-sm font-semibold text-white bg-brand hover:bg-brand-dark rounded-xl shadow-sm hover:shadow-brand/30 transition-all">Get Started</a>
+          {% else %}
+            <a href="{% url 'login' %}" class="px-4 py-2 text-sm font-medium text-ink-700 hover:text-ink-900 hover:bg-ink-50 rounded-lg transition-colors">Login</a>
+            <a href="{% url 'register' %}" class="px-5 py-2 text-sm font-semibold text-white bg-brand hover:bg-brand-dark rounded-xl shadow-sm hover:shadow-brand/30 transition-all">Get Started</a>
+          {% endif %}
+        {% endif %}
+      </div>
+
+      <!-- Mobile menu button -->
+      <button id="mob-menu-btn" class="md:hidden p-2 rounded-lg text-ink-500 hover:bg-ink-100 transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Nav -->
+  <div id="mob-menu" class="hidden md:hidden border-t border-ink-100 bg-white px-4 py-3 space-y-1">
+    <a href="{% url 'home' %}" class="block px-3 py-2.5 text-sm font-medium text-ink-700 hover:bg-ink-50 rounded-lg">Home</a>
+    <a href="{% url 'event_list' %}" class="block px-3 py-2.5 text-sm font-medium text-ink-700 hover:bg-ink-50 rounded-lg">Events</a>
+    {% if user.is_authenticated %}
+      <a href="{% url 'profile' %}" class="block px-3 py-2.5 text-sm font-medium text-ink-700 hover:bg-ink-50 rounded-lg">Profile</a>
+      <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="w-full text-left px-3 py-2.5 text-sm font-medium text-red-500 hover:bg-red-50 rounded-lg">Logout</button>
+      </form>
+    {% else %}
+      {% if current_college %}
+        <a href="{% url 'login_college_scoped' current_college.slug %}" class="block px-3 py-2.5 text-sm font-medium text-ink-700 hover:bg-ink-50 rounded-lg">Login</a>
+        <a href="{% url 'register_college_scoped' current_college.slug %}" class="block px-3 py-2.5 text-sm font-semibold text-white bg-brand rounded-xl text-center">Get Started</a>
+      {% else %}
+        <a href="{% url 'login' %}" class="block px-3 py-2.5 text-sm font-medium text-ink-700 hover:bg-ink-50 rounded-lg">Login</a>
+        <a href="{% url 'register' %}" class="block px-3 py-2.5 text-sm font-semibold text-white bg-brand rounded-xl text-center">Get Started</a>
+      {% endif %}
+    {% endif %}
+  </div>
+</nav>
+
+<!-- MESSAGES -->
+{% if messages %}
+<div class="fixed top-20 right-4 z-50 flex flex-col gap-2 max-w-sm w-full">
+  {% for message in messages %}
+  <div class="flex items-start gap-3 p-4 rounded-xl shadow-lg border animate-fade-up
+    {% if message.tags == 'success' %}bg-emerald-50 border-emerald-200 text-emerald-800
+    {% elif message.tags == 'error' %}bg-red-50 border-red-200 text-red-800
+    {% elif message.tags == 'warning' %}bg-amber-50 border-amber-200 text-amber-800
+    {% else %}bg-blue-50 border-blue-200 text-blue-800{% endif %}">
+    <span class="text-lg flex-shrink-0">
+      {% if message.tags == 'success' %}✅{% elif message.tags == 'error' %}❌{% elif message.tags == 'warning' %}⚠️{% else %}ℹ️{% endif %}
+    </span>
+    <p class="text-sm font-medium leading-snug">{{ message }}</p>
+    <button onclick="this.parentElement.remove()" class="ml-auto flex-shrink-0 opacity-50 hover:opacity-100 transition-opacity text-lg leading-none">&times;</button>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- CONTENT -->
+<main class="flex-1">
+  {% block content %}{% endblock %}
+</main>
+
+<!-- FOOTER -->
+<footer class="bg-ink-900 text-ink-400 mt-16">
+  <div class="max-w-7xl mx-auto px-6 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+      <div>
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand to-brand-accent flex items-center justify-center text-white font-bold">C</div>
+          <span class="font-serif italic text-white text-xl">CEMS</span>
+        </div>
+        <p class="text-sm leading-relaxed">The College Event Management System — beautifully organized events for your campus community.</p>
+      </div>
+      <div>
+        <h4 class="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Quick Links</h4>
+        <ul class="space-y-2 text-sm">
+          <li><a href="{% url 'home' %}" class="hover:text-white transition-colors">Home</a></li>
+          <li><a href="{% url 'event_list' %}" class="hover:text-white transition-colors">Browse Events</a></li>
+          {% if not user.is_authenticated %}
+            {% if current_college %}
+              <li><a href="{% url 'register_college_scoped' current_college.slug %}" class="hover:text-white transition-colors">Register</a></li>
+            {% else %}
+              <li><a href="{% url 'register' %}" class="hover:text-white transition-colors">Register</a></li>
+            {% endif %}
+          {% endif %}
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Platform</h4>
+        <ul class="space-y-2 text-sm">
+          <li><a href="{% url 'tenant_home' %}" class="hover:text-white transition-colors">All Colleges</a></li>
+          {% if user.is_superuser %}<li><a href="{% url 'register_college' %}" class="hover:text-white transition-colors">Register College</a></li>{% endif %}
+        </ul>
+      </div>
+    </div>
+    <div class="pt-8 border-t border-ink-800 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <p class="text-sm">© 2026 CEMS. Built with ❤️ for campus communities.</p>
+      <p class="text-xs font-mono text-ink-600">Django 5.2 · Python 3.12</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mobile menu toggle
+  document.getElementById('mob-menu-btn').addEventListener('click', () => {
+    document.getElementById('mob-menu').classList.toggle('hidden');
+  });
+  // Auto-dismiss messages
+  setTimeout(() => {
+    document.querySelectorAll('[class*="animate-fade-up"]').forEach(el => {
+      el.style.transition = 'opacity 0.5s';
+      el.style.opacity = '0';
+      setTimeout(() => el.remove(), 500);
+    });
+  }, 5000);
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

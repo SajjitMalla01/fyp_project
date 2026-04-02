@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block title %}{% if form.instance.pk %}Edit{% else %}Create{% endif %} Event{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <div class="mb-8">
+    <p class="text-xs font-bold uppercase tracking-widest text-brand mb-2">Events</p>
+    <h1 class="font-serif italic text-4xl font-bold text-ink-900">
+      {% if form.instance.pk %}Edit Event{% else %}Create New Event{% endif %}
+    </h1>
+  </div>
+
+  <div class="bg-white rounded-2xl border border-ink-100 shadow-sm overflow-hidden">
+    <div class="px-8 py-5 bg-ink-50 border-b border-ink-100">
+      <p class="text-sm text-ink-500">Fill in all required fields. Events require approval before they can be published.</p>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="p-8">
+      {% csrf_token %}
+
+      <div class="space-y-6">
+        <!-- Title -->
+        <div>
+          <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">Event Title *</label>
+          {{ form.title }}
+          {% if form.title.errors %}<p class="mt-1 text-xs text-red-500">{{ form.title.errors|first }}</p>{% endif %}
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">Description</label>
+          {{ form.description }}
+          {% if form.description.errors %}<p class="mt-1 text-xs text-red-500">{{ form.description.errors|first }}</p>{% endif %}
+        </div>
+
+        <!-- Date/Time row -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">Date & Start Time *</label>
+            {{ form.date_time }}
+            {% if form.date_time.errors %}<p class="mt-1 text-xs text-red-500">{{ form.date_time.errors|first }}</p>{% endif %}
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">End Time</label>
+            {{ form.end_time }}
+            {% if form.end_time.errors %}<p class="mt-1 text-xs text-red-500">{{ form.end_time.errors|first }}</p>{% endif %}
+          </div>
+        </div>
+
+        <!-- Venue & Capacity -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">Venue *</label>
+            {{ form.venue }}
+            {% if form.venue.errors %}<p class="mt-1 text-xs text-red-500">{{ form.venue.errors|first }}</p>{% endif %}
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">Capacity *</label>
+            {{ form.capacity }}
+            {% if form.capacity.errors %}<p class="mt-1 text-xs text-red-500">{{ form.capacity.errors|first }}</p>{% endif %}
+          </div>
+        </div>
+
+        <!-- Category -->
+        <div>
+          <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">Category *</label>
+          {{ form.category }}
+          {% if form.category.errors %}<p class="mt-1 text-xs text-red-500">{{ form.category.errors|first }}</p>{% endif %}
+        </div>
+
+        <!-- Visual Fields -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">Emoji Icon</label>
+            {{ form.emoji }}
+            <p class="mt-1 text-[0.65rem] text-ink-400">Single emoji for card display (e.g., 🎵 🏆)</p>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">Gradient Style</label>
+            {{ form.gradient }}
+            <p class="mt-1 text-[0.65rem] text-ink-400">CSS gradient class for card background</p>
+          </div>
+        </div>
+
+        <!-- Tags -->
+        {% if form.tags %}
+        <div>
+          <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">Tags</label>
+          {{ form.tags }}
+        </div>
+        {% endif %}
+
+        <!-- Is Featured -->
+        {% if form.is_featured %}
+        <div class="flex items-center gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+          {{ form.is_featured }}
+          <label class="text-sm font-semibold text-amber-800 cursor-pointer" for="{{ form.is_featured.id_for_label }}">
+            ⭐ Feature this event on the homepage
+          </label>
+        </div>
+        {% endif %}
+
+        <!-- Non-field errors -->
+        {% if form.non_field_errors %}
+        <div class="p-4 bg-red-50 border border-red-200 rounded-xl">
+          {% for error in form.non_field_errors %}
+          <p class="text-sm text-red-600">{{ error }}</p>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Footer buttons -->
+      <div class="mt-8 pt-6 border-t border-ink-100 flex flex-col sm:flex-row gap-3 justify-end">
+        <a href="{% url 'event_list' %}" class="px-6 py-3 text-sm font-semibold text-ink-600 bg-ink-50 hover:bg-ink-100 rounded-xl border border-ink-200 transition-colors text-center">Cancel</a>
+        <button type="submit" class="px-8 py-3 text-sm font-bold text-white bg-brand hover:bg-brand-dark rounded-xl shadow hover:shadow-lg transition-all">
+          {% if form.instance.pk %}Save Changes{% else %}Submit for Review →{% endif %}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Register for {{ event.title }}{% endblock %}
+{% block content %}
+<div class="max-w-lg mx-auto px-4 py-16">
+  <div class="bg-white rounded-2xl border border-ink-100 shadow-lg overflow-hidden">
+    <div class="h-28 {{ event.gradient|default:'bg-gradient-to-br from-blue-600 to-indigo-500' }} flex items-center justify-center text-5xl relative">
+      {{ event.emoji|default:'🎉' }}
+      <div class="absolute inset-0 bg-black/20"></div>
+    </div>
+    <div class="p-8 text-center">
+      <h1 class="font-serif italic text-3xl font-bold text-ink-900 mb-2">Register for Event</h1>
+      <p class="font-bold text-brand text-xl mb-1">{{ event.title }}</p>
+      <p class="text-sm text-ink-400 mb-1">📅 {{ event.date_time|date:"F d, Y at h:i A" }}</p>
+      <p class="text-sm text-ink-400 mb-6">📍 {{ event.venue }}</p>
+      <div class="bg-ink-50 rounded-xl p-4 mb-6 text-sm text-ink-600">
+        <p>You're registering as <strong class="text-ink-900">{{ user.get_full_name|default:user.username }}</strong>.</p>
+        <p class="mt-1 text-xs text-ink-400">{{ event.spots_left }} spots remaining out of {{ event.capacity }} total.</p>
+      </div>
+      <form method="post">
+        {% csrf_token %}
+        {% if form.notes %}
+        <div class="text-left mb-6">
+          <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">Notes (Optional)</label>
+          {{ form.notes }}
+        </div>
+        {% endif %}
+        <div class="flex gap-3 justify-center">
+          <a href="{% url 'event_detail' event.pk %}" class="px-6 py-3 text-sm font-semibold text-ink-600 bg-ink-50 rounded-xl border border-ink-200 hover:bg-ink-100 transition-colors">Cancel</a>
+          <button type="submit" class="px-8 py-3 text-sm font-bold text-white bg-brand hover:bg-brand-dark rounded-xl shadow hover:shadow-lg transition-all">Confirm Registration →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

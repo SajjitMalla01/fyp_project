@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Resend Verification{% endblock %}
+
+{% block content %}
+<div class="min-h-[calc(100vh-64px)] flex items-center justify-center bg-ink-50 p-6">
+  <div class="w-full max-w-md">
+    <div class="text-center mb-8">
+      <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-4xl shadow-xl mx-auto mb-5">🔁</div>
+      <h1 class="font-serif italic text-4xl font-bold text-ink-900 mb-2">Resend Code</h1>
+      <p class="text-ink-400 text-sm leading-relaxed">Enter the email address associated with your account and we'll send you a fresh verification code.</p>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-xl border border-ink-100 p-8">
+      <form method="post" action="{% url 'resend_verification' %}">
+        {% csrf_token %}
+        <div class="mb-6">
+          <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">Email Address</label>
+          <input type="email" name="email" required autofocus
+            placeholder="you@example.com"
+            class="w-full px-4 py-3 bg-ink-50 border border-ink-200 rounded-xl text-sm text-ink-800 placeholder-ink-300 focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all">
+        </div>
+        <button type="submit"
+          class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold rounded-xl shadow hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm">
+          Send New Code
+        </button>
+      </form>
+
+      <div class="mt-6 text-center space-y-2">
+        <p class="text-sm text-ink-500">Already have a code? <a href="{% url 'verify_email' %}" class="font-semibold text-brand hover:underline">Enter it here</a></p>
+        <p class="text-sm text-ink-500">Remember your password? <a href="{% url 'login' %}" class="font-semibold text-ink-700 hover:underline">Sign in</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
