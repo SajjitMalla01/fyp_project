@@ -86,10 +86,19 @@
                         </td>
                         <td class="px-10 py-8 text-right">
                             <div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-all">
-                                {% if reg.status == 'REGISTERED' %}
+                                {% if reg.status == 'PENDING' %}
+                                <form method="post" action="{% url 'approve_registration' reg.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="px-5 py-2.5 bg-emerald-600 text-white text-[9px] font-black uppercase tracking-widest rounded-xl hover:brightness-110 transition-all shadow-lg shadow-emerald-500/10">Approve</button>
+                                </form>
+                                <form method="post" action="{% url 'reject_registration' reg.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="px-5 py-2.5 bg-rose-600 text-white text-[9px] font-black uppercase tracking-widest rounded-xl hover:brightness-110 transition-all shadow-lg shadow-rose-500/10">Reject</button>
+                                </form>
+                                {% elif reg.status == 'REGISTERED' %}
                                 <form method="post" action="{% url 'verify_registration' reg.id %}">
                                     {% csrf_token %}
-                                    <button type="submit" class="px-5 py-2.5 bg-emerald-600 text-white text-[9px] font-black uppercase tracking-widest rounded-xl hover:brightness-110 transition-all shadow-lg shadow-emerald-500/10">Quick Verify</button>
+                                    <button type="submit" class="px-5 py-2.5 bg-blue-600 text-white text-[9px] font-black uppercase tracking-widest rounded-xl hover:brightness-110 transition-all shadow-lg shadow-blue-500/10">Quick Verify</button>
                                 </form>
                                 {% endif %}
                                 <button class="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-900 transition-all">⋯</button>

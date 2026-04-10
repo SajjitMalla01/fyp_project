@@ -43,61 +43,8 @@ def _send_confirmation_email(registration):
 
 
 @login_required
-def registrations_old(request):
-    try:
-        if not request.user.profile.is_student:
-            messages.error(request, 'Access denied.')
-            return redirect('home')
-    except Exception:
-        messages.error(request, 'Profile not found.')
-        return redirect('home')
-
-    now = timezone.now()
-
-    all_registrations = (
-        Registration.objects
-        .filter(user=request.user)
-        .select_related('event')
-        .order_by('-registered_at')
-    )
-
-    total_registered = all_registrations.filter(status='REGISTERED').count()
-    upcoming_count   = all_registrations.filter(status='REGISTERED', event__date_time__gte=now).count()
-    attended_count   = all_registrations.filter(status='ATTENDED').count()
-
-    my_upcoming = list(
-        all_registrations.filter(status='REGISTERED', event__date_time__gte=now)
-        .order_by('event__date_time')[:5]
-    )
-
-    registered_event_ids = list(
-        all_registrations.exclude(status='CANCELLED').values_list('event_id', flat=True)
-    )
-
-    candidate_events = list(
-        Event.objects
-        .filter(status='PUBLISHED', date_time__gte=now)
-        .exclude(id__in=registered_event_ids)
-        .order_by('date_time')
-    )
-
-    available_events = [e for e in candidate_events if not e.is_full()]
-    available_count  = len(available_events)
-
-    context = {
-        'total_registered':  total_registered,
-        'upcoming_count':    upcoming_count,
-        'attended_count':    attended_count,
-        'my_upcoming':       my_upcoming,
-        'all_registrations': all_registrations,
-        'available_events':  available_events,
-        'available_count':   available_count,
-    }
-    return render(request, 'registrations/student_dashboard.html', context)
-
-
-@login_required
 def register_event(request, event_id):
+    """Handles event registration with support for moderated approval."""
     event = get_object_or_404(Event, pk=event_id)
 
     try:
@@ -120,17 +67,22 @@ def register_event(request, event_id):
                 messages.error(request, 'Sorry, this event is now full.')
                 return redirect('event_detail', pk=event_id)
             if request.method == 'POST':
-                existing.status = 'REGISTERED'
+                status = 'PENDING' if event.requires_approval else 'REGISTERED'
+                existing.status = status
                 existing.registered_at = timezone.now()
                 existing.save()
-                _send_confirmation_email(existing) # Send success email
-                messages.success(request, f'You\'re registered for "{event.title}"!')
+                
+                if status == 'REGISTERED':
+                    _send_confirmation_email(existing)
+                    messages.success(request, f"Successfully registered for {event.title}!")
+                else:
+                    messages.info(request, "Registration submitted. This event requires admin approval.")
                 return redirect('student_dashboard')
             return render(request, 'registrations/register_confirm.html', {
                 'event': event, 'spots_left': event.spots_left()
             })
         else:
-            messages.info(request, 'You are already registered for this event.')
+            messages.info(request, f"You have already submitted a registration for this event (Status: {existing.status}).")
             return redirect('event_detail', pk=event_id)
 
     if event.is_full():
@@ -138,9 +90,14 @@ def register_event(request, event_id):
         return redirect('event_detail', pk=event_id)
 
     if request.method == 'POST':
-        reg = Registration.objects.create(user=request.user, event=event, status='REGISTERED')
-        _send_confirmation_email(reg) # Send success email
-        messages.success(request, f'Successfully registered for "{event.title}"!')
+        status = 'PENDING' if event.requires_approval else 'REGISTERED'
+        reg = Registration.objects.create(user=request.user, event=event, status=status)
+        
+        if status == 'REGISTERED':
+            _send_confirmation_email(reg)
+            messages.success(request, f'Successfully registered for "{event.title}"!')
+        else:
+            messages.info(request, "Registration submitted. This event requires admin approval.")
         return redirect('student_dashboard')
 
     return render(request, 'registrations/register_confirm.html', {
@@ -154,7 +111,7 @@ def cancel_registration(request, registration_id):
 
     if reg.status == 'CANCELLED':
         messages.info(request, 'This registration is already cancelled.')
-        return redirect('my_registrations')
+        return redirect('student_dashboard')
 
     if request.method == 'POST':
         reg.status = 'CANCELLED'
@@ -167,6 +124,7 @@ def cancel_registration(request, registration_id):
 
 @login_required
 def my_registrations(request):
+    """User-facing view of their own registrations."""
     registrations = (
         Registration.objects
         .filter(user=request.user)
@@ -178,9 +136,11 @@ def my_registrations(request):
 
 @login_required
 def participant_list(request, event_id):
+    """Staff view of all participants for a specific event."""
     event = get_object_or_404(Event, pk=event_id)
 
     try:
+        # Check permissions: Superuser, Staff, or College Admin
         if not (request.user.is_superuser or request.user.profile.is_staff or request.user.profile.is_admin):
             messages.error(request, 'Access denied.')
             return redirect('event_detail', pk=event_id)
@@ -202,37 +162,70 @@ def participant_list(request, event_id):
         'registrations': regs,
         'attended_count': attended_count,
         'active_count': regs.filter(status='REGISTERED').count(),
+        'pending_count': regs.filter(status='PENDING').count(),
         'cancelled_count': regs.filter(status='CANCELLED').count(),
         'total': regs.count(),
     })
 
 
 @login_required
+def approve_registration(request, registration_id):
+    """Staff view to approve a pending registration."""
+    reg = get_object_or_404(Registration, pk=registration_id)
+    
+    if not (request.user.is_superuser or request.user.profile.is_staff or getattr(request.user.profile, 'is_admin', False)):
+        messages.error(request, 'Permission denied.')
+        return redirect('home')
+
+    if reg.status == 'PENDING':
+        reg.status = 'REGISTERED'
+        reg.save()
+        _send_confirmation_email(reg)
+        messages.success(request, f"Approved registration for {reg.user.get_full_name() or reg.user.username}.")
+    
+    return redirect(request.META.get('HTTP_REFERER', 'participant_list'))
+
+
+@login_required
+def reject_registration(request, registration_id):
+    """Staff view to reject a pending registration."""
+    reg = get_object_or_404(Registration, pk=registration_id)
+    
+    if not (request.user.is_superuser or request.user.profile.is_staff or getattr(request.user.profile, 'is_admin', False)):
+        messages.error(request, 'Permission denied.')
+        return redirect('home')
+
+    if reg.status == 'PENDING':
+        reg.status = 'CANCELLED'
+        reg.save()
+        messages.warning(request, f"Rejected registration for {reg.user.get_full_name() or reg.user.username}.")
+    
+    return redirect(request.META.get('HTTP_REFERER', 'participant_list'))
+
+
+@login_required
 def verify_registration(request, registration_id):
-    """
-    Secure endpoint for staff to verify an event ticket/registration.
-    URL: /registrations/verify/<id>/
-    """
-    # 1. Security check: Only staff, admins or superusers
+    """Secure endpoint for staff to mark attendance via QR scan or manual click."""
     try:
         if not (request.user.is_superuser or request.user.profile.is_staff or request.user.profile.is_admin):
-            messages.error(request, 'Access denied. Only registered staff can verify tickets.')
+            messages.error(request, 'Access denied.')
             return redirect('home')
     except Exception:
         return redirect('home')
 
     registration = get_object_or_404(Registration, pk=registration_id)
     
-    # 2. Status handling
     if request.method == 'POST':
         if registration.status == 'REGISTERED':
             registration.status = 'ATTENDED'
             registration.save()
-            messages.success(request, f"Confirmed! {registration.user.get_full_name() or registration.user.username} is now marked as Attended.")
+            messages.success(request, f"Confirmed! {registration.user.get_full_name() or registration.user.username} marked as Attended.")
         elif registration.status == 'ATTENDED':
-            messages.info(request, "This ticket was already verified.")
+            messages.info(request, "Attendance already verified.")
+        elif registration.status == 'PENDING':
+            messages.warning(request, "Error: This registration is still pending approval.")
         elif registration.status == 'CANCELLED':
-            messages.error(request, "Invalid Ticket: This registration was cancelled by the student.")
+            messages.error(request, "Error: This registration was cancelled.")
 
     return render(request, 'registrations/verify_success.html', {
         'registration': registration,
@@ -243,11 +236,8 @@ def verify_registration(request, registration_id):
 
 @login_required
 def scanner_view(request):
-    """
-    Renders the QR camera scanner interface for staff.
-    """
-    if not request.user.profile.is_staff and not request.user.is_superuser:
+    """Renders the QR camera scanner interface for staff."""
+    if not (request.user.is_superuser or request.user.profile.is_staff or getattr(request.user.profile, 'is_admin', False)):
         messages.error(request, 'Access denied. Staff only.')
         return redirect('home')
-        
     return render(request, 'registrations/scanner.html')

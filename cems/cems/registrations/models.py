@@ -5,9 +5,10 @@ from django.utils import timezone
 
 class Registration(models.Model):
     STATUS_CHOICES = [
+        ('PENDING',    'Pending Approval'),
         ('REGISTERED', 'Registered'),
-        ('CANCELLED', 'Cancelled'),
-        ('ATTENDED', 'Attended'),
+        ('CANCELLED',  'Cancelled'),
+        ('ATTENDED',   'Attended'),
     ]
 
     user = models.ForeignKey(
