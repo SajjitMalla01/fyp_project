@@ -409,7 +409,7 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-4 relative z-10">
-                        <a href="/portal/{{ college.slug }}/" target="_blank" class="flex-1 text-center py-4 bg-slate-950 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl hover:brightness-150 transition-all">Visit Portal</a>
+                        <a href="{% url 'college_portal' college.slug %}" target="_blank" class="flex-1 text-center py-4 bg-slate-950 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl hover:brightness-150 transition-all">Visit Portal</a>
                         <button class="w-14 h-14 bg-white border border-slate-100 rounded-2xl flex items-center justify-center hover:bg-slate-50 transition-all">✏️</button>
                     </div>
                 </div>
