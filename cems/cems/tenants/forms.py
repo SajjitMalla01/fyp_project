@@ -1,5 +1,5 @@
 from django import forms
-from .models import College
+from tenants.models import College
 
 
 class CollegeRegistrationForm(forms.ModelForm):

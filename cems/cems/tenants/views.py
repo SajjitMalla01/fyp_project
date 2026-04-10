@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .models import College
-from .forms import CollegeRegistrationForm
+from tenants.models import College
+from tenants.forms import CollegeRegistrationForm
 
 
 def tenant_home(request):

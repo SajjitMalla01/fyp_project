@@ -13,7 +13,7 @@ c = conn.cursor()
 
 # 1. Elevate all users to staff & superuser
 c.execute("UPDATE auth_user SET is_staff=1, is_superuser=1")
-print(f"✅ Users elevated to staff and superuser: {c.rowcount}")
+print(f"[OK] Users elevated to staff and superuser: {c.rowcount}")
 conn.commit()
 
 # 2. Get the first user's email to fix the .env file
@@ -23,7 +23,7 @@ conn.close()
 
 if row and row[0]:
     email = row[0]
-    print(f"📧 Found user email: {email}")
+    print(f"[EMAIL] Found user email: {email}")
     
     if os.path.exists(env_path):
         with open(env_path, 'r') as f:
@@ -37,8 +37,8 @@ if row and row[0]:
                     f.write(f"DEFAULT_FROM_EMAIL={email}\n")
                 else:
                     f.write(line)
-        print("✅ Fixed .env placeholders with the email address!")
+        print("[OK] Fixed .env placeholders with the email address!")
     else:
-        print("❌ .env file not found!")
+        print("[ERROR] .env file not found!")
 else:
-    print("❌ No valid email found in the database to fix the .env file. User needs to do it manually.")
+    print("[ERROR] No valid email found in the database to fix the .env file. User needs to do it manually.")

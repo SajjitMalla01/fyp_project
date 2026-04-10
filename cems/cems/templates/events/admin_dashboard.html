@@ -1,824 +1,574 @@
-{% load static %}{# django-html #}
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Global Admin | Unified Command Center{% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CEMS | Unified Admin Command Center</title>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
-    <style>
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box }
-        :root {
-            /* Palette — Modern Deep Ink & Cosmic Blue */
-            --ink-950: #010409; --ink-900: #0d1117; --ink-800: #161b22; --ink-700: #21262d; 
-            --ink-600: #30363d; --ink-500: #484f58; --ink-400: #6e7681; --ink-300: #8b949e; 
-            --ink-200: #c9d1d9; --ink-100: #e6edf3; --ink-50: #f6f8fa;
-            --white: #ffffff;
-            --brand: #2563eb; --brand-accent: #7c3aed; --brand-light: #eff6ff; 
-            --success: #059669; --success-light: #d1fae5;
-            --warning: #d97706; --warning-light: #fef3c7;
-            --danger: #dc2626; --danger-light: #fee2e2;
-            --indigo: #6366f1; --indigo-light: #e0e7ff;
-            --sky: #0ea5e9; --sky-light: #f0f9ff;
-            
-            --bg-page: #f8fafc;
-            --bg-panel: #ffffff;
-            --border: #e2e8f0;
-            --text-main: #0f172a;
-            --text-dim: #64748b;
-            
-            --sidebar-w: 260px; --topbar-h: 64px; --r: 16px; --r-sm: 8px;
-            --sh-sm: 0 1px 2px rgba(0,0,0,0.05);
-            --sh-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
-            --sh-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
-            --font-serif: 'Instrument Serif', serif; --font-sans: 'DM Sans', sans-serif; --font-mono: 'JetBrains Mono', monospace;
-            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-        }
+{% block extra_head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+<style>
+    .sb-btn.active { background: var(--brand); color: white; shadow: 0 10px 15px -3px rgba(37,99,235,0.3); }
+    .bento-panel { background: white; border: 1px solid #f1f5f9; border-radius: 2.5rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.02); overflow: hidden; }
+</style>
+{% endblock %}
 
-        :root.dark {
-            --bg-page: #010409; --bg-panel: #0d1117; --border: #30363d;
-            --text-main: #f0f6fc; --text-dim: #8b949e;
-            --sh-sm: 0 4px 12px rgba(0,0,0,0.3);
-            --white: #0d1117;
-        }
-
-        html { font-size: 15px; -webkit-font-smoothing: antialiased; }
-        body { font-family: var(--font-sans); background: var(--bg-page); color: var(--text-main); transition: background 0.4s var(--ease-out); display: flex; min-height: 100vh; overflow-x: hidden; }
-
-        /* ── SIDEBAR ── */
-        .sidebar { position: fixed; top: 0; left: 0; bottom: 0; width: var(--sidebar-w); background: linear-gradient(180deg, #0d1117, #161b22); display: flex; flex-direction: column; z-index: 200; border-right: 1px solid rgba(255,255,255,0.04); }
-        .sidebar::before { content: ''; position: absolute; top: -100px; left: -100px; width: 300px; height: 300px; border-radius: 50%; background: radial-gradient(circle, rgba(37,99,235,0.2), transparent 70%); pointer-events: none; }
-        .sb-logo { display: flex; align-items: center; gap: 12px; padding: 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.06); }
-        .sb-mark { width: 36px; height: 36px; background: linear-gradient(135deg, #2563eb, #7c3aed); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fff; box-shadow: 0 4px 12px rgba(37,99,235,0.4); }
-        .sb-name { font-family: var(--font-serif); font-style: italic; font-size: 1.3rem; color: #fff; line-height: 1; margin-top: 2px; }
-        .sb-name span { display: block; font-family: var(--font-sans); font-style: normal; font-size: 0.65rem; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 3px; }
-        .sb-nav { flex: 1; overflow-y: auto; padding: 18px 12px; }
-        .nav-label { font-size: 0.62rem; font-weight: 800; text-transform: uppercase; color: rgba(255,255,255,0.25); letter-spacing: 0.15em; padding: 0 12px; margin: 16px 0 8px; }
-        .nav-btn { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: rgba(255,255,255,0.5); font-size: 0.85rem; font-weight: 500; cursor: pointer; border: none; background: none; transition: all 0.2s; width: 100%; text-align: left; }
-        .nav-btn:hover { background: rgba(255,255,255,0.06); color: #fff; }
-        .nav-btn.active { background: rgba(37,99,235,0.15); border: 1px solid rgba(37,99,235,0.3); color: #fff; font-weight: 600; }
-        .nav-btn.active .ni { color: #60a5fa; }
-        .ni { font-size: 1rem; width: 20px; text-align: center; }
-        .nb { margin-left: auto; font-size: 0.65rem; font-weight: 800; padding: 2px 7px; border-radius: 20px; }
-        .nb-amber { background: var(--warning); color: #fff; box-shadow: 0 2px 6px rgba(217,119,6,0.3); }
-
-        /* ── TOPBAR ── */
-        .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; position: relative; }
-        .topbar { position: sticky; top: 0; z-index: 150; height: var(--topbar-h); background: rgba(248,250,252,0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; transition: background 0.4s; }
-        .dark .topbar { background: rgba(1,4,9,0.85); border-bottom: 1px solid #30363d; }
-        .tb-title { display: flex; align-items: center; gap: 12px; }
-        .tb-title h2 { font-family: var(--font-serif); font-style: italic; font-size: 1.4rem; color: var(--text-main); }
-        .tb-crumb { font-size: 0.75rem; color: var(--text-dim); }
-        .tb-actions { display: flex; align-items: center; gap: 16px; }
-        .tb-search { position: relative; width: 280px; }
-        .tb-search input { width: 100%; border-radius: 99px; border: 1.5px solid var(--border); background: var(--bg-panel); padding: 8px 16px 8px 36px; font-size: 0.82rem; outline: none; transition: border-color 0.2s, box-shadow 0.2s; color: var(--text-main); }
-        .tb-search i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-dim); font-size: 0.85rem; }
-        .tb-search input:focus { border-color: var(--brand); box-shadow: 0 0 0 4px rgba(37,99,235,0.1); }
-        .tb-meta { display: flex; gap: 8px; }
-        .tb-btn { width: 38px; height: 38px; border-radius: 12px; background: var(--bg-panel); border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--text-main); transition: all 0.2s; position: relative; cursor: pointer; }
-        .tb-btn:hover { background: var(--ink-50); transform: translateY(-1px); border-color: var(--ink-300); }
-        .dot { position: absolute; top: 6px; right: 6px; width: 10px; height: 10px; background: var(--danger); border: 2.5px solid var(--bg-panel); border-radius: 50%; }
-
-        /* ── PAGES ── */
-        .page { padding: 32px; display: flex; flex-direction: column; gap: 28px; animation: slideIn 0.5s var(--ease-out) both; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-        .page-hidden { display: none !important; }
-
-        /* ── STATS ── */
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-        .stat-card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--r); padding: 22px; box-shadow: var(--sh-sm); position: relative; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; }
-        .stat-card:hover { transform: translateY(-4px); box-shadow: var(--sh-lg); }
-        .stat-card::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: var(--brand); transform: scaleX(0); transform-origin: left; transition: transform 0.4s var(--ease-out); }
-        .stat-card:hover::after { transform: scaleX(1); }
-        .sc-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
-        .sc-icon { width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 700; }
-        .stat-val { font-family: var(--font-serif); font-style: italic; font-size: 2.4rem; color: var(--text-main); margin-bottom: 4px; line-height: 1; }
-        .stat-label { font-size: 0.72rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; }
-        .stat-sub { font-size: 0.75rem; color: var(--text-dim); margin-top: 8px; display: flex; align-items: center; gap: 4px; }
-
-        /* ── PANELS ── */
-        .panel { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--r); box-shadow: var(--sh-sm); overflow: hidden; display: flex; flex-direction: column; }
-        .panel-head { padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.01); }
-        .panel-title { font-size: 0.88rem; font-weight: 700; color: var(--text-main); }
-        .panel-body { padding: 24px; }
-        .charts-row { display: grid; grid-template-columns: 2fr 1.2fr; gap: 20px; }
-        .chart-box { height: 280px; position: relative; }
-        .chart-sm { height: 190px; }
-
-        /* ── TABLES ── */
-        .tbl-wrap { width: 100%; overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-        th { text-align: left; padding: 12px 24px; font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); background: rgba(0,0,0,0.02); border-bottom: 2px solid var(--border); }
-        td { padding: 14px 24px; border-bottom: 1px solid var(--border); color: var(--text-main); vertical-align: middle; }
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background: rgba(37,99,235,0.02); }
-
-        /* ── ACCENT COLORS ── */
-        .c-blue { --bg: var(--brand-light); --clr: var(--brand); --grad: linear-gradient(135deg, #2563eb, #60a5fa); }
-        .c-emerald { --bg: var(--success-light); --clr: var(--success); --grad: linear-gradient(135deg, #059669, #34d399); }
-        .c-amber { --bg: var(--warning-light); --clr: var(--warning); --grad: linear-gradient(135deg, #d97706, #fbbf24); }
-        .c-violet { --bg: #ede9fe; --clr: #7c3aed; --grad: linear-gradient(135deg, #7c3aed, #a78bfa); }
-        .c-rose { --bg: var(--danger-light); --clr: var(--danger); --grad: linear-gradient(135deg, #dc2626, #f87171); }
-        .c-sky { --bg: var(--sky-light); --clr: var(--sky); --grad: linear-gradient(135deg, #0ea5e9, #7dd3fc); }
-        .bg-acc { background: var(--bg); color: var(--clr); }
-
-        /* ── PILLS & BADGES ── */
-        .pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 99px; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
-        .pill-in { background: var(--success-light); color: var(--success); }
-        .pill-up { background: var(--brand-light); color: var(--brand); }
-        .pill-ab { background: var(--danger-light); color: var(--danger); }
-        
-        /* ── PROGRESS ── */
-        .prog-bar { height: 6px; background: var(--border); border-radius: 10px; overflow: hidden; width: 60px; }
-        .prog-fill { height: 100%; border-radius: 10px; transition: width 0.6s var(--ease-out); }
-
-        /* ── EVENT CARDS ── */
-        .ev-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; }
-        .ev-card { background: var(--bg-panel); border: 1.5px solid var(--border); border-radius: var(--r); overflow: hidden; cursor: pointer; transition: all 0.3s var(--ease-out); display: flex; flex-direction: column; }
-        .ev-card:hover { transform: translateY(-6px); box-shadow: var(--sh-lg); border-color: var(--brand); }
-        .ev-img { height: 130px; position: relative; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: #fff; }
-        .ev-img::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.4)); }
-        .ev-badge { position: absolute; top: 12px; right: 12px; z-index: 10; font-size: 0.62rem; font-weight: 800; padding: 4px 10px; border-radius: 30px; backdrop-filter: blur(8px); background: rgba(0,0,0,0.3); color: #fff; border: 1px solid rgba(255,255,255,0.25); text-transform: uppercase; }
-        .ev-body { padding: 16px; flex: 1; display: flex; flex-direction: column; }
-        .ev-date { font-size: 0.73rem; font-weight: 800; color: var(--brand); text-transform: uppercase; margin-bottom: 4px; }
-        .ev-title { font-family: var(--font-serif); font-style: italic; font-size: 1.15rem; color: var(--text-main); margin-bottom: 8px; line-height: 1.3; font-weight: 500; }
-        .ev-foot { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-
-        /* ── POPUP (DRAWER) ── */
-        .ovl { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(6px); z-index: 400; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
-        .ovl.on { opacity: 1; pointer-events: all; }
-        .drawer { position: fixed; top: 12px; bottom: 12px; right: 12px; width: 440px; background: var(--bg-panel); border-radius: 20px; z-index: 401; transform: translateX(110%); transition: transform 0.4s var(--ease-out); box-shadow: 0 50px 100px -20px rgba(0,0,0,0.25); display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--border); }
-        .drawer.on { transform: translateX(0); }
-        .dr-close { position: absolute; top: 16px; right: 16px; z-index: 50; width: 36px; height: 36px; border-radius: 50%; background: rgba(0,0,0,0.3); border: none; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: background 0.2s; border: 1px solid rgba(255,255,255,0.2); }
-        .dr-close:hover { background: var(--danger); color: #fff; }
-        .dr-hero { height: 210px; position: relative; display: flex; align-items: center; justify-content: center; font-size: 4rem; flex-shrink: 0; }
-        .dr-body { padding: 28px; flex: 1; overflow-y: auto; }
-        .dr-title { font-family: var(--font-serif); font-style: italic; font-size: 1.8rem; line-height: 1.2; margin-bottom: 18px; color: var(--text-main); }
-        .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
-        .m-box { padding: 14px; border-radius: 12px; border: 1.5px solid var(--border); background: rgba(0,0,0,0.01); }
-        .m-lbl { font-size: 0.65rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
-        .m-val { font-size: 0.9rem; font-weight: 600; color: var(--text-main); }
-        .dr-desc { font-size: 0.9rem; color: var(--text-dim); line-height: 1.7; margin-bottom: 24px; }
-        .dr-foot { padding: 20px 28px; background: rgba(0,0,0,0.02); border-top: 1px solid var(--border); display: flex; gap: 12px; }
-
-        /* ── MODALS ── */
-        .modal-wrap { position: fixed; inset: 0; z-index: 500; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); }
-        .modal-wrap.on { display: flex; }
-        .modal { background: var(--bg-panel); width: 100%; max-width: 480px; border-radius: 24px; box-shadow: var(--sh-lg); border: 1px solid var(--border); animation: modalIn 0.3s var(--ease-out) both; overflow: hidden; }
-        @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-        .modal-head { padding: 20px 28px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-        .modal-head h3 { font-family: var(--font-serif); font-style: italic; font-size: 1.4rem; color: var(--text-main); }
-        .modal-body { padding: 28px; }
-        .modal-foot { padding: 20px 28px; background: rgba(0,0,0,0.02); border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 12px; }
-
-        /* ── BUTTONS ── */
-        .btn { border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; font-family: var(--font-sans); font-size: 0.82rem; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; justify-content: center; }
-        .btn:active { transform: scale(0.97); }
-        .btn-p { background: var(--brand); color: #fff; box-shadow: 0 4px 14px rgba(37,99,235,0.3); }
-        .btn-p:hover { background: #1d4ed8; box-shadow: 0 6px 20px rgba(37,99,235,0.4); }
-        .btn-s { background: #fff; color: var(--text-main); border: 1.5px solid var(--border); }
-        .btn-s:hover { background: var(--ink-50); border-color: var(--ink-300); }
-        .btn-d { background: var(--danger); color: #fff; }
-        .btn-d:hover { background: #b91c1c; }
-        .btn-sm { padding: 6px 14px; font-size: 0.75rem; border-radius: 8px; }
-
-        /* ── THEME TOGGLE ── */
-        .theme-sw { width: 44px; height: 24px; background: var(--border); border-radius: 100px; position: relative; cursor: pointer; transition: background 0.3s; }
-        .ts-knob { position: absolute; top: 2px; left: 2px; height: 20px; width: 20px; background: #fff; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: transform 0.3s var(--ease-out); }
-        :root.dark .theme-sw { background: var(--brand); }
-        :root.dark .ts-knob { transform: translateX(20px); }
-
-        /* ── FORM ── */
-        textarea { width: 100%; border-radius: 12px; border: 1.5px solid var(--border); background: var(--bg-panel); padding: 14px; font-family: var(--font-sans); color: var(--text-main); font-size: 0.9rem; outline: none; transition: border-color 0.2s; resize: none; }
-        textarea:focus { border-color: var(--brand); }
-
-        /* ── MESSAGES ── */
-        .msgs { display: flex; flex-direction: column; gap: 8px; padding: 24px 32px 0; }
-        .msg { padding: 12px 20px; border-radius: 12px; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 10px; animation: slideIn 0.4s var(--ease-out); border: 1px solid transparent; }
-        .msg-success { background: var(--success-light); color: var(--success); border-color: rgba(5,150,105,0.1); }
-        .msg-error { background: var(--danger-light); color: var(--danger); border-color: rgba(220,38,38,0.1); }
-        .stat-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; background: var(--brand); }
-        .dot-published { background: #059669; }
-        .dot-pending { background: #d97706; }
-        .dot-approved { background: #2563eb; }
-        .dot-rejected { background: #dc2626; }
-
-    </style>
-</head>
-
-<body>
-    <!-- ═══ SIDEBAR ═══ -->
-    <aside class="sidebar">
-        <div class="sb-logo">
-            <div class="sb-mark">CE</div>
-            <div class="sb-name">CEMS<span>Admin Platform</span></div>
-        </div>
-        <div class="sb-nav">
-            <div class="nav-label">Main Console</div>
-            <button class="nav-btn active" onclick="goTab('dashboard',this)"><span class="ni">⊞</span> Dashboard</button>
-            <button class="nav-btn" onclick="goTab('calendar',this)"><span class="ni">📅</span> Schedule</button>
-            <button class="nav-btn" onclick="goTab('analytics',this)"><span class="ni">📊</span> Insights</button>
-
-            <div class="nav-label">Management</div>
-            <button class="nav-btn" onclick="goTab('events',this)"><span class="ni">📋</span> Events Hub</button>
-            <button class="nav-btn" onclick="goTab('social',this)"><span class="ni">💬</span> Community Wall</button>
-            <button class="nav-btn" onclick="goTab('pending',this)">
-                <span class="ni">⏳</span> Moderation
-                {% if pending_events > 0 %}<span class="nb nb-amber">{{ pending_events }}</span>{% endif %}
+{% block content %}
+<div class="pt-32 pb-24 px-6 lg:px-12 max-w-[1600px] mx-auto flex flex-col lg:flex-row gap-12">
+    
+    <!-- ADMIN COMMAND RAIL (FULL RESTORATION) -->
+    <aside class="lg:w-72 flex-shrink-0">
+        <div class="sticky top-32 space-y-2 bg-white/50 backdrop-blur-xl p-4 rounded-[2.5rem] border border-white/50 shadow-premium">
+            <p class="text-[9px] font-black uppercase text-slate-400 tracking-[0.4em] px-4 mb-4">Command Rail</p>
+            <button onclick="goTab('dashboard', this)" class="sb-btn active w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
+                <span class="text-lg">⊞</span> Overview
             </button>
-            <button class="nav-btn" onclick="goTab('attendance',this)"><span class="ni">✅</span> Attendance</button>
-            <a href="{% url 'event_create' %}" class="nav-btn" style="color:var(--brand); font-weight:700;"><span class="ni">➕</span> Create New Event</a>
-
-            <div class="nav-label">System</div>
-            <button class="nav-btn" onclick="goTab('notifications',this)">
-                <span class="ni">🔔</span> Notifications
-                {% if pending_events > 0 %}<span class="nb nb-amber">!</span>{% endif %}
+            <button onclick="goTab('calendar', this)" class="sb-btn w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
+                <span class="text-lg">📅</span> Schedule
             </button>
-            <button class="nav-btn" onclick="goTab('reports',this)"><span class="ni">📦</span> Data Reports</button>
+            <button onclick="goTab('analytics', this)" class="sb-btn w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
+                <span class="text-lg">📊</span> Insights
+            </button>
             
-            <div class="nav-label">Profile</div>
-            <a href="{% url 'profile' %}" class="nav-btn"><span class="ni">👤</span> My Account</a>
-            <form action="{% url 'logout' %}" method="post">{% csrf_token %}<button type="submit" class="nav-btn"><span class="ni">🚪</span> Logout</button></form>
+            <div class="h-px bg-slate-100 my-4 mx-4"></div>
+            <p class="text-[9px] font-black uppercase text-slate-400 tracking-[0.4em] px-4 mb-4">Management</p>
+            
+            <button onclick="goTab('events', this)" class="sb-btn w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
+                <span class="text-lg">📋</span> Events Hub
+            </button>
+            <button onclick="goTab('social', this)" class="sb-btn w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
+                <span class="text-lg">💬</span> Community
+            </button>
+            <button onclick="goTab('pending', this)" class="sb-btn w-full flex items-center justify-between px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
+                <div class="flex items-center gap-3"><span class="text-lg">⏳</span> Moderation</div>
+                {% if pending_events > 0 %}<span class="px-2 py-0.5 bg-amber-500 text-white rounded-lg text-[8px]">{{ pending_events }}</span>{% endif %}
+            </button>
+            <button onclick="goTab('attendance', this)" class="sb-btn w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
+                <span class="text-lg">✅</span> Attendance
+            </button>
+            
+            <div class="h-px bg-slate-100 my-4 mx-4"></div>
+            <p class="text-[9px] font-black uppercase text-slate-400 tracking-[0.4em] px-4 mb-4">Infrastructure</p>
+            <button onclick="goTab('tenants', this)" class="sb-btn w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
+                <span class="text-lg">🏫</span> Institutions
+            </button>
+            <button onclick="goTab('notifications', this)" class="sb-btn w-full flex items-center justify-between px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
+                <div class="flex items-center gap-3"><span class="text-lg">🔔</span> Notifications</div>
+                {% if pending_events > 0 %}<span class="w-1.5 h-1.5 bg-brand rounded-full"></span>{% endif %}
+            </button>
+            <button onclick="goTab('reports', this)" class="sb-btn w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
+                <span class="text-lg">📦</span> Data Reports
+            </button>
         </div>
     </aside>
 
-    <!-- ═══ MAIN ═══ -->
-    <main class="main">
-        <header class="topbar">
-            <div class="tb-title">
-                <div>
-                    <h2 id="viewTitle">Overview</h2>
-                    <div class="tb-crumb">CEMS System › <span id="viewCrumb">Dashboard</span></div>
-                </div>
-            </div>
-            <div class="tb-actions">
-                <div class="tb-search">
-                    <i>🔍</i>
-                    <input type="text" placeholder="Omni-search system..." oninput="globalSearch(this.value)">
-                </div>
-                <div class="tb-meta">
-                    <div class="tb-btn" onclick="toggleTheme()" title="Toggle Visual Mode">
-                        <div class="theme-sw"><div class="ts-knob"></div></div>
-                    </div>
-                    <a href="{% url 'event_create' %}" class="btn btn-p">+ Create Event</a>
-                </div>
-            </div>
-        </header>
-
-        {% if messages %}
-        <div class="msgs">
-            {% for m in messages %}
-            <div class="msg msg-{{ m.tags }}">{% if m.tags == 'success' %}✓{% else %}!{% endif %} {{ m }}</div>
-            {% endfor %}
-        </div>
-        {% endif %}
-
-        <!-- ══════════ PAGE: DASHBOARD ══════════ -->
-        <div class="page" id="tab-dashboard">
-            <div class="stats-grid">
-                <div class="stat-card c-blue">
-                    <div class="sc-head">
-                        <div class="sc-icon bg-acc">📅</div>
-                        <span class="pill pill-up">Global</span>
-                    </div>
-                    <div class="stat-val">{{ total_events }}</div>
-                    <div class="stat-label">Total Events</div>
-                    <div class="stat-sub">Across all colleges</div>
-                </div>
-                <div class="stat-card c-emerald">
-                    <div class="sc-head">
-                        <div class="sc-icon bg-acc">✓</div>
-                        <span class="pill pill-in">Active</span>
-                    </div>
-                    <div class="stat-val">{{ published_events }}</div>
-                    <div class="stat-label">Published</div>
-                    <div class="stat-sub">Live on platform</div>
-                </div>
-                <div class="stat-card c-violet">
-                    <div class="sc-head">
-                        <div class="sc-icon bg-acc">🏛</div>
-                        <span class="pill pill-in">Verified</span>
-                    </div>
-                    <div class="stat-val">{{ total_colleges }}</div>
-                    <div class="stat-label">Colleges</div>
-                    <div class="stat-sub">Partner institutions</div>
-                </div>
-                <div class="stat-card c-rose">
-                    <div class="sc-head">
-                        <div class="sc-icon bg-acc">👥</div>
-                        <span class="pill pill-ab">Scale</span>
-                    </div>
-                    <div class="stat-val">{{ total_users }}</div>
-                    <div class="stat-label">Users</div>
-                    <div class="stat-sub">Total participants</div>
-                </div>
-            </div>
-
-            <div class="charts-row">
-                <div class="panel">
-                    <div class="panel-head"><div class="panel-title">Recent Event Performance</div><a href="#" onclick="goTab('analytics')" class="btn btn-s btn-sm">Full Report</a></div>
-                    <div class="panel-body">
-                        <div class="chart-box"><canvas id="cPerformance"></canvas></div>
-                    </div>
-                </div>
-                <div class="panel">
-                    <div class="panel-head"><div class="panel-title">Status Breakdown</div></div>
-                    <div class="panel-body">
-                        <div class="chart-box chart-sm"><canvas id="cStatus"></canvas></div>
-                        <div style="margin-top:20px; display:flex; flex-direction:column; gap:10px;">
-                            {% for label, count, color in status_breakdown %}
-                                <div style="display:flex; align-items:center; gap:8px;">
-                                    <span class="stat-dot dot-{{ label|slugify }}"></span>
-                                    <span style="font-size:0.8rem; font-weight:600; color:var(--text-dim);">{{ label }}</span>
-                                </div>
-                                <span style="font-size:0.85rem; font-weight:700;">{{ count }}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="panel">
-                <div class="panel-head"><div class="panel-title">Recent Network Activity</div><a href="{% url 'event_list' %}" class="btn btn-s btn-sm">View Ledger</a></div>
-                <div class="tbl-wrap">
-                    <table>
-                        <thead>
-                            <tr><th>Event Title</th><th>Date</th><th>Status</th><th>Registration</th><th>Actions</th></tr>
-                        </thead>
-                        <tbody id="eventsList">
-                            {% for e in recent_events %}
-                            <tr>
-                                <td><strong>{{ e.title }}</strong></td>
-                                <td style="font-family:var(--font-mono); font-size:0.75rem;">{{ e.date_time|date:"M d, Y" }}</td>
-                                <td>
-                                    {% if e.status == 'PUBLISHED' %}<span class="pill pill-in">Published</span>
-                                    {% elif e.status == 'PENDING' %}<span class="pill pill-ab" style="background:var(--warning-light); color:var(--warning);">Pending</span>
-                                    {% else %}<span class="pill pill-up">{{ e.status }}</span>{% endif %}
-                                </td>
-                                <td>
-                                    <div style="display:flex; align-items:center; gap:8px;">
-                                        <span style="font-weight:700;">{{ e.reg_count }}/{{ e.capacity }}</span>
-                                        <div class="prog-bar"><div class="prog-fill" data-w="{% widthratio e.reg_count e.capacity|default:1 100 %}"></div></div>
-                                    </div>
-                                </td>
-                                <td><button class="btn btn-s btn-sm" data-id="{{ e.pk }}" onclick="openDrawer(this)">Inspect</button></td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- ══════════ PAGE: CALENDAR ══════════ -->
-        <div class="page page-hidden" id="tab-calendar">
-            <div class="panel">
-                <div class="panel-body"><div id="calendar" style="min-height: 650px;"></div></div>
-            </div>
-        </div>
-
-        <!-- ══════════ PAGE: ALL EVENTS ══════════ -->
-        <div class="page page-hidden" id="tab-events">
-            <div class="ev-grid" id="eventsGrid">
-                {% for e in all_events %}
-                <div class="ev-card" data-id="{{ e.pk }}" onclick="openDrawer(this)">
-                    <div class="ev-img {{ e.gradient }}">
-                        <span>{{ e.emoji }}</span>
-                        <div class="ev-badge">{{ e.status }}</div>
-                    </div>
-                    <div class="ev-body">
-                        <div class="ev-date">{{ e.date_time|date:"M d, Y" }}</div>
-                        <div class="ev-title">{{ e.title }}</div>
-                        <div class="ev-foot">
-                            <div style="font-size:0.75rem; color:var(--text-dim);">📍 {{ e.venue|truncatechars:20 }}</div>
-                            <div style="font-weight:700;">{{ e.reg_count }}/{{ e.capacity }}</div>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <!-- ══════════ PAGE: MODERATION ══════════ -->
-        <div class="page page-hidden" id="tab-pending">
-            <div class="panel">
-                <div class="panel-head"><div class="panel-title">Pending Moderation ({{ pending_list|length }})</div></div>
-                <div class="tbl-wrap">
-                    <table>
-                        <thead>
-                            <tr><th>Event</th><th>Submitted By</th><th>Schedule</th><th>Actions</th></tr>
-                        </thead>
-                        <tbody>
-                            {% for e in pending_list %}
-                            <tr>
-                                <td><strong>{{ e.title }}</strong></td>
-                                <td>{{ e.created_by.get_full_name|default:e.created_by.username }}</td>
-                                <td>{{ e.date_time|date:"M d, Y @ H:i" }}</td>
-                                <td>
-                                    <div style="display:flex; gap:8px;">
-                                        <a href="{% url 'approve_event' e.pk %}" class="btn btn-p btn-sm">Approve</a>
-                                        <button class="btn btn-d btn-sm" data-id="{{ e.pk }}" data-title="{{ e.title|escapejs }}" onclick="openReject(this)">Reject</button>
-                                        <button class="btn btn-s btn-sm" data-id="{{ e.pk }}" onclick="openDrawer(this)">Details</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr><td colspan="4" style="text-align:center; padding:40px; color:var(--text-dim);">✨ Moderation queue is empty. Good job!</td></tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- ══════════ PAGE: ANALYTICS ══════════ -->
-        <div class="page page-hidden" id="tab-analytics">
-            <div class="panel">
-                <div class="panel-head"><div class="panel-title">Growth & Registration Velocity</div></div>
-                <div class="panel-body">
-                    <div class="chart-box" style="height:350px;"><canvas id="cAnalytics"></canvas></div>
-                </div>
-            </div>
-            <div class="charts-row">
-                <div class="panel">
-                    <div class="panel-head"><div class="panel-title">Engagement by Category</div></div>
-                    <div class="panel-body"><div class="chart-box"><canvas id="cCategory"></canvas></div></div>
-                </div>
-                <div class="panel">
-                    <div class="panel-head"><div class="panel-title">Performance Index</div></div>
-                    <div class="tbl-wrap">
-                        <table>
-                            <thead><tr><th>Entity</th><th>Rate</th></tr></thead>
-                            <tbody>
-                                {% for e in performance_events %}
-                                <tr>
-                                    <td>{{ e.title|truncatechars:20 }}</td>
-                                    <td><strong>{% if e.reg_count > 0 %}<div class="prog-bar" style="width:100px;"><div class="prog-fill" data-w="{% widthratio e.att_count e.reg_count|default:1 100 %}"></div></div>{% else %}0%{% endif %}</strong></td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ══════════ PAGE: ATTENDANCE ══════════ -->
-        <div class="page page-hidden" id="tab-attendance">
-             <div class="panel">
-                <div class="panel-head"><div class="panel-title">Global Attendance Ledger</div><button class="btn btn-s btn-sm">Export Report</button></div>
-                <div class="tbl-wrap">
-                    <table>
-                        <thead>
-                            <tr><th>User</th><th>Target Event</th><th>Check-in Status</th><th>Timestamp</th></tr>
-                        </thead>
-                        <tbody id="attList">
-                            {% for r in attendance_log %}
-                            <tr>
-                                <td><strong>{{ r.user.get_full_name|default:r.user.username }}</strong></td>
-                                <td>{{ r.event.title|truncatechars:30 }}</td>
-                                <td>
-                                    {% if r.status == 'ATTENDED' %}<span class="pill pill-in">Attended</span>
-                                    {% elif r.status == 'CANCELLED' %}<span class="pill pill-ab">Cancelled</span>
-                                    {% else %}<span class="pill pill-up">Registered</span>{% endif %}
-                                </td>
-                                <td style="font-family:var(--font-mono); font-size:0.72rem;">{{ r.registered_at|date:"M d, H:i" }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+    <!-- CONTENT ENGINE (FULL FEATURE SET) -->
+    <div class="flex-1 min-w-0">
         
-        <!-- ══════════ PAGE: SOCIAL ══════════ -->
-        <div class="page page-hidden" id="tab-social">
-            <div style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px;">
-                {% for c in recent_comments %}
-                <div class="panel">
-                    <div class="panel-body" style="display:flex; gap:16px; align-items:flex-start;">
-                        <div style="width:44px; height:44px; border-radius:50%; background:var(--brand-light); color:var(--brand); display:flex; align-items:center; justify-content:center; font-weight:800;">{{ c.user.username|first|upper }}</div>
-                        <div style="flex:1;">
-                            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                                <span style="font-weight:700;">@{{ c.user.username }}</span>
-                                <span class="pill {% if c.is_pre_event %}pill-up{% else %}pill-in{% endif %}">{% if c.is_pre_event %}Pre-Event Thought{% else %}Event Feedback{% endif %}</span>
+        <!-- PAGE: OVERVIEW -->
+        <div class="space-y-12 animate-reveal" id="tab-dashboard">
+            <!-- Global Stats Bento -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="bento-panel p-10 bg-slate-950 text-white relative group overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-brand/40 to-transparent"></div>
+                    <p class="text-[9px] font-black text-white/40 uppercase tracking-[0.3em] mb-6">Global Registry</p>
+                    <h3 class="font-serif italic text-6xl font-bold leading-none mb-1 group-hover:scale-110 transition-transform">{{ total_events }}</h3>
+                    <p class="text-[10px] font-black uppercase tracking-widest text-brand">Institutional Events</p>
+                </div>
+                <div class="bento-panel p-10 group hover:border-brand/20 transition-all">
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6">Network Reach</p>
+                    <h3 class="font-serif italic text-6xl font-bold text-slate-900 leading-none mb-1">{{ total_users }}</h3>
+                    <p class="text-[10px] font-black uppercase tracking-widest text-indigo-500">Authenticated Users</p>
+                </div>
+                <div class="bento-panel p-10 group hover:border-brand/20 transition-all">
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6">Partner Scale</p>
+                    <h3 class="font-serif italic text-6xl font-bold text-slate-900 leading-none mb-1">{{ total_colleges }}</h3>
+                    <p class="text-[10px] font-black uppercase tracking-widest text-emerald-500">Active Tenants</p>
+                </div>
+                <div class="bento-panel p-10 group hover:border-brand/20 transition-all">
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6">Platform Drift</p>
+                    <h3 class="font-serif italic text-6xl font-bold text-slate-900 leading-none mb-1">{{ total_comments }}</h3>
+                    <p class="text-[10px] font-black uppercase tracking-widest text-rose-500">Total Interactions</p>
+                </div>
+            </div>
+
+            <!-- Global Insights -->
+            <div class="grid lg:grid-cols-3 gap-12">
+                <div class="lg:col-span-2 bento-panel p-10">
+                    <div class="flex items-center justify-between mb-12">
+                        <h4 class="font-serif italic text-3xl text-slate-900">Registration Velocity</h4>
+                        <span class="text-[9px] font-black text-brand uppercase tracking-widest">Global Aggregate</span>
+                    </div>
+                    <div class="h-80"><canvas id="cPerformance"></canvas></div>
+                </div>
+                <div class="bento-panel p-10">
+                    <div class="flex items-center justify-between mb-12">
+                        <h4 class="font-serif italic text-3xl text-slate-900">Status Mix</h4>
+                    </div>
+                    <div class="h-64 mb-10"><canvas id="cStatus"></canvas></div>
+                    <div class="space-y-4">
+                        {% for label, count, color in status_breakdown %}
+                        <div class="flex items-center justify-between py-3 border-b border-slate-50 last:border-0">
+                            <div class="flex items-center gap-3">
+                                <div class="w-2 h-2 rounded-full" style="background-color: {{ color }}"></div>
+                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ label }}</span>
                             </div>
-                            <p style="font-size:0.95rem; color:var(--text-dim); font-style:italic;">"{{ c.text }}"</p>
-                            <div style="margin-top:10px; font-size:0.75rem; color:var(--text-dim);">Regarding: <span style="color:var(--brand); font-weight:700;">{{ c.event.title }}</span></div>
+                            <span class="text-sm font-bold text-slate-900">{{ count }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Ledger -->
+            <div class="space-y-6">
+                <h4 class="font-serif italic text-3xl px-4">Global Ledger</h4>
+                <div class="bento-panel">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="bg-slate-50 border-b border-slate-100">
+                                <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Institutional Event</th>
+                                <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Date</th>
+                                <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Enrollment</th>
+                                <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400 text-right">Command</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50">
+                            {% for e in recent_events %}
+                            <tr class="group hover:bg-slate-50/50 transition-all">
+                                <td class="px-8 py-6">
+                                    <p class="font-serif italic text-xl font-bold text-slate-900 leading-none mb-1">{{ e.title }}</p>
+                                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ e.college.name }}</p>
+                                </td>
+                                <td class="px-8 py-6 text-xs text-slate-400 font-mono">{{ e.date_time|date:"M d, Y" }}</td>
+                                <td class="px-8 py-6">
+                                    <div class="flex items-center gap-4">
+                                        <div class="flex-1 w-24 h-1.5 bg-slate-100 rounded-full overflow-hidden p-[1px]">
+                                            <div class="h-full bg-brand rounded-full" style="width: {% widthratio e.reg_count e.capacity|default:1 100 %}%"></div>
+                                        </div>
+                                        <span class="text-[10px] font-bold text-slate-900">{{ e.reg_count }}/{{ e.capacity }}</span>
+                                    </div>
+                                </td>
+                                <td class="px-8 py-6 text-right">
+                                    <button class="px-5 py-2.5 bg-slate-900 text-white rounded-xl text-[9px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all" data-id="{{ e.pk }}" onclick="openDrawer(this)">Inspect Hub</button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE: CALENDAR (RESTORED) -->
+        <div class="hidden animate-reveal space-y-12" id="tab-calendar">
+            <h3 class="font-serif italic text-4xl text-slate-900 px-4">Logistics Timeline</h3>
+            <div class="bento-panel p-10"><div id="calendar" style="min-height: 700px;"></div></div>
+        </div>
+
+        <!-- PAGE: ALL EVENTS (RESTORED GRID) -->
+        <div class="hidden animate-reveal space-y-12" id="tab-events">
+            <div class="flex items-center justify-between px-4">
+                <h3 class="font-serif italic text-4xl text-slate-900">Event Matrix</h3>
+                <div class="relative w-72">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
+                    <input type="text" placeholder="Search Matrix..." oninput="globalSearch(this.value)" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl text-xs focus:outline-none focus:border-brand">
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="eventsGrid">
+                {% for e in all_events %}
+                <div class="bento-panel group cursor-pointer hover:-translate-y-2 transition-all p-2" data-id="{{ e.pk }}" onclick="openDrawer(this)">
+                    <div class="h-40 rounded-[2rem] bg-slate-950 flex items-center justify-center text-4xl relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-20 bg-gradient-to-br from-brand via-transparent to-indigo-500"></div>
+                        <span class="relative z-10">{{ e.emoji|default:'🎉' }}</span>
+                        <div class="absolute top-4 right-4 px-3 py-1 glass-dark text-[8px] font-black uppercase tracking-widest text-white rounded-lg">{{ e.status }}</div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-[9px] font-black text-brand uppercase tracking-widest mb-2">{{ e.date_time|date:"M d, Y" }}</p>
+                        <h4 class="font-serif italic text-xl font-bold text-slate-900 mb-4">{{ e.title }}</h4>
+                        <div class="flex items-center justify-between pt-4 border-t border-slate-50">
+                            <p class="text-[9px] font-black text-slate-300 uppercase underline">{{ e.college.name|truncatechars:15 }}</p>
+                            <span class="text-[10px] font-bold text-slate-900">{{ e.reg_count }}/{{ e.capacity }}</span>
                         </div>
                     </div>
                 </div>
                 {% empty %}
-                <div style="text-align:center; padding:100px; color:var(--text-dim);">💬 No community interactions detected yet.</div>
+                <div class="col-span-full py-32 text-center text-slate-300 italic font-serif text-2xl">Matrix Depleted.</div>
                 {% endfor %}
             </div>
         </div>
 
-        <!-- ══════════ PAGE: NOTIFICATIONS ══════════ -->
-        <div class="page page-hidden" id="tab-notifications">
-            <div class="panel">
-                <div class="panel-head"><div class="panel-title">System Notifications</div></div>
-                <div class="panel-body" style="display:flex; flex-direction:column; gap:12px;">
-                    {% if pending_events > 0 %}
-                    <div style="display:flex; align-items:flex-start; gap:16px; padding:16px; background:var(--warning-light); border-radius:12px; border:1px solid rgba(217,119,6,0.2);">
-                        <span style="font-size:1.5rem;">⏳</span>
+        <!-- PAGE: MODERATION -->
+        <div class="hidden animate-reveal space-y-12" id="tab-pending">
+            <h3 class="font-serif italic text-4xl text-slate-900 px-4">System Moderation</h3>
+            <div class="bento-panel">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-slate-50 border-b border-slate-100">
+                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Institutional Event</th>
+                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Author</th>
+                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">
+                        {% for e in pending_list %}
+                        <tr class="hover:bg-slate-50/50 transition-all">
+                            <td class="px-8 py-6">
+                                <p class="font-serif italic text-xl font-bold text-slate-900 leading-none mb-1">{{ e.title }}</p>
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ e.date_time|date:"M d, Y @ H:i" }}</p>
+                            </td>
+                            <td class="px-8 py-6">
+                                <p class="text-xs font-bold text-slate-700">{{ e.created_by.get_full_name|default:e.created_by.username }}</p>
+                            </td>
+                            <td class="px-8 py-6 text-right flex items-center justify-end gap-3">
+                                <a href="{% url 'approve_event' e.pk %}" class="px-5 py-2.5 bg-brand text-white rounded-xl text-[9px] font-black uppercase tracking-widest shadow-brand hover:brightness-110 transition-all">✅ Approve</a>
+                                <button class="px-5 py-2.5 bg-rose-50 text-rose-600 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-rose-600 hover:text-white transition-all" data-id="{{ e.pk }}" data-title="{{ e.title|escapejs }}" onclick="openReject(this)">❌ Reject</button>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="4" class="py-32 text-center text-slate-300 italic font-serif text-2xl">Moderation Queue Clear.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PAGE: ANALYTICS -->
+        <div class="hidden animate-reveal space-y-12" id="tab-analytics">
+            <h3 class="font-serif italic text-4xl text-slate-900 px-4">Institutional Insights</h3>
+            <div class="bento-panel p-12">
+                <div class="h-96"><canvas id="cAnalytics"></canvas></div>
+            </div>
+            
+            <div class="grid lg:grid-cols-2 gap-12">
+                <div class="bento-panel p-10">
+                    <h4 class="font-serif italic text-2xl mb-8">Engagement by Category</h4>
+                    <div class="h-80"><canvas id="cCategory"></canvas></div>
+                </div>
+                <div class="bento-panel p-10">
+                    <h4 class="font-serif italic text-2xl mb-8">Performance Index</h4>
+                    <div class="space-y-6">
+                        {% for e in performance_events %}
                         <div>
-                            <div style="font-weight:700; color:var(--warning);">{{ pending_events }} Event{{ pending_events|pluralize }} Awaiting Moderation</div>
-                            <div style="font-size:0.8rem; color:var(--text-dim); margin-top:4px;">Review and approve or reject pending event submissions.</div>
-                            <button onclick="goTab('pending')" class="btn btn-p btn-sm" style="margin-top:10px; background:var(--warning);">Review Now</button>
+                            <div class="flex justify-between text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">
+                                <span>{{ e.title|truncatechars:30 }}</span>
+                                <span class="text-brand">{% if e.reg_count > 0 %}{% widthratio e.att_count e.reg_count 100 %}%{% else %}0%{% endif %} Impact</span>
+                            </div>
+                            <div class="h-2 bg-slate-50 rounded-full overflow-hidden p-[1px]">
+                                <div class="h-full bg-brand rounded-full transition-all duration-1000" style="width: {% if e.reg_count > 0 %}{% widthratio e.att_count e.reg_count 100 %}{% else %}0{% endif %}%"></div>
+                            </div>
                         </div>
-                    </div>
-                    {% endif %}
-                    <div style="display:flex; align-items:flex-start; gap:16px; padding:16px; background:var(--brand-light); border-radius:12px; border:1px solid rgba(37,99,235,0.15);">
-                        <span style="font-size:1.5rem;">📊</span>
-                        <div>
-                            <div style="font-weight:700; color:var(--brand);">Platform Health: Nominal</div>
-                            <div style="font-size:0.8rem; color:var(--text-dim); margin-top:4px;">{{ total_events }} total events · {{ total_users }} registered users · {{ total_colleges }} college{{ total_colleges|pluralize }} active.</div>
-                        </div>
-                    </div>
-                    <div style="display:flex; align-items:flex-start; gap:16px; padding:16px; background:var(--success-light); border-radius:12px; border:1px solid rgba(5,150,105,0.15);">
-                        <span style="font-size:1.5rem;">✅</span>
-                        <div>
-                            <div style="font-weight:700; color:var(--success);">{{ published_events }} Event{{ published_events|pluralize }} Live</div>
-                            <div style="font-size:0.8rem; color:var(--text-dim); margin-top:4px;">Events are publicly visible and accepting registrations.</div>
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- ══════════ PAGE: REPORTS ══════════ -->
-        <div class="page page-hidden" id="tab-reports">
-            <div class="panel">
-                <div class="panel-head"><div class="panel-title">Platform Data Report</div><span style="font-size:0.75rem; color:var(--text-dim);">Snapshot as of today</span></div>
-                <div class="tbl-wrap">
-                    <table>
-                        <thead><tr><th>Metric</th><th>Value</th><th>Detail</th></tr></thead>
-                        <tbody>
-                            <tr><td><strong>Total Events</strong></td><td><strong>{{ total_events }}</strong></td><td style="color:var(--text-dim);">All time across the platform</td></tr>
-                            <tr><td><strong>Published Events</strong></td><td><strong style="color:var(--success);">{{ published_events }}</strong></td><td style="color:var(--text-dim);">Currently live and accepting registrations</td></tr>
-                            <tr><td><strong>Pending Moderation</strong></td><td><strong style="color:var(--warning);">{{ pending_events }}</strong></td><td style="color:var(--text-dim);">Awaiting admin review</td></tr>
-                            <tr><td><strong>Total Registrations</strong></td><td><strong>{{ total_registrations }}</strong></td><td style="color:var(--text-dim);">Across all events</td></tr>
-                            <tr><td><strong>Attended</strong></td><td><strong style="color:var(--success);">{{ attended_count }}</strong></td><td style="color:var(--text-dim);">Confirmed check-ins</td></tr>
-                            <tr><td><strong>Registered Users</strong></td><td><strong>{{ total_users }}</strong></td><td style="color:var(--text-dim);">Platform-wide user base</td></tr>
-                            <tr><td><strong>Active Colleges</strong></td><td><strong>{{ total_colleges }}</strong></td><td style="color:var(--text-dim);">Partner institutions</td></tr>
-                            <tr><td><strong>Community Interactions</strong></td><td><strong>{{ total_comments }}</strong></td><td style="color:var(--text-dim);">Pre-event thoughts &amp; feedback</td></tr>
-                        </tbody>
-                    </table>
+        <!-- PAGE: ATTENDANCE (RESTORED) -->
+        <div class="hidden animate-reveal space-y-12" id="tab-attendance">
+            <h3 class="font-serif italic text-4xl text-slate-900 px-4">Operational Ledger</h3>
+            <div class="bento-panel">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-slate-50 border-b border-slate-100">
+                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Subject</th>
+                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Experience Node</th>
+                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Validation</th>
+                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">
+                        {% for r in attendance_log %}
+                        <tr class="hover:bg-slate-50/50 transition-all">
+                            <td class="px-8 py-6">
+                                <p class="text-xs font-bold text-slate-900">{{ r.user.get_full_name|default:r.user.username }}</p>
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">ID: {{ r.user.username }}</p>
+                            </td>
+                            <td class="px-8 py-6 font-serif italic text-lg text-slate-600">{{ r.event.title|truncatechars:30 }}</td>
+                            <td class="px-8 py-6">
+                                <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest
+                                    {% if r.status == 'ATTENDED' %}bg-emerald-50 text-emerald-600 border border-emerald-100
+                                    {% elif r.status == 'CANCELLED' %}bg-rose-50 text-rose-600 border border-rose-100
+                                    {% else %}bg-blue-50 text-blue-600 border border-blue-100{% endif %}">
+                                    {{ r.status }}
+                                </span>
+                            </td>
+                            <td class="px-8 py-6 text-xs text-slate-400 font-mono">{{ r.registered_at|date:"M d, H:i" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PAGE: SOCIAL (RESTORED) -->
+        <div class="hidden animate-reveal space-y-12" id="tab-social">
+            <h3 class="font-serif italic text-4xl text-slate-900 px-4">Collective Pulse</h3>
+            <div class="grid gap-8 max-w-4xl mx-auto">
+                {% for c in recent_comments %}
+                <div class="bento-panel p-10 group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-4 g-blue opacity-10"></div>
+                    <div class="flex items-start gap-8">
+                        <div class="w-16 h-16 rounded-[1.5rem] bg-brand text-white flex items-center justify-center text-xl font-black shadow-xl">
+                            {{ c.user.username|first|upper }}
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex justify-between items-center mb-4">
+                                <p class="text-sm font-bold text-slate-900">@{{ c.user.username }}</p>
+                                <span class="text-[9px] font-black uppercase tracking-widest text-slate-300">{{ c.created_at|date:"M d, H:i" }}</span>
+                            </div>
+                            <p class="text-xl font-serif italic text-slate-600 leading-relaxed mb-6">"{{ c.text }}"</p>
+                            <div class="pt-4 border-t border-slate-50 flex items-center justify-between">
+                                <p class="text-[9px] font-black text-brand uppercase tracking-widest">{{ c.event.title }}</p>
+                                <span class="px-3 py-1 bg-slate-50 text-slate-400 rounded-lg text-[8px] font-black uppercase tracking-widest">
+                                    {% if c.is_pre_event %}Anticipation{% else %}Feedback{% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="py-32 text-center text-slate-300 italic font-serif text-2xl">Silences in the network.</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- PAGE: NOTIFICATIONS (RESTORED) -->
+        <div class="hidden animate-reveal space-y-12" id="tab-notifications">
+            <h3 class="font-serif italic text-4xl text-slate-900 px-4">Intelligence Alerts</h3>
+            <div class="grid gap-6">
+                {% if pending_events > 0 %}
+                <div class="bento-panel p-10 bg-amber-50 border-amber-100 flex items-center justify-between group">
+                    <div class="flex items-center gap-8">
+                        <div class="text-4xl animate-bounce">⏳</div>
+                        <div>
+                            <h4 class="text-lg font-bold text-amber-900">{{ pending_events }} Protocol{{ pending_events|pluralize }} Awaiting Moderation</h4>
+                            <p class="text-xs text-amber-700/60 uppercase tracking-widest font-black mt-1">Institutional Review Required</p>
+                        </div>
+                    </div>
+                    <button onclick="goTab('pending')" class="px-8 py-4 bg-amber-600 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-amber-500/20 hover:brightness-110 transition-all">Execute Review</button>
+                </div>
+                {% endif %}
+                <div class="bento-panel p-10 bg-emerald-50 border-emerald-100 flex items-center gap-8">
+                    <div class="text-4xl">📊</div>
+                    <div>
+                        <h4 class="text-lg font-bold text-emerald-900">Platform Synchronized</h4>
+                        <p class="text-xs text-emerald-700/60 uppercase tracking-widest font-black mt-1">All institutional nodes nominal</p>
+                    </div>
                 </div>
             </div>
         </div>
 
-    </main>
-
-    <!-- ═══ DRAWER & MODALS ═══ -->
-    <div class="ovl" id="ovl" onclick="closeDrawer();closeModal()"></div>
-    
-    <div class="drawer" id="drawer">
-        <button class="dr-close" onclick="closeDrawer()">×</button>
-        <div class="dr-hero" id="drHero">✨</div>
-        <div class="dr-body">
-            <div id="drBadge" class="pill pill-up" style="margin-bottom:12px;">STATUS</div>
-            <h3 class="dr-title" id="drTitle">Event Title</h3>
-            <div class="meta-grid">
-                <div class="m-box"><div class="m-lbl">Date</div><div class="m-val" id="drDate">M d, Y</div></div>
-                <div class="m-box"><div class="m-lbl">Venue</div><div class="m-val" id="drVenue">TBA</div></div>
-                <div class="m-box"><div class="m-lbl">Registered</div><div class="m-val" id="drReg">0 / 0</div></div>
-                <div class="m-box"><div class="m-lbl">Category</div><div class="m-val" id="drCat">Misc</div></div>
+        <!-- PAGE: REPORTS (RESTORED) -->
+        <div class="hidden animate-reveal space-y-12" id="tab-reports">
+            <h3 class="font-serif italic text-4xl text-slate-900 px-4">Analytical Snapshot</h3>
+            <div class="bento-panel">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-slate-50 border-b border-slate-100">
+                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Metric Descriptor</th>
+                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Quantitative Value</th>
+                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Operational Context</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">
+                        <tr><td class="px-8 py-6 font-bold">Global Event Volume</td><td class="px-8 py-6 font-serif italic text-xl">{{ total_events }}</td><td class="px-8 py-6 text-xs text-slate-400">All-time repository entries</td></tr>
+                        <tr><td class="px-8 py-6 font-bold">Active Transmissions</td><td class="px-8 py-6 font-serif italic text-xl text-emerald-600">{{ published_events }}</td><td class="px-8 py-6 text-xs text-slate-400">Live Experiences accepting traffic</td></tr>
+                        <tr><td class="px-8 py-6 font-bold">Awaiting Authorization</td><td class="px-8 py-6 font-serif italic text-xl text-amber-600">{{ pending_events }}</td><td class="px-8 py-6 text-xs text-slate-400">Pending admin verification</td></tr>
+                        <tr><td class="px-8 py-6 font-bold">Total Network Enlistment</td><td class="px-8 py-6 font-serif italic text-xl">{{ total_users }}</td><td class="px-8 py-6 text-xs text-slate-400">Verified platform identities</td></tr>
+                        <tr><td class="px-8 py-6 font-bold">Institutional Scale</td><td class="px-8 py-6 font-serif italic text-xl">{{ total_colleges }}</td><td class="px-8 py-6 text-xs text-slate-400">Partner university nodes</td></tr>
+                        <tr><td class="px-8 py-6 font-bold">Total Interactions</td><td class="px-8 py-6 font-serif italic text-xl text-rose-600">{{ total_comments }}</td><td class="px-8 py-6 text-xs text-slate-400">Community wall participation</td></tr>
+                    </tbody>
+                </table>
             </div>
-            <p class="dr-desc" id="drDesc">Loading description...</p>
         </div>
-        <div class="dr-foot" id="drActions">
-            <a href="#" class="btn btn-p" id="drLink">Full Management</a>
-            <button class="btn btn-s" onclick="closeDrawer()">Dismiss</button>
+
+        <!-- PAGE: TENANTS (COLLEGES) -->
+        <div class="hidden animate-reveal space-y-12" id="tab-tenants">
+            <div class="flex items-center justify-between px-4">
+                <h3 class="font-serif italic text-4xl text-slate-900">Institutional Network</h3>
+                <a href="{% url 'register_college' %}" class="px-8 py-4 bg-indigo-600 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-xl hover:brightness-110 transition-all">+ Add Institutional Node</a>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8" id="tenantsGrid">
+                {% for college in colleges %}
+                <div class="bento-panel p-10 group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700"></div>
+                    <div class="flex items-center gap-8 mb-10 relative z-10">
+                        <div class="w-20 h-20 rounded-[2rem] bg-indigo-50 border border-indigo-100 flex items-center justify-center text-3xl font-black text-indigo-600 shadow-xl group-hover:scale-110 transition-transform">{{ college.name|first }}</div>
+                        <div>
+                            <h4 class="font-serif italic text-3xl font-bold text-slate-900 leading-none mb-2">{{ college.name }}</h4>
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">SLUG-DOMAIN: {{ college.slug }}</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mb-10 text-center relative z-10">
+                        <div class="p-4 bg-slate-50 rounded-3xl group-hover:bg-white transition-colors">
+                            <p class="text-[9px] font-black text-slate-300 uppercase mb-1">Live Events</p>
+                            <p class="text-2xl font-bold text-slate-900">{{ college.events.count }}</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-3xl group-hover:bg-white transition-colors">
+                            <p class="text-[9px] font-black text-slate-300 uppercase mb-1">Scale</p>
+                            <p class="text-2xl font-bold text-slate-900">{{ college.user_profiles.count }} <span class="text-[10px] font-normal text-slate-400">Users</span></p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 relative z-10">
+                        <a href="/portal/{{ college.slug }}/" target="_blank" class="flex-1 text-center py-4 bg-slate-950 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl hover:brightness-150 transition-all">Visit Portal</a>
+                        <button class="w-14 h-14 bg-white border border-slate-100 rounded-2xl flex items-center justify-center hover:bg-slate-50 transition-all">✏️</button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- DRAWER & MODALS -->
+<div class="fixed inset-0 z-[1000] hidden flex items-center justify-center p-6 bg-slate-950/40 backdrop-blur-sm animate-fade-in" id="ticket-modal">
+    <div class="relative bg-white rounded-[3.5rem] shadow-2xl w-full max-w-sm overflow-hidden border border-slate-100 animate-fade-up">
+        <div class="h-4 g-blue"></div>
+        <div class="p-12 text-center">
+            <h3 class="font-serif italic text-4xl font-bold text-slate-900 mb-2" id="drTitle">Discovery Hub</h3>
+            <p id="drBadge" class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-12">Institutional Node</p>
+            <div id="drDesc" class="text-slate-500 italic text-lg mb-12">Loading intelligence...</div>
+            <div class="space-y-3">
+                <a href="#" id="drLink" class="block w-full py-5 bg-brand text-white text-[10px] font-black uppercase tracking-widest rounded-[2rem] shadow-brand hover:brightness-110 transition-all">Execute Pivot →</a>
+                <button onclick="closeDrawer()" class="w-full py-5 bg-slate-50 text-slate-600 font-bold rounded-[2rem] hover:bg-slate-100 transition-all">Dismiss Intelligent Interface</button>
+            </div>
         </div>
     </div>
+</div>
 
-    <div class="modal-wrap" id="rejectModal">
-        <div class="modal">
-            <div class="modal-head"><h3>Reject Event</h3><button onclick="closeModal()" style="background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:1.5rem;">×</button></div>
-            <div class="modal-body">
-                <p style="font-size:0.9rem; color:var(--text-dim); margin-bottom:16px;">Please provide a reason for rejecting <strong id="rejName">this event</strong>. This will be sent to the organizer.</p>
-                <textarea id="rejReason" rows="5" placeholder="Reason for rejection..."></textarea>
-            </div>
-            <div class="modal-foot">
-                <button class="btn btn-s" onclick="closeModal()">Cancel</button>
-                <button class="btn btn-d" id="rejBtn">Send Rejection</button>
-            </div>
+<div class="fixed inset-0 z-[1000] hidden flex items-center justify-center p-6 bg-slate-950/40 backdrop-blur-sm" id="rejectModal">
+    <div class="bg-white rounded-[3rem] shadow-2xl w-full max-w-md p-12 relative border border-slate-100">
+        <h3 class="font-serif italic text-3xl font-bold text-slate-900 mb-6">Reject Transaction</h3>
+        <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-8">Specify reason for disapproval</p>
+        <textarea id="rejReason" rows="5" class="w-full p-6 bg-slate-50 border border-slate-100 rounded-[2rem] text-sm focus:outline-none focus:border-rose-500 transition-all mb-8" placeholder="Reason for rejection..."></textarea>
+        <div class="flex gap-4">
+            <button onclick="closeModal()" class="flex-1 py-5 bg-slate-100 text-slate-500 font-bold rounded-2xl hover:bg-slate-200 transition-all">Cancel</button>
+            <button id="rejBtn" class="flex-1 py-5 bg-rose-600 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-rose-500/20 hover:brightness-110 transition-all">Transmit Rejection</button>
         </div>
     </div>
+</div>
 
-    <!-- ═══ SCRIPTS ═══ -->
-    <script id="data-events" type="application/json">{{ events_data|safe }}</script>
-    <script id="data-status" type="application/json">[ {{ published }}, {{ pending }}, {{ approved }}, {{ rejected }} ]</script>
-    <script id="data-monthly" type="application/json">{{ monthly_data|safe }}</script>
-    <script id="data-category" type="application/json">{{ category_data_json|safe }}</script>
-    <script id="data-att" type="application/json">{{ performance_data_json|safe }}</script>
+{% endblock %}
 
-    <script>
-        const EVENTS = JSON.parse(document.getElementById('data-events').textContent || '[]');
-        const COLOR_MAP = { published: '#059669', pending: '#d97706', approved: '#2563eb', rejected: '#dc2626' };
-        let calendar;
+{% block extra_js %}
+<script id="data-events" type="application/json">{{ events_data|safe }}</script>
+<script id="data-status" type="application/json">[ {{ published }}, {{ pending }}, {{ approved }}, {{ rejected }} ]</script>
+<script id="data-monthly" type="application/json">{{ monthly_data|safe }}</script>
+<script id="data-category" type="application/json">{{ category_data_json|safe }}</script>
+<script id="data-att" type="application/json">{{ performance_data_json|safe }}</script>
+<script>
+    const EVENTS = JSON.parse(document.getElementById('data-events').textContent || '[]');
+    let calendar;
+    const charts = [];
 
-        /* ── Core Navigation ── */
-        function goTab(id, btn) {
-            document.querySelectorAll('.page').forEach(p => p.classList.add('page-hidden'));
-            const tab = document.getElementById('tab-' + id);
-            if (tab) tab.classList.remove('page-hidden');
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            if(btn) btn.classList.add('active');
-            
-            const titles = { dashboard: 'Overview', calendar: 'Schedule', analytics: 'Platform Insights', events: 'Events Hub', social: 'Community Wall', pending: 'Moderation Queue', attendance: 'Attendance Tracking', notifications: 'System Alerts', reports: 'Data Reports' };
-            document.getElementById('viewTitle').textContent = titles[id] || 'System Console';
-            document.getElementById('viewCrumb').textContent = titles[id] || 'Console';
-
-            if (id === 'calendar' && calendar) setTimeout(() => calendar.updateSize(), 50);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        /* ── Theme Hub ── */
-        const charts = [];
-        function updateCharts(isDark) {
-            const fontColor = isDark ? '#8b949e' : '#64748b';
-            const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
-            charts.forEach(c => {
-                if (c.options.scales) {
-                    Object.values(c.options.scales).forEach(s => {
-                        if (s.ticks) s.ticks.color = fontColor;
-                        if (s.grid) s.grid.color = gridColor;
-                    });
-                }
-                if (c.options.plugins && c.options.plugins.legend) {
-                    c.options.plugins.legend.labels.color = fontColor;
-                }
-                c.update();
-            });
-        }
-
-        function toggleTheme() {
-            const isDark = document.documentElement.classList.toggle('dark');
-            const theme = isDark ? 'dark' : 'light';
-            localStorage.setItem('theme', theme);
-            updateCharts(isDark);
-        }
-        (function() {
-            const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-            if (theme === 'dark') document.documentElement.classList.add('dark');
-        })();
-
-        /* ── Drawer & Search ── */
-        function openDrawer(target) {
-            const id = parseInt(target.getAttribute('data-id'));
-            const ev = EVENTS.find(e => e.id === id);
-            if (!ev) return;
-            document.getElementById('drHero').textContent = ev.emoji;
-            document.getElementById('drHero').className = 'dr-hero ' + ev.grad;
-            document.getElementById('drTitle').textContent = ev.title;
-            document.getElementById('drDate').textContent = ev.date;
-            document.getElementById('drVenue').textContent = ev.venue;
-            document.getElementById('drReg').textContent = ev.reg + ' / ' + ev.cap;
-            document.getElementById('drCat').textContent = ev.category;
-            document.getElementById('drDesc').textContent = ev.desc || 'No detailed description provided.';
-            
-            const b = document.getElementById('drBadge');
-            b.textContent = ev.status.toUpperCase();
-            b.className = 'pill ' + (ev.status === 'published' ? 'pill-in' : ev.status === 'pending' ? 'pill-ab' : 'pill-up');
-            
-            document.getElementById('drLink').href = '/events/' + id + '/';
-            document.getElementById('ovl').classList.add('on');
-            document.getElementById('drawer').classList.add('on');
-            document.body.style.overflow = 'hidden';
-        }
-        function closeDrawer() {
-            document.getElementById('ovl').classList.remove('on');
-            document.getElementById('drawer').classList.remove('on');
-            document.body.style.overflow = '';
-        }
-        function globalSearch(q) {
-            const low = q.toLowerCase();
-            document.querySelectorAll('#eventsList tr, .ev-card').forEach(function(el) {
-                el.style.display = el.textContent.toLowerCase().includes(low) ? '' : 'none';
-            });
-        }
-
-        /* ── Moderation ── */
-        let activeRejId = null;
-        function openReject(target) {
-            activeRejId = target.getAttribute('data-id');
-            const name = target.getAttribute('data-title');
-            document.getElementById('rejName').textContent = name;
-            document.getElementById('rejReason').value = '';
-            document.getElementById('rejectModal').classList.add('on');
-            document.getElementById('ovl').classList.add('on');
-        }
-        function closeModal() {
-            document.getElementById('rejectModal').classList.remove('on');
-            document.getElementById('ovl').classList.remove('on');
-        }
-        document.getElementById('rejBtn').onclick = async () => {
-            const reason = document.getElementById('rejReason').value.trim();
-            if (!reason) return alert('Reason required.');
-            const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            try {
-                const r = await fetch(`/api/event/${activeRejId}/update-status/`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrf },
-                    body: JSON.stringify({ status: 'REJECTED', reason })
-                });
-                const res = await r.json();
-                if (res.success) window.location.reload();
-                else alert(res.message);
-            } catch(e) { alert('Request failed.'); }
-        };
-
-        /* ── Init Visuals ── */
-        document.addEventListener('DOMContentLoaded', () => {
-            /* FullCalendar */
-            const calEl = document.getElementById('calendar');
-            if (calEl) {
-                calendar = new FullCalendar.Calendar(calEl, {
-                    initialView: 'dayGridMonth',
-                    events: EVENTS.map(e => ({ title: e.title, start: e.date, color: COLOR_MAP[e.status] || '#2563eb', url: '/events/'+e.id+'/' })),
-                    headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,dayGridWeek' }
-                });
-                calendar.render();
-            }
-
-            /* Charts Defaults */
-            Chart.defaults.font.family = "'DM Sans', sans-serif";
-            const isDark = document.documentElement.classList.contains('dark');
-            Chart.defaults.color = isDark ? '#8b949e' : '#64748b';
-
-            /* Dashboard Performance (Main Bar) */
-            const attRaw = JSON.parse(document.getElementById('data-att').textContent || '{}');
-            charts.push(new Chart(document.getElementById('cPerformance'), {
-                type: 'bar',
-                data: {
-                    labels: attRaw.labels,
-                    datasets: [
-                        { label: 'Registered', data: attRaw.regs, backgroundColor: 'rgba(37,99,235,0.1)', borderColor: '#2563eb', borderWidth: 2, borderRadius: 6 },
-                        { label: 'Attended', data: attRaw.atts, backgroundColor: '#059669', borderRadius: 6 }
-                    ]
-                },
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } }, x: { grid: { display: false } } }, plugins: { legend: { display: false } } }
-            }));
-
-            /* Status Donut */
-            const statusRaw = JSON.parse(document.getElementById('data-status').textContent || '[0,0,0,0]');
-            charts.push(new Chart(document.getElementById('cStatus'), {
-                type: 'doughnut',
-                data: {
-                    labels: ['Published', 'Pending', 'Approved', 'Rejected'],
-                    datasets: [{
-                        data: statusRaw,
-                        backgroundColor: ['#059669', '#d97706', '#2563eb', '#dc2626'],
-                        borderWidth: 0, hoverOffset: 4
-                    }]
-                },
-                options: { cutout: '75%', plugins: { legend: { display: false } }, maintainAspectRatio: false }
-            }));
-
-            /* Analytics (Monthly Line) */
-            const monthRaw = JSON.parse(document.getElementById('data-monthly').textContent || '{"labels":[], "regs":[], "events":[]}');
-            charts.push(new Chart(document.getElementById('cAnalytics'), {
-                type: 'line',
-                data: {
-                    labels: monthRaw.labels,
-                    datasets: [{
-                        label: 'Registrations', data: monthRaw.regs, borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,0.05)', fill: true, tension: 0.4, pointRadius: 5, pointBackgroundColor: '#fff', pointBorderWidth: 3
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { grid: { color: 'rgba(0,0,0,0.05)' } } } }
-            }));
-
-            /* Category Polar */
-            const catRaw = JSON.parse(document.getElementById('data-category').textContent || '[]');
-            charts.push(new Chart(document.getElementById('cCategory'), {
-                type: 'polarArea',
-                data: {
-                    labels: catRaw.map(c => c.label),
-                    datasets: [{
-                        data: catRaw.map(c => c.count),
-                        backgroundColor: ['#2563eb', '#059669', '#7c3aed', '#d97706', '#dc2626', '#0ea5e9'],
-                        borderWidth: 0
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10 } } }, scales: { r: { ticks: { display: false } } } }
-            }));
-
-            /* Initial Chart Alignment */
-            updateCharts(document.documentElement.classList.contains('dark'));
-
-            /* Multi-fix: Width Bars */
-            document.querySelectorAll('[data-w]').forEach(function(el) {
-                el.style.width = el.getAttribute('data-w') + '%';
-            });
+    function goTab(id, btn) {
+        ['tab-dashboard', 'tab-pending', 'tab-events', 'tab-analytics', 'tab-attendance', 'tab-tenants', 'tab-calendar', 'tab-social', 'tab-notifications', 'tab-reports'].forEach(tid => {
+            const el = document.getElementById(tid);
+            if(el) el.classList.add('hidden');
         });
-        document.addEventListener('keydown', e => { if(e.key === 'Escape') { closeDrawer(); closeModal(); } });
-    </script>
-</body>
+        const target = document.getElementById('tab-' + id);
+        if(target) target.classList.remove('hidden');
+        document.querySelectorAll('.sb-btn').forEach(b => b.classList.remove('active'));
+        if(btn) btn.classList.add('active');
+        if(id === 'calendar' && calendar) setTimeout(() => calendar.updateSize(), 100);
+    }
 
-</html>
+    function openDrawer(target) {
+        const id = parseInt(target.getAttribute('data-id'));
+        const ev = EVENTS.find(e => e.id === id);
+        if(!ev) return;
+        document.getElementById('drTitle').textContent = ev.title;
+        document.getElementById('drDesc').textContent = ev.desc || 'System node operational.';
+        document.getElementById('drLink').href = '/events/' + id + '/';
+        document.getElementById('ticket-modal').classList.remove('hidden');
+    }
+
+    function closeDrawer() { document.getElementById('ticket-modal').classList.add('hidden'); }
+    function closeModal() { document.getElementById('rejectModal').classList.add('hidden'); }
+
+    let activeRejId = null;
+    function openReject(target) {
+        activeRejId = target.getAttribute('data-id');
+        document.getElementById('rejectModal').classList.remove('hidden');
+    }
+
+    document.getElementById('rejBtn').onclick = async () => {
+        const reason = document.getElementById('rejReason').value.trim();
+        if(!reason) return alert('Reason required.');
+        const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        try {
+            const r = await fetch(`/api/event/${activeRejId}/update-status/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrf },
+                body: JSON.stringify({ status: 'REJECTED', reason })
+            });
+            const res = await r.json();
+            if(res.success) window.location.reload();
+            else alert(res.message);
+        } catch(e) { alert('Request failed.'); }
+    };
+
+    function globalSearch(q) {
+        const low = q.toLowerCase();
+        document.querySelectorAll('#eventsGrid > div').forEach(el => {
+            el.style.display = el.textContent.toLowerCase().includes(low) ? '' : 'none';
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Init FullCalendar
+        const calEl = document.getElementById('calendar');
+        if(calEl) {
+            calendar = new FullCalendar.Calendar(calEl, {
+                initialView: 'dayGridMonth',
+                events: EVENTS.map(e => ({ title: e.title, start: e.date, color: '#2563eb' }))
+            });
+            calendar.render();
+        }
+
+        // Init Charts
+        const attRaw = JSON.parse(document.getElementById('data-att').textContent || '{}');
+        new Chart(document.getElementById('cPerformance'), {
+            type: 'bar',
+            data: {
+                labels: attRaw.labels,
+                datasets: [
+                    { label: 'Registered', data: attRaw.regs, backgroundColor: 'rgba(37,99,235,0.05)', borderColor: '#2563eb', borderWidth: 2, borderRadius: 12 },
+                    { label: 'Attended', data: attRaw.atts, backgroundColor: '#059669', borderRadius: 12 }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } } }
+        });
+
+        const statusRaw = JSON.parse(document.getElementById('data-status').textContent);
+        new Chart(document.getElementById('cStatus'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Published', 'Pending', 'Approved', 'Rejected'],
+                datasets: [{ data: statusRaw, backgroundColor: ['#059669', '#f59e0b', '#2563eb', '#ef4444'], borderWidth: 0 }]
+            },
+            options: { cutout: '80%', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+
+        const monthRaw = JSON.parse(document.getElementById('data-monthly').textContent);
+        new Chart(document.getElementById('cAnalytics'), {
+            type: 'line',
+            data: {
+                labels: monthRaw.labels,
+                datasets: [{ label: 'Growth', data: monthRaw.regs, borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,0.05)', fill: true, tension: 0.4, pointRadius: 6, pointBackgroundColor: '#fff', pointBorderWidth: 3 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { grid: { color: '#f1f5f9' } } } }
+        });
+
+        const catRaw = JSON.parse(document.getElementById('data-category').textContent);
+        new Chart(document.getElementById('cCategory'), {
+            type: 'polarArea',
+            data: {
+                labels: catRaw.map(c => c.label),
+                datasets: [{ data: catRaw.map(c => c.count), backgroundColor: ['#2563eb', '#059669', '#7c3aed', '#f59e0b', '#ef4444'], borderWidth: 0 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+        });
+    });
+</script>
+{% endblock %}

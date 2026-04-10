@@ -1,123 +1,162 @@
 {% extends 'base.html' %}
-{% block title %}{% if form.instance.pk %}Edit{% else %}Create{% endif %} Event{% endblock %}
+{% load static %}
+{% block title %}{% if form.instance.pk %}Refine{% else %}Initialize{% endif %} Event | Operations Matrix{% endblock %}
 
 {% block content %}
-<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-  <div class="mb-8">
-    <p class="text-xs font-bold uppercase tracking-widest text-brand mb-2">Events</p>
-    <h1 class="font-serif italic text-4xl font-bold text-ink-900">
-      {% if form.instance.pk %}Edit Event{% else %}Create New Event{% endif %}
+<div class="max-w-4xl mx-auto px-6 lg:px-12 py-32">
+  <div class="mb-16 animate-fade-up">
+    <p class="text-[10px] font-black uppercase tracking-[0.4em] text-brand mb-4">Operations</p>
+    <h1 class="font-serif italic text-6xl font-bold text-slate-900 leading-none">
+      {% if form.instance.pk %}Refine Entry{% else %}Launch New Event{% endif %}
     </h1>
   </div>
 
-  <div class="bg-white rounded-2xl border border-ink-100 shadow-sm overflow-hidden">
-    <div class="px-8 py-5 bg-ink-50 border-b border-ink-100">
-      <p class="text-sm text-ink-500">Fill in all required fields. Events require approval before they can be published.</p>
+  <div class="bg-white rounded-[3rem] shadow-premium border border-slate-100 overflow-hidden animate-reveal">
+    <div class="px-12 py-8 bg-slate-50 border-b border-slate-100">
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Executive Intelligence: Review required for publication</p>
     </div>
 
-    <form method="post" enctype="multipart/form-data" class="p-8">
+    <form method="post" enctype="multipart/form-data" class="p-12 md:p-16 space-y-12">
       {% csrf_token %}
 
-      <div class="space-y-6">
-        <!-- Title -->
-        <div>
-          <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">Event Title *</label>
+      <!-- Primary Content -->
+      <div class="space-y-8">
+        <div class="space-y-3">
+          <label class="block text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] ml-2">Core Descriptor *</label>
           {{ form.title }}
-          {% if form.title.errors %}<p class="mt-1 text-xs text-red-500">{{ form.title.errors|first }}</p>{% endif %}
+          {% if form.title.errors %}<p class="mt-2 text-[10px] text-rose-500 font-bold ml-2">{{ form.title.errors|first }}</p>{% endif %}
         </div>
 
-        <!-- Description -->
-        <div>
-          <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">Description</label>
+        <div class="space-y-3">
+          <label class="block text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] ml-2">Contextual Narrative</label>
           {{ form.description }}
-          {% if form.description.errors %}<p class="mt-1 text-xs text-red-500">{{ form.description.errors|first }}</p>{% endif %}
+          {% if form.description.errors %}<p class="mt-2 text-[10px] text-rose-500 font-bold ml-2">{{ form.description.errors|first }}</p>{% endif %}
         </div>
-
-        <!-- Date/Time row -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div>
-            <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">Date & Start Time *</label>
-            {{ form.date_time }}
-            {% if form.date_time.errors %}<p class="mt-1 text-xs text-red-500">{{ form.date_time.errors|first }}</p>{% endif %}
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">End Time</label>
-            {{ form.end_time }}
-            {% if form.end_time.errors %}<p class="mt-1 text-xs text-red-500">{{ form.end_time.errors|first }}</p>{% endif %}
-          </div>
-        </div>
-
-        <!-- Venue & Capacity -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div>
-            <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">Venue *</label>
-            {{ form.venue }}
-            {% if form.venue.errors %}<p class="mt-1 text-xs text-red-500">{{ form.venue.errors|first }}</p>{% endif %}
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">Capacity *</label>
-            {{ form.capacity }}
-            {% if form.capacity.errors %}<p class="mt-1 text-xs text-red-500">{{ form.capacity.errors|first }}</p>{% endif %}
-          </div>
-        </div>
-
-        <!-- Category -->
-        <div>
-          <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">Category *</label>
-          {{ form.category }}
-          {% if form.category.errors %}<p class="mt-1 text-xs text-red-500">{{ form.category.errors|first }}</p>{% endif %}
-        </div>
-
-        <!-- Visual Fields -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div>
-            <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">Emoji Icon</label>
-            {{ form.emoji }}
-            <p class="mt-1 text-[0.65rem] text-ink-400">Single emoji for card display (e.g., 🎵 🏆)</p>
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">Gradient Style</label>
-            {{ form.gradient }}
-            <p class="mt-1 text-[0.65rem] text-ink-400">CSS gradient class for card background</p>
-          </div>
-        </div>
-
-        <!-- Tags -->
-        {% if form.tags %}
-        <div>
-          <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">Tags</label>
-          {{ form.tags }}
-        </div>
-        {% endif %}
-
-        <!-- Is Featured -->
-        {% if form.is_featured %}
-        <div class="flex items-center gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
-          {{ form.is_featured }}
-          <label class="text-sm font-semibold text-amber-800 cursor-pointer" for="{{ form.is_featured.id_for_label }}">
-            ⭐ Feature this event on the homepage
-          </label>
-        </div>
-        {% endif %}
-
-        <!-- Non-field errors -->
-        {% if form.non_field_errors %}
-        <div class="p-4 bg-red-50 border border-red-200 rounded-xl">
-          {% for error in form.non_field_errors %}
-          <p class="text-sm text-red-600">{{ error }}</p>
-          {% endfor %}
-        </div>
-        {% endif %}
       </div>
 
-      <!-- Footer buttons -->
-      <div class="mt-8 pt-6 border-t border-ink-100 flex flex-col sm:flex-row gap-3 justify-end">
-        <a href="{% url 'event_list' %}" class="px-6 py-3 text-sm font-semibold text-ink-600 bg-ink-50 hover:bg-ink-100 rounded-xl border border-ink-200 transition-colors text-center">Cancel</a>
-        <button type="submit" class="px-8 py-3 text-sm font-bold text-white bg-brand hover:bg-brand-dark rounded-xl shadow hover:shadow-lg transition-all">
-          {% if form.instance.pk %}Save Changes{% else %}Submit for Review →{% endif %}
+      <!-- Logistics Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div class="space-y-3">
+          <label class="block text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] ml-2">Temporal Start *</label>
+          {{ form.date_time }}
+          {% if form.date_time.errors %}<p class="mt-2 text-[10px] text-rose-500 font-bold ml-2">{{ form.date_time.errors|first }}</p>{% endif %}
+        </div>
+        <div class="space-y-3">
+          <label class="block text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] ml-2">Temporal End</label>
+          {{ form.end_time }}
+          {% if form.end_time.errors %}<p class="mt-2 text-[10px] text-rose-500 font-bold ml-2">{{ form.end_time.errors|first }}</p>{% endif %}
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div class="space-y-3">
+          <label class="block text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] ml-2">Operational Venue *</label>
+          {{ form.venue }}
+          {% if form.venue.errors %}<p class="mt-2 text-[10px] text-rose-500 font-bold ml-2">{{ form.venue.errors|first }}</p>{% endif %}
+        </div>
+        <div class="space-y-3">
+          <label class="block text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] ml-2">Capacity Threshold *</label>
+          {{ form.capacity }}
+          {% if form.capacity.errors %}<p class="mt-2 text-[10px] text-rose-500 font-bold ml-2">{{ form.capacity.errors|first }}</p>{% endif %}
+        </div>
+      </div>
+
+      <!-- Segmentation -->
+      <div class="space-y-3">
+        <label class="block text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] ml-2">Logical Category *</label>
+        <div class="role-select-base">
+            {{ form.category }}
+        </div>
+        {% if form.category.errors %}<p class="mt-2 text-[10px] text-rose-500 font-bold ml-2">{{ form.category.errors|first }}</p>{% endif %}
+      </div>
+
+      <!-- Visual Module -->
+      <div class="p-10 bg-slate-50 border-2 border-dashed border-slate-100 rounded-[3rem] text-center group hover:border-brand/30 transition-all">
+        <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] mb-8">Intelligence Manifest (Cover)</p>
+        
+        <div id="image-preview" class="mb-8 hidden">
+           <img src="" class="w-full max-h-64 object-cover rounded-[2rem] shadow-2xl border border-white">
+        </div>
+        
+        <div id="upload-icon" class="mb-8 flex justify-center">
+            <div class="w-20 h-20 rounded-[2rem] bg-white shadow-xl flex items-center justify-center text-3xl">🖼️</div>
+        </div>
+
+        <div class="relative inline-block">
+            <span class="px-8 py-4 bg-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-sm group-hover:bg-slate-950 group-hover:text-white transition-all cursor-pointer">Select High-Impact Visual</span>
+            <input type="file" name="image" id="id_image" accept="image/*" onchange="previewImage(this)" class="absolute inset-0 opacity-0 cursor-pointer">
+        </div>
+        <p class="mt-6 text-[8px] text-slate-400 font-black uppercase tracking-[0.2em]">Lossless Formats Preferred</p>
+      </div>
+
+      <!-- Aesthetics -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div class="space-y-3">
+          <label class="block text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] ml-2">Emoji Fallback</label>
+          {{ form.emoji }}
+        </div>
+        <div class="space-y-3">
+          <label class="block text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] ml-2">Ambient Style</label>
+          <div class="role-select-base">
+              {{ form.gradient }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="pt-12 border-t border-slate-50 flex flex-col md:flex-row gap-4 justify-end">
+        <a href="{% url 'event_list' %}" class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 bg-slate-50 rounded-2xl hover:bg-slate-100 transition-all text-center">Abort Operational Entry</a>
+        <button type="submit" class="px-10 py-5 text-[10px] font-black uppercase tracking-widest text-white bg-slate-950 rounded-2xl shadow-2xl hover:brightness-125 hover:-translate-y-1 transition-all">
+          {% if form.instance.pk %}Synchronize State{% else %}Submit to Repository →{% endif %}
         </button>
       </div>
     </form>
   </div>
 </div>
+
+<style>
+/* Base Input Styles Overrides */
+input[type="text"], input[type="number"], input[type="datetime-local"], select, textarea {
+    width: 100%;
+    padding: 1.25rem 1.5rem;
+    background-color: #f8fafc;
+    border: 1px solid #f1f5f9;
+    border-radius: 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #0f172a;
+    transition: all 0.2s;
+}
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    background-color: #fff;
+    border-color: rgba(37, 99, 235, 0.2);
+    box-shadow: 0 0 0 8px rgba(37, 99, 235, 0.05);
+}
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1.5rem center;
+    background-size: 1.25rem;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function previewImage(input) {
+    const preview = document.getElementById('image-preview');
+    const icon = document.getElementById('upload-icon');
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        preview.querySelector('img').src = e.target.result;
+        preview.classList.remove('hidden');
+        icon.classList.add('hidden');
+      }
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+</script>
 {% endblock %}

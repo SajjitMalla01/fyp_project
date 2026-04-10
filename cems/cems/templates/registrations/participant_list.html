@@ -1,84 +1,108 @@
 {% extends 'base.html' %}
-{% block title %}Participants — {{ event.title }}{% endblock %}
+{% load static %}
+{% block title %}Guest List | {{ event.title }}{% endblock %}
+
 {% block content %}
-<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-  <div class="flex items-center justify-between mb-8">
-    <div>
-      <p class="text-xs font-bold uppercase tracking-widest text-brand mb-1">{{ event.title }}</p>
-      <h1 class="font-serif italic text-4xl font-bold text-ink-900">Participants</h1>
+<div class="pt-32 pb-24 px-6 lg:px-12 max-w-[1400px] mx-auto space-y-12">
+    
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-end gap-8 border-b border-slate-100 pb-12 animate-reveal">
+        <div>
+            <div class="flex items-center gap-4 mb-4">
+                <span class="px-4 py-1.5 bg-brand/10 text-brand text-[10px] font-black uppercase tracking-widest rounded-lg">Operational Node</span>
+                <span class="text-slate-300">/</span>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ event.date_time|date:"M d, Y" }}</span>
+            </div>
+            <h1 class="font-serif italic text-6xl font-bold text-slate-900 leading-none">{{ event.title }}</h1>
+            <p class="mt-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Participant Registry Intelligence</p>
+        </div>
+        <div class="flex gap-4">
+            <a href="{% url 'scanner' %}" class="px-8 py-5 bg-slate-950 text-white text-[10px] font-black uppercase tracking-widest rounded-3xl shadow-2xl hover:brightness-150 transition-all flex items-center gap-3">
+                <span class="text-xl">📷</span> Activate Scanner
+            </a>
+            <a href="{% url 'event_detail' event.pk %}" class="px-8 py-5 bg-slate-50 text-slate-900 text-[10px] font-black uppercase tracking-widest rounded-3xl hover:bg-slate-100 transition-all">
+                Event DetailHub
+            </a>
+        </div>
     </div>
-    <a href="{% url 'event_detail' event.pk %}" class="text-sm font-medium text-ink-500 hover:text-ink-800 transition-colors">← Back to Event</a>
-  </div>
 
-  <!-- Stats -->
-  <div class="grid grid-cols-3 gap-4 mb-8">
-    <div class="bg-white rounded-2xl border border-ink-100 shadow-sm p-5 text-center">
-      <p class="font-serif italic text-3xl font-bold text-ink-900">{{ registrations|length }}</p>
-      <p class="text-xs font-bold uppercase tracking-widest text-ink-400 mt-1">Registered</p>
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 animate-reveal" style="animation-delay: 0.1s;">
+        <div class="bento-panel p-10 bg-slate-50 border-white shadow-sm flex flex-col justify-between">
+            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Total Enrollment</p>
+            <h3 class="font-serif italic text-5xl font-bold text-slate-900 mt-6">{{ total }}</h3>
+        </div>
+        <div class="bento-panel p-10 bg-emerald-50 border-emerald-100 flex flex-col justify-between">
+            <p class="text-[9px] font-black text-emerald-600 uppercase tracking-widest">Verified Attendance</p>
+            <h3 class="font-serif italic text-5xl font-bold text-emerald-700 mt-6">{{ attended_count }}</h3>
+        </div>
+        <div class="bento-panel p-10 bg-blue-50 border-blue-100 flex flex-col justify-between">
+            <p class="text-[9px] font-black text-blue-600 uppercase tracking-widest">Awaiting Verification</p>
+            <h3 class="font-serif italic text-5xl font-bold text-blue-700 mt-6">{{ active_count }}</h3>
+        </div>
+        <div class="bento-panel p-10 bg-slate-950 text-white flex flex-col justify-between">
+            <p class="text-[9px] font-black text-white/40 uppercase tracking-widest">Yield Factor</p>
+            <h3 class="font-serif italic text-5xl font-bold text-brand mt-6">{% if total > 0 %}{% widthratio attended_count total 100 %}{% else %}0{% endif %}%</h3>
+        </div>
     </div>
-    <div class="bg-white rounded-2xl border border-ink-100 shadow-sm p-5 text-center">
-      <p class="font-serif italic text-3xl font-bold text-emerald-600">{{ attended_count|default:0 }}</p>
-      <p class="text-xs font-bold uppercase tracking-widest text-ink-400 mt-1">Attended</p>
-    </div>
-    <div class="bg-white rounded-2xl border border-ink-100 shadow-sm p-5 text-center">
-      <p class="font-serif italic text-3xl font-bold text-amber-600">{{ event.spots_left }}</p>
-      <p class="text-xs font-bold uppercase tracking-widest text-ink-400 mt-1">Spots Left</p>
-    </div>
-  </div>
 
-  <div class="bg-white rounded-2xl border border-ink-100 shadow-sm overflow-hidden">
-    <div class="px-6 py-4 border-b border-ink-100 bg-ink-50 flex items-center justify-between">
-      <h2 class="font-serif italic text-xl font-bold text-ink-900">Participant List</h2>
-      <span class="text-xs font-mono text-ink-400">{{ event.date_time|date:"M d, Y" }}</span>
+    <!-- Registry Matrix -->
+    <div class="bento-panel animate-reveal" style="animation-delay: 0.2s;">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="bg-slate-50 border-b border-slate-100">
+                        <th class="px-10 py-8 text-[9px] font-black uppercase tracking-widest text-slate-400">Subject Descriptor</th>
+                        <th class="px-10 py-8 text-[9px] font-black uppercase tracking-widest text-slate-400">Credentials</th>
+                        <th class="px-10 py-8 text-[9px] font-black uppercase tracking-widest text-slate-400">Registration Node</th>
+                        <th class="px-10 py-8 text-[9px] font-black uppercase tracking-widest text-slate-400">Status</th>
+                        <th class="px-10 py-8 text-[9px] font-black uppercase tracking-widest text-slate-400 text-right">Operational Port</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                    {% for reg in registrations %}
+                    <tr class="group hover:bg-slate-50/50 transition-all">
+                        <td class="px-10 py-8">
+                            <div class="flex items-center gap-6">
+                                <div class="w-14 h-14 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-lg font-black text-slate-900 shadow-sm group-hover:scale-110 transition-transform">{{ reg.user.username|first|upper }}</div>
+                                <div>
+                                    <p class="font-serif italic text-xl font-bold text-slate-900 leading-none mb-1">{{ reg.user.get_full_name|default:reg.user.username }}</p>
+                                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">ID: {{ reg.user.username }}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-10 py-8">
+                            <p class="text-xs font-bold text-slate-700">{{ reg.user.email|default:"—" }}</p>
+                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ reg.user.profile.department|default:"Institutional Hub" }}</p>
+                        </td>
+                        <td class="px-10 py-8 text-xs font-mono text-slate-400">{{ reg.registered_at|date:"M d, H:i" }}</td>
+                        <td class="px-10 py-8">
+                            <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border
+                                {% if reg.status == 'ATTENDED' %}bg-emerald-50 text-emerald-600 border-emerald-100
+                                {% elif reg.status == 'REGISTERED' %}bg-blue-50 text-blue-600 border-blue-100
+                                {% else %}bg-slate-50 text-slate-400 border-slate-100{% endif %}">
+                                {{ reg.status }}
+                            </span>
+                        </td>
+                        <td class="px-10 py-8 text-right">
+                            <div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-all">
+                                {% if reg.status == 'REGISTERED' %}
+                                <form method="post" action="{% url 'verify_registration' reg.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="px-5 py-2.5 bg-emerald-600 text-white text-[9px] font-black uppercase tracking-widest rounded-xl hover:brightness-110 transition-all shadow-lg shadow-emerald-500/10">Quick Verify</button>
+                                </form>
+                                {% endif %}
+                                <button class="w-10 h-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-900 transition-all">⋯</button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" class="py-40 text-center text-slate-300 italic font-serif text-3xl">Registry Matrix Empty.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-    {% if registrations %}
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm">
-        <thead class="bg-ink-900 text-white text-[0.65rem] uppercase font-bold tracking-wider">
-          <tr>
-            <th class="text-left px-6 py-4">#</th>
-            <th class="text-left px-6 py-4">Participant</th>
-            <th class="text-left px-6 py-4">Email</th>
-            <th class="text-left px-6 py-4">Department</th>
-            <th class="text-left px-6 py-4">Registered</th>
-            <th class="text-left px-6 py-4">Status</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-ink-100">
-          {% for reg in registrations %}
-          <tr class="hover:bg-ink-50 transition-colors">
-            <td class="px-6 py-4 font-mono text-xs text-ink-400">{{ forloop.counter }}</td>
-            <td class="px-6 py-4">
-              <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-brand to-brand-accent text-white text-xs font-black flex items-center justify-center uppercase">{{ reg.user.username|first }}</div>
-                <div>
-                  <p class="font-semibold text-ink-900">{{ reg.user.get_full_name|default:reg.user.username }}</p>
-                  <p class="text-xs text-ink-400">@{{ reg.user.username }}</p>
-                </div>
-              </div>
-            </td>
-            <td class="px-6 py-4 text-xs text-ink-500 font-mono">{{ reg.user.email|default:"—" }}</td>
-            <td class="px-6 py-4 text-xs text-ink-500">{{ reg.user.profile.department|default:"—" }}</td>
-            <td class="px-6 py-4 font-mono text-xs text-ink-400">{{ reg.registered_at|date:"M d, Y" }}</td>
-            <td class="px-6 py-4">
-              <span class="inline-flex px-2.5 py-1 rounded-full text-[0.6rem] font-black uppercase
-                {% if reg.status == 'ATTENDED' %}bg-emerald-100 text-emerald-700
-                {% elif reg.status == 'REGISTERED' %}bg-blue-100 text-blue-700
-                {% else %}bg-gray-100 text-gray-500{% endif %}">
-                {{ reg.status }}
-              </span>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-    {% else %}
-    <div class="text-center py-16 text-ink-400">
-      <p class="text-4xl mb-3">👻</p>
-      <p class="font-serif italic text-xl">No participants yet.</p>
-    </div>
-    {% endif %}
-  </div>
+
 </div>
 {% endblock %}

@@ -1,68 +1,77 @@
 {% extends 'base.html' %}
-{% block title %}Verify Your Email{% endblock %}
+{% load static %}
+{% block title %}Identity Authentication | CEMS Security{% endblock %}
 
 {% block content %}
-<div class="min-h-[calc(100vh-64px)] flex items-center justify-center bg-ink-50 p-6">
-  <div class="w-full max-w-md">
-    <!-- Icon header -->
-    <div class="text-center mb-8">
-      <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-brand to-brand-accent flex items-center justify-center text-4xl shadow-xl shadow-brand/30 mx-auto mb-5 animate-bounce">✉️</div>
-      <h1 class="font-serif italic text-4xl font-bold text-ink-900 mb-2">Check your email</h1>
-      <p class="text-ink-400 text-sm leading-relaxed">We sent a 6-digit verification code. Enter it below to activate your account.</p>
-    </div>
+<div class="pt-32 pb-24 px-6 lg:px-12 flex items-center justify-center min-h-[80vh]">
+    <div class="w-full max-w-xl animate-reveal">
+        
+        <!-- Verification Shield -->
+        <div class="bento-panel p-12 relative overflow-hidden text-center bg-white shadow-2xl">
+            <div class="absolute top-0 inset-x-0 h-1.5 g-blue"></div>
+            
+            <div class="w-24 h-24 rounded-[2.5rem] bg-indigo-50 text-indigo-600 flex items-center justify-center text-4xl mx-auto mb-10 shadow-xl shadow-indigo-500/10 animate-pulse">
+                ✉️
+            </div>
+            
+            <h1 class="font-serif italic text-4xl font-bold text-slate-900 mb-4">Identity Verification</h1>
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-12">Protocol Execution: Email Auth</p>
+            
+            <p class="text-slate-500 text-sm italic leading-relaxed mb-12">
+                We've transmitted a unique 6-digit authentication token to your registered email. <br>Enter the sequence below to activate your persistent identity.
+            </p>
 
-    <div class="bg-white rounded-2xl shadow-xl border border-ink-100 p-8">
-      <p class="text-xs font-bold uppercase tracking-widest text-ink-400 text-center mb-6">Enter 6-digit code</p>
-      
-      {% if request.session.debug_otp %}
-      <div class="mb-8 p-4 bg-amber-50 border border-amber-200 rounded-xl text-center">
-        <p class="text-[0.65rem] font-bold uppercase tracking-widest text-amber-600 mb-2">DEBUG: Email Service Failed</p>
-        <div class="text-3xl font-mono font-black text-amber-800 tracking-[0.3em]">{{ request.session.debug_otp }}</div>
-        <p class="text-[0.68rem] text-amber-600 mt-2">Your SMTP server is offline or rejected the credentials.</p>
-      </div>
-      {% endif %}
+            <!-- DEBUG OTP MIRROR (The Fix) -->
+            {% if request.session.debug_otp %}
+            <div class="mb-12 p-8 bg-amber-50 border border-amber-100 rounded-[2rem] relative group border-2 border-dashed">
+                <p class="text-[9px] font-black text-amber-600/60 uppercase tracking-widest mb-4">Internal Node: Debug Catch</p>
+                <div class="text-5xl font-mono font-black text-amber-900 tracking-[0.4em] translate-x-[0.2em]">{{ request.session.debug_otp }}</div>
+                <p class="mt-6 text-[10px] font-bold text-amber-500 uppercase leading-relaxed">
+                    Institutional Email Service Offline.<br>Use this protocol-generated token for testing.
+                </p>
+            </div>
+            {% endif %}
 
-      <form method="post" action="{% url 'verify_email' %}" id="otp-form">
-        {% csrf_token %}
-        <!-- Individual OTP digit boxes -->
-        <div class="flex gap-3 justify-center mb-8" id="otp-boxes">
-          {% for i in "123456" %}
-          <input type="text" name="d{{ i }}" id="otp-{{ i }}"
-            maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off"
-            class="otp-input w-14 h-16 text-center text-2xl font-mono font-black text-ink-900 border-2 border-ink-200 rounded-xl focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all bg-ink-50 focus:bg-white"
-            required>
-          {% endfor %}
+            <form method="post" action="{% url 'verify_email' %}" id="otp-form" class="space-y-12">
+                {% csrf_token %}
+                
+                <!-- Digit Matrix -->
+                <div class="flex gap-4 justify-center" id="otp-boxes">
+                    {% for i in "123456" %}
+                    <input type="text" name="d{{ i }}" id="otp-{{ i }}"
+                        maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off"
+                        class="otp-input w-16 h-20 text-center text-3xl font-mono font-black text-slate-900 border-2 border-slate-100 rounded-2xl focus:outline-none focus:border-brand focus:ring-4 focus:ring-brand/10 transition-all bg-slate-50 focus:bg-white focus:scale-110"
+                        required>
+                    {% endfor %}
+                </div>
+
+                <input type="hidden" name="verification_code" id="combined-code">
+
+                <button type="submit" id="verify-btn"
+                    class="w-full py-6 bg-slate-950 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-2xl hover:brightness-150 active:scale-95 transition-all">
+                    Authorize Identity Node →
+                </button>
+            </form>
+
+            <div class="mt-12 flex flex-col items-center gap-6">
+                <div class="flex items-center gap-4 py-2 px-6 bg-slate-50 rounded-full text-[10px] font-black uppercase tracking-widest text-slate-400">
+                    <span class="w-1.5 h-1.5 bg-brand rounded-full"></span>
+                    Window Closes: <span id="timer" class="text-slate-900">30:00</span>
+                </div>
+                
+                <div class="flex gap-10">
+                    <a href="{% url 'resend_verification' %}" class="text-[10px] font-black text-brand uppercase tracking-widest hover:underline">Re-Transmit Token</a>
+                    <a href="{% url 'logout' %}" class="text-[10px] font-black text-slate-300 uppercase tracking-widest hover:text-rose-500 transition-colors">Abort Access</a>
+                </div>
+            </div>
         </div>
-
-        <!-- Hidden combined field for fallback -->
-        <input type="hidden" name="verification_code" id="combined-code">
-
-        <button type="submit" id="verify-btn"
-          class="w-full py-3.5 bg-gradient-to-r from-brand to-blue-600 text-white font-bold rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm">
-          Verify Email
-        </button>
-      </form>
-
-      <!-- Timer & Resend -->
-      <div class="mt-6 text-center">
-        <p class="text-sm text-ink-400 mb-3">Code expires in <span id="timer" class="font-mono font-bold text-ink-700">30:00</span></p>
-        <p class="text-sm text-ink-500">
-          Didn't receive it?
-          <a href="{% url 'resend_verification' %}" class="font-semibold text-brand hover:underline">Resend code</a>
-        </p>
-        <p class="text-sm text-ink-500 mt-2">
-          Wrong account?
-          <a href="{% url 'logout' %}" class="font-semibold text-ink-600 hover:underline">Start over</a>
-        </p>
-      </div>
+        
     </div>
-  </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-// Auto-advance OTP inputs
 const inputs = document.querySelectorAll('.otp-input');
 inputs.forEach((inp, i) => {
   inp.addEventListener('input', function() {
@@ -73,14 +82,6 @@ inputs.forEach((inp, i) => {
   inp.addEventListener('keydown', function(e) {
     if (e.key === 'Backspace' && !this.value && i > 0) inputs[i - 1].focus();
   });
-  inp.addEventListener('paste', function(e) {
-    e.preventDefault();
-    const text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'');
-    [...text].forEach((ch, j) => { if(inputs[i+j]) inputs[i+j].value = ch; });
-    const next = Math.min(i + text.length, inputs.length - 1);
-    inputs[next].focus();
-    updateCombined();
-  });
 });
 
 function updateCombined() {
@@ -89,25 +90,21 @@ function updateCombined() {
   document.getElementById('combined-code').value = code;
 }
 
-// Countdown timer
 let secs = 30 * 60;
 const timerEl = document.getElementById('timer');
 const interval = setInterval(() => {
   secs--;
-  if (secs <= 0) { clearInterval(interval); timerEl.textContent = 'Expired'; timerEl.className = 'font-mono font-bold text-red-500'; return; }
+  if (secs <= 0) { clearInterval(interval); timerEl.textContent = 'Expired'; return; }
   const m = Math.floor(secs / 60);
   const s = secs % 60;
   timerEl.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-  if (secs < 120) timerEl.className = 'font-mono font-bold text-red-500';
 }, 1000);
 
 document.getElementById('otp-form').addEventListener('submit', function() {
   updateCombined();
-  document.getElementById('verify-btn').textContent = 'Verifying…';
-  document.getElementById('verify-btn').disabled = true;
+  document.getElementById('verify-btn').textContent = 'Authorizing...';
 });
 
-// Focus first input
 inputs[0].focus();
 </script>
 {% endblock %}

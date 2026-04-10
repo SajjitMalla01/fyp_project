@@ -22,8 +22,8 @@ print("\n2. Creating super admin...")
 if not User.objects.filter(username='superadmin').exists():
     user = User.objects.create_superuser('superadmin', 'super@auto.com', 'admin123')
     Profile.objects.get_or_create(user=user, role='ADMIN')
-    print("✅ Database built and Super User created!")
+    print("[OK] Database built and Super User created!")
     print("   Username: superadmin")
     print("   Password: admin123")
 else:
-    print("✅ Database is ready and Super Admin already exists! (Username: superadmin)")
+    print("[OK] Database is ready and Super Admin already exists! (Username: superadmin)")

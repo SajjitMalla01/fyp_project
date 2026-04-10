@@ -8,10 +8,12 @@ from django.db.models import Count, Q
 from django.utils import timezone
 from datetime import timedelta
 
-from .models import Event
-from .forms import EventForm
+from events.models import Event
+from events.forms import EventForm
 from registrations.models import Registration
 from accounts.models import Profile
+from tenants.models import College
+from django.contrib.auth.models import User
 
 
 def home(request):
@@ -27,9 +29,24 @@ def home(request):
     if college:
         events = Event.objects.filter(status='PUBLISHED', college=college).order_by('date_time')
     else:
-        events = Event.objects.filter(status='PUBLISHED').order_by('date_time')
+        # For global landing page, show high-profile events across all sites
+        events = Event.objects.filter(status='PUBLISHED').order_by('date_time')[:6]
 
-    context = {'events': events, 'college': college}
+    all_colleges = College.objects.filter(status='ACTIVE')
+    
+    # Global Stats
+    stats = {
+        'total_events': Event.objects.count(),
+        'total_colleges': all_colleges.count(),
+        'total_students': User.objects.count(), # Approximation
+    }
+
+    context = {
+        'events': events, 
+        'college': college, 
+        'all_colleges': all_colleges,
+        **stats
+    }
 
     # Central site homepage (listing all events)
     return render(request, 'events/home.html', context)
@@ -125,19 +142,29 @@ def admin_dashboard(request):
         'atts':   [e.att_count for e in top_events]
     }
 
+    all_events = event_qs.annotate(reg_count=Count('registrations')).order_by('-date_time')
+    attendance_log = reg_qs.select_related('user', 'event').order_by('-registered_at')[:50]
+
+    from tenants.models import College
+    colleges = College.objects.all()
+
     context = {
         **stats,
         'attendance_rate': attendance_rate,
         'total_users': total_users,
         'total_colleges': total_colleges,
         'recent_events': recent_events,
+        'all_events': all_events,
         'pending_list': pending_list,
+        'attendance_log': attendance_log,
         'monthly_data': json.dumps(monthly_data),
         'category_data_json': json.dumps(category_data),
         'performance_data_json': json.dumps(performance_data),
         'avg_regs': avg_regs,
         'recent_comments': recent_comments,
+        'total_comments': recent_comments.count(),
         'college': college,
+        'colleges': colleges,
     }
     return render(request, 'events/admin_dashboard.html', context)
 
@@ -388,7 +415,7 @@ def event_update(request, pk):
             return redirect('event_detail', pk=pk)
 
     if request.method == 'POST':
-        form = EventForm(request.POST, instance=event)
+        form = EventForm(request.POST, request.FILES, instance=event)
         if form.is_valid():
             form.save()
             messages.success(request, f'"{event.title}" updated.')

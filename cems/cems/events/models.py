@@ -25,6 +25,15 @@ class Event(models.Model):
         ('other',       'Other'),
     ]
 
+    GRADIENT_CHOICES = [
+        ('g-blue',      'Ocean Blue (Corporate)'),
+        ('g-violet',    'Purple Haze (Creative)'),
+        ('g-emerald',   'Deep Forest (Sustainable)'),
+        ('g-rose',      'Velvet Rose (Social)'),
+        ('g-amber',     'Sunlight (Energy)'),
+        ('g-slate',     'Midnight (Minimal)'),
+    ]
+
     college     = models.ForeignKey('tenants.College', on_delete=models.CASCADE,
                                      related_name='events', null=True, blank=True)
     title       = models.CharField(max_length=200)

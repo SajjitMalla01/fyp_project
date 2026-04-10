@@ -11,6 +11,6 @@ from accounts.models import Profile
 if not User.objects.filter(username='superadmin').exists():
     user = User.objects.create_superuser('superadmin', 'super@auto.com', 'admin123')
     Profile.objects.get_or_create(user=user, role='ADMIN')
-    print("✅ Super User created! Username: superadmin | Password: admin123")
+    print("[OK] Super User created! Username: superadmin | Password: admin123")
 else:
-    print("✅ Super Admin already exists! (Username: superadmin)")
+    print("[OK] Super Admin already exists! (Username: superadmin)")

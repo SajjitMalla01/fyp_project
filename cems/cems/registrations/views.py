@@ -2,9 +2,44 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.conf import settings
 
 from events.models import Event
-from .models import Registration
+from registrations.models import Registration
+
+
+def _send_confirmation_email(registration):
+    """
+    Sends a high-fidelity confirmation email to the student upon successful registration.
+    """
+    event = registration.event
+    user = registration.user
+    
+    subject = f'Registration Confirmed: {event.title}'
+    context = {
+        'user': user,
+        'event': event,
+        'registration': registration,
+        'college': event.college
+    }
+    
+    html_message = render_to_string('emails/registration_success.html', context)
+    plain_message = strip_tags(html_message)
+    
+    try:
+        send_mail(
+            subject,
+            plain_message,
+            settings.DEFAULT_FROM_EMAIL,
+            [user.email],
+            html_message=html_message,
+            fail_silently=True
+        )
+    except Exception as e:
+        print(f"Email failed: {e}")
 
 
 @login_required
@@ -88,6 +123,7 @@ def register_event(request, event_id):
                 existing.status = 'REGISTERED'
                 existing.registered_at = timezone.now()
                 existing.save()
+                _send_confirmation_email(existing) # Send success email
                 messages.success(request, f'You\'re registered for "{event.title}"!')
                 return redirect('student_dashboard')
             return render(request, 'registrations/register_confirm.html', {
@@ -102,7 +138,8 @@ def register_event(request, event_id):
         return redirect('event_detail', pk=event_id)
 
     if request.method == 'POST':
-        Registration.objects.create(user=request.user, event=event, status='REGISTERED')
+        reg = Registration.objects.create(user=request.user, event=event, status='REGISTERED')
+        _send_confirmation_email(reg) # Send success email
         messages.success(request, f'Successfully registered for "{event.title}"!')
         return redirect('student_dashboard')
 
@@ -157,11 +194,60 @@ def participant_list(request, event_id):
         .select_related('user', 'user__profile')
         .order_by('-registered_at')
     )
+    
+    attended_count = regs.filter(status='ATTENDED').count()
+
     return render(request, 'registrations/participant_list.html', {
-        'event':         event,
+        'event': event,
         'registrations': regs,
-        'active':        regs.filter(status='REGISTERED').count(),
-        'attended':      regs.filter(status='ATTENDED').count(),
-        'cancelled':     regs.filter(status='CANCELLED').count(),
-        'total':         regs.count(),
+        'attended_count': attended_count,
+        'active_count': regs.filter(status='REGISTERED').count(),
+        'cancelled_count': regs.filter(status='CANCELLED').count(),
+        'total': regs.count(),
     })
+
+
+@login_required
+def verify_registration(request, registration_id):
+    """
+    Secure endpoint for staff to verify an event ticket/registration.
+    URL: /registrations/verify/<id>/
+    """
+    # 1. Security check: Only staff, admins or superusers
+    try:
+        if not (request.user.is_superuser or request.user.profile.is_staff or request.user.profile.is_admin):
+            messages.error(request, 'Access denied. Only registered staff can verify tickets.')
+            return redirect('home')
+    except Exception:
+        return redirect('home')
+
+    registration = get_object_or_404(Registration, pk=registration_id)
+    
+    # 2. Status handling
+    if request.method == 'POST':
+        if registration.status == 'REGISTERED':
+            registration.status = 'ATTENDED'
+            registration.save()
+            messages.success(request, f"Confirmed! {registration.user.get_full_name() or registration.user.username} is now marked as Attended.")
+        elif registration.status == 'ATTENDED':
+            messages.info(request, "This ticket was already verified.")
+        elif registration.status == 'CANCELLED':
+            messages.error(request, "Invalid Ticket: This registration was cancelled by the student.")
+
+    return render(request, 'registrations/verify_success.html', {
+        'registration': registration,
+        'event': registration.event,
+        'student': registration.user,
+    })
+
+
+@login_required
+def scanner_view(request):
+    """
+    Renders the QR camera scanner interface for staff.
+    """
+    if not request.user.profile.is_staff and not request.user.is_superuser:
+        messages.error(request, 'Access denied. Staff only.')
+        return redirect('home')
+        
+    return render(request, 'registrations/scanner.html')

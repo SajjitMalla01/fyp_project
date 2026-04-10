@@ -14,10 +14,10 @@ try:
     from django.utils import timezone
     from datetime import timedelta
 except Exception as e:
-    print(f"❌ Error importing models: {e}")
+    print(f"[ERROR] Error importing models: {e}")
     exit(1)
 
-print("🚀 Starting final CEMS configuration...")
+print("[START] Starting final CEMS configuration...")
 
 try:
     # 1. Create professional colleges
@@ -34,7 +34,7 @@ try:
             defaults={'slug': c_data['slug'], 'domain': c_data['domain'], 'status': 'ACTIVE', 'primary_color': c_data['primary_color'], 'accent_color': c_data['accent_color']}
         )
         colleges.append(college)
-        print(f"{'✅ Created' if created else 'ℹ️ Found'}: {college.name}")
+        print(f"{'[OK] Created' if created else '[INFO] Found'}: {college.name}")
 
     herald, british, islington = colleges
 
@@ -53,7 +53,7 @@ try:
     sp.role = 'ADMIN'
     sp.college = herald
     sp.save()
-    print(f"✅ Superadmin Configured: admin123")
+    print(f"[OK] Superadmin Configured: admin123")
 
     # 3. Generate Content
     events_data = [
@@ -75,10 +75,10 @@ try:
             print(f"   + Event: {ev.title}")
 
 except Exception as e:
-    print(f"❌ Error: {e}")
+    print(f"[ERROR] Error: {e}")
     import traceback
     traceback.print_exc()
 
-print("\n🎉 ALL DONE!")
+print("\n--- ALL DONE! ---")
 print("1. Superadmin: superadmin / admin123")
 print("2. Run: python manage.py runserver")

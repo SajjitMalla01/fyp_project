@@ -1,112 +1,105 @@
 {% extends 'base.html' %}
-{% block title %}Sign In{% endblock %}
+{% load static %}
+{% block title %}Sign In — Discovery Gateway{% endblock %}
 
 {% block content %}
-<div class="min-h-[calc(100vh-64px)] flex items-stretch bg-ink-50">
+<div class="min-h-screen flex items-stretch bg-slate-50">
 
-  <!-- LEFT BRAND PANEL -->
-  <div
-    class="hidden lg:flex w-[480px] flex-shrink-0 flex-col justify-between bg-gradient-to-br from-ink-900 via-blue-950 to-ink-900 p-12 relative overflow-hidden">
-    <div class="absolute -top-32 -left-32 w-80 h-80 bg-brand/20 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute -bottom-32 -right-32 w-80 h-80 bg-brand-accent/20 rounded-full blur-3xl pointer-events-none">
-    </div>
+  <!-- FLAGSHIP BRAND PANEL -->
+  <div class="hidden lg:flex w-[500px] flex-shrink-0 flex-col justify-between bg-slate-950 p-16 relative overflow-hidden">
+    <!-- Deep Aura -->
+    <div class="absolute -top-40 -left-40 w-[600px] h-[600px] bg-brand/10 rounded-full blur-[120px] animate-pulse"></div>
+    <div class="absolute bottom-20 -right-40 w-[400px] h-[400px] bg-indigo-500/10 rounded-full blur-[100px]"></div>
+    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 pointer-events-none"></div>
 
-    <div class="relative z-10">
-      <div class="flex items-center gap-3 mb-16">
-        <div
-          class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand to-brand-accent flex items-center justify-center text-white font-bold text-xl shadow-lg">
-          C</div>
-        <span class="font-serif italic text-3xl text-white">CEMS</span>
+    <div class="relative z-10 animate-fade-up">
+      <div class="flex items-center gap-4 mb-20">
+        <div class="w-14 h-14 rounded-2xl bg-brand flex items-center justify-center text-white font-black text-3xl shadow-brand">C</div>
+        <span class="font-serif italic text-4xl text-white tracking-tight">CEMS</span>
       </div>
-      <h2 class="font-serif italic text-4xl text-white font-bold leading-tight mb-4">Welcome back to your campus hub.
+      <h2 class="font-serif italic text-6xl text-white font-bold leading-[1.05] mb-10 tracking-tight">
+        Discovery<br>Starts<br>Within.
       </h2>
-      <p class="text-blue-200/70 leading-relaxed text-sm">Sign in to manage events, track registrations, and stay
-        connected with everything happening on campus.</p>
+      <p class="text-slate-500 leading-relaxed text-lg italic font-light max-w-sm">
+        Enter the unified gateway for academic summits, cultural festivals, and institutional intelligence.
+      </p>
     </div>
 
-    <!-- Feature list -->
-    <ul class="relative z-10 space-y-4">
-      <li class="flex items-center gap-3 text-blue-100/80 text-sm">
-        <div
-          class="w-6 h-6 rounded-lg bg-brand/30 border border-brand/40 flex items-center justify-center text-blue-300 text-xs">
-          ✓</div>
-        Event Discovery
-      </li>
-      <li class="flex items-center gap-3 text-blue-100/80 text-sm">
-        <div
-          class="w-6 h-6 rounded-lg bg-brand/30 border border-brand/40 flex items-center justify-center text-blue-300 text-xs">
-          ✓</div>
-        Real-time Registrations
-      </li>
-      <li class="flex items-center gap-3 text-blue-100/80 text-sm">
-        <div
-          class="w-6 h-6 rounded-lg bg-brand/30 border border-brand/40 flex items-center justify-center text-blue-300 text-xs">
-          ✓</div>
-        Attendance Tracking
-      </li>
-      <li class="flex items-center gap-3 text-blue-100/80 text-sm">
-        <div
-          class="w-6 h-6 rounded-lg bg-brand/30 border border-brand/40 flex items-center justify-center text-blue-300 text-xs">
-          ✓</div>
-        Multi-College Support
-      </li>
-    </ul>
+    <!-- Trust Module (High Fidelity) -->
+    <div class="relative z-10 border-t border-white/5 pt-10 mt-auto animate-fade-in" style="animation-delay: 0.3s;">
+        <div class="flex items-center gap-6">
+            <div class="flex -space-x-4">
+                <div class="w-10 h-10 rounded-full border-2 border-slate-950 bg-slate-800 flex items-center justify-center text-sm">🎓</div>
+                <div class="w-10 h-10 rounded-full border-2 border-slate-950 bg-slate-800 flex items-center justify-center text-sm">🧪</div>
+                <div class="w-10 h-10 rounded-full border-2 border-slate-950 bg-slate-800 flex items-center justify-center text-sm">🎨</div>
+            </div>
+            <p class="text-[10px] font-black uppercase text-slate-500 tracking-[0.3em]">Network Active<br>24/7 Verified</p>
+        </div>
+    </div>
   </div>
 
-  <!-- RIGHT FORM PANEL -->
-  <div class="flex-1 flex items-center justify-center p-6 bg-ink-50">
-    <div class="w-full max-w-md">
-      <!-- Mobile logo -->
-      <div class="flex lg:hidden items-center gap-2 mb-8 justify-center">
-        <div
-          class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand to-brand-accent flex items-center justify-center text-white font-bold text-lg">
-          C</div>
-        <span class="font-serif italic text-2xl text-ink-900">CEMS</span>
-      </div>
+  <!-- AUTH FORM ENGINE -->
+  <div class="flex-1 flex items-center justify-center p-8 lg:p-24 relative overflow-hidden">
+    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/micro-carbon.png')] opacity-5 pointer-events-none"></div>
+    
+    <div class="w-full max-w-[460px] relative z-10 animate-reveal">
+      <div class="bg-white rounded-[3rem] shadow-premium border border-slate-100 p-12 md:p-16 relative">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-1.5 g-blue rounded-b-full"></div>
+        
+        <div class="mb-12">
+            <h1 class="font-serif italic text-4xl font-bold text-slate-900 mb-3 leading-none">Intelligence Check</h1>
+            <p class="text-slate-400 text-xs font-black uppercase tracking-widest">Sign in to your institutional account</p>
+        </div>
 
-      <div class="bg-white rounded-2xl shadow-xl border border-ink-100 p-8">
-        <h1 class="font-serif italic text-3xl font-bold text-ink-900 mb-1">Sign In</h1>
-        <p class="text-ink-400 text-sm mb-8">Enter your credentials to access your dashboard.</p>
-
-        <form method="post" action="{% url 'login' %}" id="login-form">
+        <form method="post" action="{% url 'login' %}" id="login-form" class="space-y-8">
           {% csrf_token %}
-          <!-- Username -->
-          <div class="mb-5">
-            <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2"
-              for="id_username">Username</label>
-            <input type="text" id="id_username" name="username" autocomplete="username" autofocus required
-              placeholder="your_username"
-              class="w-full px-4 py-3 bg-ink-50 border border-ink-200 rounded-xl text-sm text-ink-800 placeholder-ink-300 focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all font-mono">
-          </div>
-
-          <!-- Password -->
-          <div class="mb-6">
-            <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2"
-              for="id_password">Password</label>
-            <div class="relative">
-              <input type="password" id="id_password" name="password" autocomplete="current-password" required
-                placeholder="••••••••"
-                class="w-full px-4 py-3 bg-ink-50 border border-ink-200 rounded-xl text-sm text-ink-800 placeholder-ink-300 focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all pr-12">
-              <button type="button" id="toggle-pw"
-                class="absolute right-4 top-1/2 -translate-y-1/2 text-ink-400 hover:text-ink-700 transition-colors text-lg select-none">👁</button>
+          
+          <div class="space-y-3">
+            <label class="block text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] ml-2" for="id_username">Identifier</label>
+            <div class="relative group">
+                <span class="absolute left-6 top-1/2 -translate-y-1/2 text-xl grayscale group-focus-within:grayscale-0 transition-all opacity-40">👤</span>
+                <input type="text" id="id_username" name="username" autocomplete="username" autofocus required
+                       placeholder="Institutional Username"
+                       class="w-full pl-16 pr-6 py-5 bg-slate-50 border border-slate-100 rounded-[1.5rem] text-sm font-bold text-slate-900 focus:outline-none focus:border-brand/40 focus:ring-8 focus:ring-brand/5 transition-all">
             </div>
           </div>
 
-          <!-- Submit -->
-          <button type="submit" id="login-btn"
-            class="w-full py-3.5 bg-gradient-to-r from-brand to-blue-600 text-white font-bold rounded-xl shadow-md shadow-brand/30 hover:shadow-lg hover:shadow-brand/40 hover:-translate-y-0.5 active:translate-y-0 transition-all text-sm">
-            Sign In to CEMS
-          </button>
+          <div class="space-y-3">
+            <div class="flex justify-between items-center ml-2">
+                <label class="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em]" for="id_password">Credential</label>
+                <a href="#" class="text-[8px] font-black text-brand uppercase tracking-widest hover:brightness-110">Recover Key</a>
+            </div>
+            <div class="relative group">
+                <span class="absolute left-6 top-1/2 -translate-y-1/2 text-xl grayscale group-focus-within:grayscale-0 transition-all opacity-40">🔒</span>
+                <input type="password" id="id_password" name="password" autocomplete="current-password" required
+                       placeholder="••••••••••••"
+                       class="w-full pl-16 pr-14 py-5 bg-slate-50 border border-slate-100 rounded-[1.5rem] text-sm font-bold text-slate-900 focus:outline-none focus:border-brand/40 focus:ring-8 focus:ring-brand/5 transition-all">
+                <button type="button" id="toggle-pw" class="absolute right-6 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-900 transition-colors">👁️</button>
+            </div>
+          </div>
+
+          <div class="pt-4">
+              <button type="submit" id="login-btn"
+                class="w-full py-6 bg-slate-950 text-white text-xs font-black uppercase tracking-[0.3em] rounded-[1.5rem] shadow-xl hover:brightness-125 hover:-translate-y-1 active:translate-y-0 transition-all">
+                Access Hub →
+              </button>
+          </div>
         </form>
 
-        <div class="mt-6 pt-6 border-t border-ink-100 text-center space-y-2">
-          <p class="text-sm text-ink-500">Don't have an account? <a href="{% url 'register' %}"
-              class="font-semibold text-brand hover:underline">Register here</a></p>
-          <a href="{% url 'admin_gateway' %}"
-            class="inline-block text-xs font-bold text-ink-300 hover:text-brand uppercase transition-colors">🏛️ College
-            Administrator? Reach your Gateway here</a>
+        <div class="mt-12 pt-10 border-t border-slate-50 space-y-6">
+          <p class="text-xs text-slate-400 text-center uppercase tracking-widest">New Intelligence? <a href="{% url 'register' %}" class="font-black text-brand hover:underline px-1">Join Network</a></p>
+          
+          <a href="{% url 'admin_gateway' %}" class="group flex items-center justify-between p-6 bg-slate-50 rounded-[2rem] hover:bg-slate-950 hover:text-white transition-all">
+              <div class="flex items-center gap-4">
+                  <span class="text-2xl group-hover:scale-110 transition-transform">🏛️</span>
+                  <div>
+                      <p class="text-[8px] font-black uppercase tracking-[0.2em] opacity-40">Administrative</p>
+                      <p class="text-[10px] font-black uppercase tracking-widest">Gateway Access</p>
+                  </div>
+              </div>
+              <span class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center group-hover:bg-brand group-hover:border-brand transition-all">→</span>
+          </a>
         </div>
-
       </div>
     </div>
   </div>
@@ -120,12 +113,11 @@
   document.getElementById('toggle-pw').addEventListener('click', function () {
     const inp = document.getElementById('id_password');
     inp.type = inp.type === 'password' ? 'text' : 'password';
-    this.textContent = inp.type === 'password' ? '👁' : '🙈';
   });
   // Loading states
   document.getElementById('login-form').addEventListener('submit', function () {
     const btn = document.getElementById('login-btn');
-    btn.textContent = 'Signing in…';
+    btn.innerHTML = `<span class="animate-pulse">Authenticating Session...</span>`;
     btn.disabled = true;
   });
 </script>

@@ -8,8 +8,8 @@ from datetime import timedelta
 from django.core.mail import send_mail
 from django.conf import settings
 
-from .forms import UserRegisterForm
-from .models import Profile, EmailVerification
+from accounts.forms import UserRegisterForm
+from accounts.models import Profile, EmailVerification
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -424,6 +424,8 @@ def resend_verification(request):
                 messages.success(request, f'New verification code sent to {email}!')
             else:
                 messages.info(request, f'New code (email unavailable): {code}')
+                # Store code in session as fallback if SMTP fails
+                request.session['debug_otp'] = code
 
             return redirect('verify_email')
 

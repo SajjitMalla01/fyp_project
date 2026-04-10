@@ -1,14 +1,16 @@
 import os
 import django
-from django.conf import settings
-from django.template.loader import get_template, render_to_string
-from django.test import RequestFactory
-from accounts.models import Profile, User
-from events.models import Event
-from tenants.models import College
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'cems.settings')
 django.setup()
+
+from django.conf import settings
+from django.template.loader import get_template, render_to_string
+from django.test import RequestFactory
+from accounts.models import Profile
+from django.contrib.auth.models import User
+from events.models import Event
+from tenants.models import College
 
 def check_templates():
     errors = []
@@ -21,10 +23,10 @@ def check_templates():
              
         try:
              t = get_template(template_name)
-             print(f"✅ {template_name} parsed successfully.")
+             print(f"[OK] {template_name} parsed successfully.")
         except Exception as e:
              errors.append((template_name, str(e)))
-             print(f"❌ Error in {template_name}: {e}")
+             print(f"[ERROR] In {template_name}: {e}")
 
     if not errors:
         print("\nAll templates parsed successfully!")

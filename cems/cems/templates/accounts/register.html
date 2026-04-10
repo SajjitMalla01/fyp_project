@@ -1,183 +1,194 @@
 {% extends 'base.html' %}
-{% block title %}Create Account{% endblock %}
+{% load static %}
+{% block title %}Create Account — Discovery Gateway{% endblock %}
 
 {% block content %}
-<div class="min-h-[calc(100vh-64px)] flex items-stretch">
+<div class="min-h-screen flex items-stretch bg-slate-50">
 
-  <!-- LEFT BRAND PANEL -->
-  <div class="hidden lg:flex w-[420px] flex-shrink-0 flex-col justify-between bg-gradient-to-br from-ink-900 via-violet-950 to-ink-900 p-12 relative overflow-hidden">
-    <div class="absolute -top-24 -right-24 w-72 h-72 bg-brand-accent/20 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute -bottom-24 -left-24 w-72 h-72 bg-brand/20 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="relative z-10">
-      <div class="flex items-center gap-3 mb-12">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand to-brand-accent flex items-center justify-center text-white font-bold text-xl shadow-lg">C</div>
-        <span class="font-serif italic text-3xl text-white">CEMS</span>
+  <!-- FLAGSHIP BRAND PANEL -->
+  <div class="hidden lg:flex w-[500px] flex-shrink-0 flex-col justify-between bg-slate-950 p-16 relative overflow-hidden">
+    <!-- Deep Aura -->
+    <div class="absolute -top-40 -left-40 w-[600px] h-[600px] bg-brand/10 rounded-full blur-[120px] animate-pulse"></div>
+    <div class="absolute bottom-20 -right-40 w-[400px] h-[400px] bg-indigo-500/10 rounded-full blur-[100px]"></div>
+    
+    <div class="relative z-10 animate-fade-up">
+      <div class="flex items-center gap-4 mb-20">
+        <div class="w-14 h-14 rounded-2xl bg-brand flex items-center justify-center text-white font-black text-3xl shadow-brand">C</div>
+        <span class="font-serif italic text-4xl text-white tracking-tight">CEMS</span>
       </div>
-      <h2 class="font-serif italic text-4xl text-white font-bold leading-tight mb-4">Join your campus community.</h2>
-      <p class="text-violet-200/70 leading-relaxed text-sm">Create your CEMS account and start registering for events, tracking attendance, and connecting with your college.</p>
+      <h2 class="font-serif italic text-6xl text-white font-bold leading-[1.05] mb-10 tracking-tight">
+        Join the<br>Institutional<br>Future.
+      </h2>
+      <p class="text-slate-500 leading-relaxed text-lg italic font-light max-w-sm">
+        Your portal to unified campus intelligence. One account, cross-institutional access.
+      </p>
     </div>
+
     {% if college %}
-    <div class="relative z-10 bg-white/10 border border-white/15 rounded-xl p-4 backdrop-blur-sm">
-      <p class="text-[0.65rem] font-bold uppercase tracking-widest text-violet-300 mb-1">Registering for</p>
-      <p class="text-white font-bold text-lg">🏛️ {{ college.name }}</p>
+    <div class="relative z-10 p-8 rounded-[2.5rem] glass-dark animate-fade-in" style="animation-delay: 0.2s;">
+      <p class="text-[9px] font-black uppercase tracking-[0.4em] text-brand mb-4">Discovery Node</p>
+      <p class="text-white font-bold text-2xl flex items-center gap-4 leading-tight">
+          <span class="text-3xl">🏛️</span>
+          {{ college.name }}
+      </p>
     </div>
     {% endif %}
   </div>
 
-  <!-- RIGHT FORM PANEL -->
-  <div class="flex-1 flex items-center justify-center p-6 bg-ink-50 overflow-y-auto">
-    <div class="w-full max-w-md py-8">
-      <!-- Mobile logo -->
-      <div class="flex lg:hidden items-center gap-2 mb-8 justify-center">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand to-brand-accent flex items-center justify-center text-white font-bold text-lg">C</div>
-        <span class="font-serif italic text-2xl text-ink-900">CEMS</span>
-      </div>
+  <!-- AUTH FORM ENGINE -->
+  <div class="flex-1 flex items-center justify-center p-8 lg:p-24 relative overflow-y-auto">
+    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/micro-carbon.png')] opacity-5 pointer-events-none"></div>
+    
+    <div class="w-full max-w-[560px] relative z-10 animate-reveal py-12">
+      <div class="bg-white rounded-[3rem] shadow-premium border border-slate-100 p-12 md:p-16 relative">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-1.5 g-blue rounded-b-full"></div>
+        
+        <div class="mb-12 text-center">
+            <h1 class="font-serif italic text-4xl font-bold text-slate-900 mb-3 leading-none">Initialize Identity</h1>
+            <p class="text-slate-400 text-xs font-black uppercase tracking-widest">Connect to the Discovery Matrix</p>
+        </div>
 
-      <div class="bg-white rounded-2xl shadow-xl border border-ink-100 p-8">
-        <h1 class="font-serif italic text-3xl font-bold text-ink-900 mb-1">Create account</h1>
-        <p class="text-ink-400 text-sm mb-8">Fill in the details below to get started.</p>
-
-        <form method="post" action="{% url 'register' %}" id="register-form">
+        <form method="post" action="{% url 'register' %}" id="register-form" class="space-y-8">
           {% csrf_token %}
 
-          <!-- Username -->
-          <div class="mb-4">
-            <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">Username</label>
-            <input type="text" name="username" id="id_username" autocomplete="username" autofocus required
-              value="{{ form.username.value|default:'' }}"
-              placeholder="choose_a_username"
-              class="w-full px-4 py-3 bg-ink-50 border border-ink-200 rounded-xl text-sm text-ink-800 placeholder-ink-300 focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all font-mono">
-            {% if form.username.errors %}<p class="mt-1.5 text-xs text-red-500">{{ form.username.errors|first }}</p>{% endif %}
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="space-y-3">
+                <label class="block text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] ml-2">Identifier</label>
+                <input type="text" name="username" id="id_username" autocomplete="username" autofocus required
+                       value="{{ form.username.value|default:'' }}"
+                       placeholder="johndoe"
+                       class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold text-slate-900 focus:outline-none focus:border-brand/40 focus:ring-8 focus:ring-brand/5 transition-all">
+                {% if form.username.errors %}<p class="mt-2 text-[10px] text-rose-500 font-bold ml-2">{{ form.username.errors|first }}</p>{% endif %}
+            </div>
+
+            <div class="space-y-3">
+                <label class="block text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] ml-2">Channel</label>
+                <input type="email" name="email" id="id_email" autocomplete="email" required
+                       value="{{ form.email.value|default:'' }}"
+                       placeholder="name@college.edu"
+                       class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold text-slate-900 focus:outline-none focus:border-brand/40 focus:ring-8 focus:ring-brand/5 transition-all">
+                {% if form.email.errors %}<p class="mt-2 text-[10px] text-rose-500 font-bold ml-2">{{ form.email.errors|first }}</p>{% endif %}
+            </div>
           </div>
 
-          <!-- Email -->
-          <div class="mb-4">
-            <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">Email Address</label>
-            <input type="email" name="email" id="id_email" autocomplete="email" required
-              value="{{ form.email.value|default:'' }}"
-              placeholder="you@example.com"
-              class="w-full px-4 py-3 bg-ink-50 border border-ink-200 rounded-xl text-sm text-ink-800 placeholder-ink-300 focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all">
-            {% if form.email.errors %}<p class="mt-1.5 text-xs text-red-500">{{ form.email.errors|first }}</p>{% endif %}
-          </div>
-
-          <!-- Role -->
-          <div class="mb-4">
-            <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">I am a</label>
-            <div class="grid grid-cols-2 gap-3" id="role-selector">
-              <label class="role-opt cursor-pointer">
+          <!-- Role Architecture -->
+          <div class="space-y-4">
+            <label class="block text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] ml-2 text-center">Identity Type</label>
+            <div class="grid grid-cols-2 gap-4" id="role-selector">
+              <label class="role-opt cursor-pointer group">
                 <input type="radio" name="role" value="STUDENT" class="sr-only" checked>
-                <div class="role-card flex items-center gap-2 px-4 py-3 rounded-xl border-2 border-brand bg-brand/5 text-brand transition-all">
-                  <span class="text-lg">🎓</span>
-                  <span class="text-sm font-semibold">Student</span>
+                <div class="role-card flex flex-col items-center gap-3 p-6 rounded-[2rem] border-2 border-brand bg-brand/5 text-brand transition-all shadow-lg">
+                  <span class="text-3xl">🎓</span>
+                  <span class="text-[9px] font-black uppercase tracking-widest">Scholar</span>
                 </div>
               </label>
-              <label class="role-opt cursor-pointer">
+              <label class="role-opt cursor-pointer group">
                 <input type="radio" name="role" value="STAFF" class="sr-only">
-                <div class="role-card flex items-center gap-2 px-4 py-3 rounded-xl border-2 border-ink-200 text-ink-500 hover:border-ink-400 transition-all">
-                  <span class="text-lg">👨‍💼</span>
-                  <span class="text-sm font-semibold">Staff</span>
+                <div class="role-card flex flex-col items-center gap-3 p-6 rounded-[2rem] border-2 border-slate-50 bg-slate-50 text-slate-400 hover:border-slate-200 transition-all">
+                  <span class="text-3xl">👨‍💼</span>
+                  <span class="text-[9px] font-black uppercase tracking-widest">Faculty</span>
                 </div>
               </label>
             </div>
           </div>
 
-          <!-- College Selection -->
+          <!-- Institutional Field -->
           {% if not college %}
-          <div class="mb-4">
-            <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">My College</label>
-            {{ form.college }}
-            <p class="mt-1 text-[0.65rem] text-ink-400">Select your college manually if you are using a generic email (e.g., @gmail.com).</p>
-            {% if form.college.errors %}<p class="mt-1.5 text-xs text-red-500">{{ form.college.errors|first }}</p>{% endif %}
+          <div class="space-y-3">
+            <label class="block text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] ml-2">Affiliation Node</label>
+            <div class="relative role-select-base">
+                {{ form.college }}
+            </div>
+            {% if form.college.errors %}<p class="mt-2 text-[10px] text-rose-500 font-bold ml-2">{{ form.college.errors|first }}</p>{% endif %}
           </div>
           {% endif %}
 
-          <!-- Password -->
-          <div class="mb-4">
-            <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">Password</label>
-            <div class="relative">
-              <input type="password" name="password1" id="id_password1" autocomplete="new-password" required
-                placeholder="Min. 8 characters"
-                class="w-full px-4 py-3 bg-ink-50 border border-ink-200 rounded-xl text-sm text-ink-800 placeholder-ink-300 focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all pr-12"
-                oninput="checkStrength(this.value)">
-              <button type="button" class="absolute right-4 top-1/2 -translate-y-1/2 text-ink-400 hover:text-ink-700 transition-colors text-lg select-none" onclick="togglePw('id_password1', this)">👁</button>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="space-y-3">
+                <label class="block text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] ml-2">Credential Key</label>
+                <input type="password" name="password1" id="id_password1" autocomplete="new-password" required
+                       placeholder="••••••••"
+                       class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold text-slate-900 focus:outline-none focus:border-brand/40 focus:ring-8 focus:ring-brand/5 transition-all"
+                       oninput="checkStrength(this.value)">
+                <div class="mt-3 flex gap-1 h-1 px-1">
+                    <div id="st-1" class="flex-1 bg-slate-100 rounded-full transition-colors"></div>
+                    <div id="st-2" class="flex-1 bg-slate-100 rounded-full transition-colors"></div>
+                    <div id="st-3" class="flex-1 bg-slate-100 rounded-full transition-colors"></div>
+                </div>
             </div>
-            <!-- Strength bar -->
-            <div class="mt-2 h-1 bg-ink-100 rounded-full overflow-hidden">
-              <div id="strength-bar" class="h-full rounded-full transition-all duration-500 w-0"></div>
+
+            <div class="space-y-3">
+                <label class="block text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] ml-2">Verify Key</label>
+                <input type="password" name="password2" id="id_password2" autocomplete="new-password" required
+                       placeholder="••••••••"
+                       class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold text-slate-900 focus:outline-none focus:border-brand/40 focus:ring-8 focus:ring-brand/5 transition-all">
             </div>
-            <p id="strength-label" class="mt-1 text-xs text-ink-400"></p>
-            {% if form.password1.errors %}<p class="mt-1.5 text-xs text-red-500">{{ form.password1.errors|first }}</p>{% endif %}
           </div>
 
-          <!-- Confirm Password -->
-          <div class="mb-6">
-            <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">Confirm Password</label>
-            <div class="relative">
-              <input type="password" name="password2" id="id_password2" autocomplete="new-password" required
-                placeholder="Repeat password"
-                class="w-full px-4 py-3 bg-ink-50 border border-ink-200 rounded-xl text-sm text-ink-800 placeholder-ink-300 focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all pr-12">
-              <button type="button" class="absolute right-4 top-1/2 -translate-y-1/2 text-ink-400 hover:text-ink-700 transition-colors text-lg select-none" onclick="togglePw('id_password2', this)">👁</button>
-            </div>
-            {% if form.password2.errors %}<p class="mt-1.5 text-xs text-red-500">{{ form.password2.errors|first }}</p>{% endif %}
+          <div class="pt-6">
+              <button type="submit" id="reg-btn"
+                class="w-full py-6 bg-slate-950 text-white text-xs font-black uppercase tracking-[0.3em] rounded-[2rem] shadow-xl hover:brightness-125 hover:-translate-y-1 transition-all">
+                Initialize Account →
+              </button>
           </div>
-
-          <button type="submit" id="reg-btn"
-            class="w-full py-3.5 bg-gradient-to-r from-brand-accent to-brand text-white font-bold rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all text-sm">
-            Create My Account →
-          </button>
         </form>
 
-        <p class="mt-6 text-center text-sm text-ink-500">Already have an account? <a href="{% url 'login' %}" class="font-semibold text-brand hover:underline">Sign in</a></p>
+        <p class="mt-12 text-center text-xs text-slate-400 uppercase tracking-widest">
+            Existing Identity? <a href="{% url 'login' %}" class="font-black text-brand hover:underline px-1">Access Gateway</a>
+        </p>
       </div>
     </div>
   </div>
 </div>
+
+<style>
+#id_college {
+    width: 100%;
+    padding: 1.25rem 1.5rem;
+    background-color: #f8fafc;
+    border: 1px solid #f1f5f9;
+    border-radius: 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #0f172a;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1.5rem center;
+    background-size: 1.25rem;
+}
+</style>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-function togglePw(id, btn) {
-  const inp = document.getElementById(id);
-  inp.type = inp.type === 'password' ? 'text' : 'password';
-  btn.textContent = inp.type === 'password' ? '👁' : '🙈';
-}
-
 function checkStrength(pw) {
-  const bar = document.getElementById('strength-bar');
-  const label = document.getElementById('strength-label');
+  const s1 = document.getElementById('st-1');
+  const s2 = document.getElementById('st-2');
+  const s3 = document.getElementById('st-3');
+  [s1, s2, s3].forEach(s => s.className = 'flex-1 bg-slate-100 rounded-full transition-colors');
+  if (pw.length === 0) return;
   let score = 0;
   if (pw.length >= 8) score++;
-  if (/[A-Z]/.test(pw)) score++;
-  if (/[0-9]/.test(pw)) score++;
+  if (/[A-Z]/.test(pw) && /[0-9]/.test(pw)) score++;
   if (/[^A-Za-z0-9]/.test(pw)) score++;
-  const configs = [
-    { pct:'25%', color:'bg-red-500', text:'Weak' },
-    { pct:'50%', color:'bg-amber-500', text:'Fair' },
-    { pct:'75%', color:'bg-yellow-400', text:'Good' },
-    { pct:'100%', color:'bg-emerald-500', text:'Strong' },
-  ];
-  bar.className = 'h-full rounded-full transition-all duration-500';
-  if (score === 0) { bar.style.width = '0'; label.textContent = ''; return; }
-  const c = configs[score - 1];
-  bar.style.width = c.pct;
-  bar.classList.add(c.color);
-  label.textContent = c.text;
-  label.className = `mt-1 text-xs ${score >= 3 ? 'text-emerald-600' : 'text-amber-600'}`;
+  if (score >= 1) s1.className = 'flex-1 bg-rose-400 rounded-full';
+  if (score >= 2) s1.className = s2.className = 'flex-1 bg-amber-400 rounded-full';
+  if (score >= 3) s1.className = s2.className = s3.className = 'flex-1 bg-emerald-400 rounded-full';
 }
 
-// Role selector highlight
 document.querySelectorAll('.role-opt').forEach(opt => {
   opt.addEventListener('click', () => {
     document.querySelectorAll('.role-card').forEach(c => {
-      c.className = 'role-card flex items-center gap-2 px-4 py-3 rounded-xl border-2 border-ink-200 text-ink-500 hover:border-ink-400 transition-all';
+      c.className = 'role-card flex flex-col items-center gap-3 p-6 rounded-[2rem] border-2 border-slate-50 bg-slate-50 text-slate-400 hover:border-slate-200 transition-all';
     });
-    opt.querySelector('.role-card').className = 'role-card flex items-center gap-2 px-4 py-3 rounded-xl border-2 border-brand bg-brand/5 text-brand transition-all';
+    opt.querySelector('.role-card').className = 'role-card flex flex-col items-center gap-3 p-6 rounded-[2rem] border-2 border-brand bg-brand/5 text-brand transition-all shadow-lg';
   });
 });
 
 document.getElementById('register-form').addEventListener('submit', function() {
   const btn = document.getElementById('reg-btn');
-  btn.textContent = 'Creating account…';
+  btn.innerHTML = `<span class="animate-pulse">Building Identity...</span>`;
   btn.disabled = true;
 });
 </script>

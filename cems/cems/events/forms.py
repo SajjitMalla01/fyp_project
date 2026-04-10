@@ -1,5 +1,5 @@
 from django import forms
-from .models import Event
+from events.models import Event
 
 
 class EventForm(forms.ModelForm):
@@ -7,7 +7,7 @@ class EventForm(forms.ModelForm):
         model  = Event
         fields = [
             'title', 'description', 'date_time', 'end_time',
-            'venue', 'capacity', 'category', 'emoji', 'gradient',
+            'venue', 'capacity', 'category', 'image', 'emoji', 'gradient',
         ]
         widgets = {
             'title': forms.TextInput(attrs={

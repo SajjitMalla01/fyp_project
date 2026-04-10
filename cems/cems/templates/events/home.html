@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}CEMS — Flagship Event Gateway{% endblock %}
+
+{% block content %}
+
+{% if college %}
+<!-- COLLEGE-SPECIFIC HOME (Portal Mode) -->
+<div class="relative min-h-[85vh] flex items-center pt-24 pb-16 overflow-hidden">
+    <!-- Sophisticated Background -->
+    <div class="absolute inset-0 bg-slate-50"></div>
+    <div class="absolute top-0 left-0 right-0 h-[500px] bg-gradient-to-b from-brand/5 to-transparent"></div>
+    <div class="absolute top-[10%] right-[10%] w-[400px] h-[400px] bg-brand/10 rounded-full blur-[120px] animate-pulse"></div>
+    
+    <div class="relative max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
+        <div class="animate-fade-up">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand/10 border border-brand/20 text-[10px] font-black uppercase tracking-[0.2em] text-brand mb-8 animate-float">
+                🏛️ Official Portal
+            </div>
+            <h1 class="font-serif italic text-6xl md:text-8xl font-bold leading-[0.9] text-slate-900 mb-8">
+                {{ college.name }}
+            </h1>
+            <p class="text-xl text-slate-600 max-w-xl mb-12 leading-relaxed">
+                The digital heartbeat of campus life. Discover exclusive events, secure your spot, and shape your student legacy.
+            </p>
+            <div class="flex flex-wrap gap-4">
+                {% if not user.is_authenticated %}
+                <a href="{% url 'register_college_scoped' college.slug %}" class="px-8 py-4 bg-brand text-white font-bold rounded-2xl shadow-premium hover:shadow-brand transition-all hover:-translate-y-1">
+                    Get Started →
+                </a>
+                <a href="{% url 'login_college_scoped' college.slug %}" class="px-8 py-4 bg-white border border-slate-200 text-slate-700 font-bold rounded-2xl hover:bg-slate-50 transition-all">
+                    Sign In
+                </a>
+                {% else %}
+                <a href="{% url 'event_list' %}" class="px-10 py-5 bg-brand text-white font-bold rounded-[2rem] shadow-premium hover:shadow-brand transition-all hover:-translate-y-1 text-lg">
+                    Discover Events
+                </a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Hero Bento Card -->
+        <div class="relative animate-reveal">
+            <div class="relative bg-white rounded-[3rem] p-10 shadow-premium border border-slate-100 overflow-hidden group">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-brand/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700"></div>
+                <div class="flex items-center justify-between mb-12">
+                    <div class="w-16 h-16 rounded-2xl bg-brand/10 flex items-center justify-center text-3xl">✨</div>
+                    <div class="text-right">
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Trending Now</p>
+                        <p class="text-sm font-bold text-brand">Top Highlight</p>
+                    </div>
+                </div>
+                <h3 class="font-serif italic text-3xl font-bold text-slate-900 mb-6 underline decoration-brand/30 decoration-4 underline-offset-8">Featured Engagement</h3>
+                <div class="space-y-6 mb-12">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center text-xl">📅</div>
+                        <div>
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Date & Time</p>
+                            <p class="text-sm font-bold text-slate-700">Upcoming This Week</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center text-xl">📍</div>
+                        <div>
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Venue</p>
+                            <p class="text-sm font-bold text-slate-700">Main Campus Theater</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 bg-slate-900 rounded-[2rem] text-white flex items-center justify-between">
+                    <div>
+                        <p class="text-[10px] font-black opacity-60 uppercase tracking-widest mb-1">Status</p>
+                        <p class="text-xs font-bold">Limited Slots Available</p>
+                    </div>
+                    <div class="flex -space-x-3">
+                        <div class="w-8 h-8 rounded-full border-2 border-slate-900 bg-blue-500"></div>
+                        <div class="w-8 h-8 rounded-full border-2 border-slate-900 bg-purple-500"></div>
+                        <div class="w-8 h-8 rounded-full border-2 border-slate-900 bg-slate-700 flex items-center justify-center text-[8px] font-bold">+42</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Decorative Back-cards -->
+            <div class="absolute inset-0 -z-10 bg-slate-200 rounded-[3rem] translate-x-4 rotate-2 opacity-40"></div>
+            <div class="absolute inset-0 -z-20 bg-slate-100 rounded-[3rem] translate-x-8 rotate-6 opacity-20"></div>
+        </div>
+    </div>
+</div>
+
+<!-- DISCOVERY SECTION -->
+<div class="max-w-7xl mx-auto px-6 py-24">
+    <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+        <div class="animate-fade-up">
+            <p class="text-[10px] font-black uppercase tracking-[0.3em] text-brand mb-4">Discovery Feed</p>
+            <h2 class="font-serif italic text-5xl font-bold text-slate-900">Featured Academy Events</h2>
+        </div>
+        <a href="{% url 'event_list' %}" class="group px-6 py-3 bg-slate-50 hover:bg-white border border-slate-200 rounded-2xl flex items-center gap-3 transition-all">
+            <span class="text-xs font-bold text-slate-600">View All Events</span>
+            <span class="w-8 h-8 bg-brand text-white rounded-xl flex items-center justify-center group-hover:translate-x-1 transition-transform">→</span>
+        </a>
+    </div>
+
+    {% if events %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        {% for event in events %}
+        <div class="group relative bg-white rounded-[2.5rem] p-4 border border-slate-100 shadow-sm hover:shadow-premium transition-all duration-500 animate-fade-up" style="animation-delay: {{ forloop.counter0|add:1 }}00ms;">
+            <div class="relative h-64 rounded-[2rem] overflow-hidden mb-8">
+                {% if event.image %}
+                    <img src="{{ event.image.url }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="">
+                {% else %}
+                    <div class="absolute inset-0 {{ event.gradient|default:'g-blue' }} flex items-center justify-center text-6xl group-hover:scale-110 transition-transform duration-700">{{ event.emoji|default:'🎉' }}</div>
+                {% endif %}
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent"></div>
+                <div class="absolute top-4 left-4 bg-white rounded-2xl px-3 py-2 text-center shadow-xl">
+                    <p class="text-[8px] font-black uppercase text-brand">{{ event.date_time|date:"M" }}</p>
+                    <p class="text-xl font-bold text-slate-900 leading-none">{{ event.date_time|date:"d" }}</p>
+                </div>
+                <div class="absolute bottom-4 left-4 right-4 flex justify-between items-center text-white">
+                    <span class="text-[10px] font-bold uppercase tracking-widest px-3 py-1 bg-white/20 backdrop-blur-md rounded-full border border-white/20">{{ event.get_category_display }}</span>
+                </div>
+            </div>
+            <div class="px-4 pb-4">
+                <h3 class="font-serif italic text-2xl font-bold text-slate-900 mb-4 group-hover:text-brand transition-colors">{{ event.title }}</h3>
+                <div class="flex items-center gap-4 text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-8">
+                    <div class="flex items-center gap-1.5"><span class="text-sm">📍</span> {{ event.venue|truncatechars:15 }}</div>
+                    <div class="w-1 h-1 rounded-full bg-slate-200"></div>
+                    <div class="flex items-center gap-1.5"><span class="text-sm">🕒</span> {{ event.date_time|time:"H:i" }}</div>
+                </div>
+                <a href="{% url 'event_detail' event.pk %}" class="block w-full text-center py-4 rounded-2xl font-bold transition-all bg-slate-50 text-slate-700 hover:bg-brand hover:text-white hover:shadow-lg hover:shadow-brand/20">
+                    Details
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="py-32 bg-slate-50 rounded-[3rem] border-2 border-dashed border-slate-200 text-center animate-fade-in">
+        <div class="text-7xl mb-8 animate-float">🗓️</div>
+        <h3 class="font-serif italic text-3xl font-bold text-slate-900 mb-2">No upcoming releases</h3>
+        <p class="text-slate-500">Your campus calendar is currently quiet. Check back soon for announcements!</p>
+    </div>
+    {% endif %}
+</div>
+
+{% else %}
+
+<!-- THE GLOBAL HUB (Central Gateway) -->
+<div class="relative min-h-screen bg-slate-950 flex items-center justify-center overflow-hidden">
+    <!-- Cosmic Background -->
+    <div class="absolute inset-0">
+        <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[160px] animate-pulse"></div>
+        <div class="absolute bottom-0 left-0 w-[600px] h-[600px] bg-purple-600/10 rounded-full blur-[160px] animate-pulse" style="animation-delay: 1s;"></div>
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-30 pointer-events-none"></div>
+    </div>
+
+    <div class="relative max-w-7xl mx-auto px-6 py-32 text-center">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-[11px] font-black uppercase tracking-[0.3em] text-blue-400 mb-12 animate-float">
+            💎 Master Repository
+        </div>
+        <h1 class="font-serif italic text-7xl md:text-9xl font-bold text-white leading-[0.9] mb-12 animate-reveal">
+            Select Your <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-brand">Campus</span>
+        </h1>
+        <p class="text-xl text-slate-400 max-w-2xl mx-auto mb-20 leading-relaxed animate-fade-in" style="animation-delay: 0.4s;">
+            Welcome to the Central Event Management System. Access the curated experience of your home institution.
+        </p>
+
+        <!-- Bento Selection Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
+            {% for clg in all_colleges %}
+            <div class="group relative bg-white/5 backdrop-blur-3xl border border-white/10 p-10 rounded-[3rem] transition-all duration-700 hover:bg-white/[0.08] hover:-translate-y-4 hover:shadow-2xl hover:shadow-brand/20 animate-fade-up" style="animation-delay: {{ forloop.counter0|add:5 }}00ms;">
+                <div class="w-16 h-16 rounded-2xl mb-10 flex items-center justify-center text-4xl shadow-xl transition-all duration-700 group-hover:scale-125 group-hover:rotate-12"
+                     style="background: {{ clg.primary_color|default:'#2563eb' }};">
+                    🏛️
+                </div>
+                <h3 class="font-serif italic text-3xl font-bold text-white mb-4">{{ clg.name }}</h3>
+                <p class="text-slate-400 text-sm mb-12 leading-relaxed h-16 overflow-hidden">
+                    Join the digital portal for {{ clg.name }} to manage your campus activity.
+                </p>
+                
+                <a href="{% url 'college_portal' clg.slug %}" class="w-full py-5 bg-white text-slate-900 text-center font-bold rounded-2xl transition-all hover:bg-slate-200 text-sm shadow-xl flex items-center justify-center gap-2 group/btn">
+                    Access Portal
+                    <span class="group-hover/btn:translate-x-1 transition-transform">→</span>
+                </a>
+
+                <!-- Edge Glow -->
+                <div class="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent rounded-[3rem] pointer-events-none"></div>
+                <div class="absolute top-4 right-4 text-xs font-black text-white/20 uppercase tracking-widest">{{ clg.slug }}</div>
+            </div>
+            {% empty %}
+            <div class="col-span-full py-32 bg-white/5 rounded-[3rem] border-2 border-dashed border-white/10 text-center">
+                <p class="text-slate-400 italic text-lg mb-8">No registered institutions found.</p>
+                <a href="{% url 'register_college' %}" class="px-10 py-5 bg-white text-slate-900 font-bold rounded-2xl shadow-xl hover:scale-105 transition-all">Onboard Your College +</a>
+            </div>
+            {% endfor %}
+
+            <!-- Register Card -->
+            <a href="{% url 'register_college' %}" class="group relative bg-gradient-to-br from-brand/20 to-purple-600/20 border-2 border-dashed border-white/10 p-10 rounded-[3rem] flex flex-col items-center justify-center text-center hover:border-brand/50 transition-all duration-500 overflow-hidden">
+                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/noisy-net.png')] opacity-20"></div>
+                <div class="relative w-20 h-20 rounded-full bg-white/10 flex items-center justify-center text-4xl mb-8 group-hover:scale-110 transition-transform duration-500">➕</div>
+                <h3 class="relative text-3xl font-bold text-white mb-2">Partner with CEMS</h3>
+                <p class="relative text-slate-400 text-sm leading-relaxed">Establish your college's digital presence.<br>Register as a new institution.</p>
+            </a>
+        </div>
+
+        <!-- System Intelligence Pulse -->
+        <div class="mt-40 grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 items-center justify-center">
+            <div class="text-center group p-6">
+                <p class="text-6xl font-black text-white mb-3 group-hover:text-brand transition-colors">{{ total_events }}</p>
+                <p class="text-[10px] font-black text-blue-400 uppercase tracking-[0.3em]">Managed Events</p>
+            </div>
+            <div class="text-center group p-6">
+                <p class="text-6xl font-black text-white mb-3 group-hover:text-brand transition-colors">{{ total_colleges }}</p>
+                <p class="text-[10px] font-black text-blue-400 uppercase tracking-[0.3em]">Institutional Partners</p>
+            </div>
+            <div class="text-center group p-6">
+                <p class="text-6xl font-black text-white mb-3 group-hover:text-brand transition-colors">{{ total_students }}+</p>
+                <p class="text-[10px] font-black text-blue-400 uppercase tracking-[0.3em]">Active Students</p>
+            </div>
+            <div class="text-center group p-6">
+                <p class="text-6xl font-black text-white mb-3 group-hover:text-brand transition-colors">99.9</p>
+                <p class="text-[10px] font-black text-blue-400 uppercase tracking-[0.3em]">Core Uptime %</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

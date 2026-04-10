@@ -29,19 +29,36 @@
               'accent-light': '#ede9fe' 
             },
           },
+          boxShadow: {
+            'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
+            'premium': '0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02)',
+            'brand': '0 10px 15px -3px var(--brand-alpha, rgba(37, 99, 235, 0.2))',
+          },
           animation: {
-            'fade-up': 'fadeUp 0.5s ease both',
-            'fade-in': 'fadeIn 0.3s ease both',
+            'fade-up': 'fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both',
+            'fade-in': 'fadeIn 0.4s ease both',
+            'float': 'float 6s ease-in-out infinite',
+            'reveal': 'reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) both',
           },
           keyframes: {
-            fadeUp: { from:{ opacity:'0', transform:'translateY(16px)' }, to:{ opacity:'1', transform:'translateY(0)' } },
+            fadeUp: { from:{ opacity:'0', transform:'translateY(24px)' }, to:{ opacity:'1', transform:'translateY(0)' } },
             fadeIn: { from:{ opacity:'0' }, to:{ opacity:'1' } },
+            float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
+            reveal: { from: { opacity: '0', clipPath: 'inset(10% 0 10% 0)' }, to: { opacity: '1', clipPath: 'inset(0% 0 0% 0)' } }
           }
         }
       }
     }
   </script>
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <style>
+    .g-blue { background: linear-gradient(135deg, #2563eb, #60a5fa); }
+    .g-violet { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
+    .g-emerald { background: linear-gradient(135deg, #059669, #34d399); }
+    .g-rose { background: linear-gradient(135deg, #dc2626, #f87171); }
+    .g-amber { background: linear-gradient(135deg, #d97706, #fbbf24); }
+    .g-slate { background: linear-gradient(135deg, #1e293b, #475569); }
+  </style>
   {% block extra_head %}{% endblock %}
 </head>
 <body class="bg-ink-50 font-sans text-ink-700 antialiased min-h-screen flex flex-col" {% if current_college %}data-pc="{{ current_college.primary_color }}" data-ac="{{ current_college.accent_color }}"{% endif %}>
@@ -53,15 +70,15 @@
 </script>
 
 <!-- NAVBAR -->
-<nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-ink-100 shadow-sm">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-center justify-between h-16">
+<div class="fixed top-6 left-0 right-0 z-[100] px-6">
+  <nav class="max-w-7xl mx-auto bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-[2rem] shadow-glass px-6 py-3 transition-all duration-500 hover:shadow-premium group/nav">
+    <div class="flex items-center justify-between">
       <!-- Brand -->
-      <a href="{% url 'home' %}{% if current_college %}?college_id={{ current_college.id }}{% endif %}" class="flex items-center gap-2.5 group">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand to-brand-accent flex items-center justify-center text-white font-bold text-lg shadow-md group-hover:shadow-brand/40 transition-shadow">C</div>
+      <a href="{% url 'home' %}{% if current_college %}?college_id={{ current_college.id }}{% endif %}" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-brand to-brand-accent flex items-center justify-center text-white font-bold text-xl shadow-lg group-hover:rotate-12 transition-all duration-500">C</div>
         <div class="flex flex-col">
-          <span class="font-serif italic text-2xl text-ink-900 leading-none tracking-tight">CEMS</span>
-          {% if current_college %}<span class="text-[10px] font-bold text-brand uppercase tracking-wider">{{ current_college.name }}</span>{% endif %}
+          <span class="font-serif italic text-2xl text-ink-900 dark:text-white leading-none tracking-tight">CEMS</span>
+          {% if current_college %}<span class="text-[9px] font-black text-brand uppercase tracking-widest">{{ current_college.name }}</span>{% endif %}
         </div>
       </a>
 
@@ -168,43 +185,50 @@
 </main>
 
 <!-- FOOTER -->
-<footer class="bg-ink-900 text-ink-400 mt-16">
-  <div class="max-w-7xl mx-auto px-6 py-12">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-      <div>
-        <div class="flex items-center gap-2 mb-4">
-          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand to-brand-accent flex items-center justify-center text-white font-bold">C</div>
-          <span class="font-serif italic text-white text-xl">CEMS</span>
+<!-- FOOTER (PREMIUM UPGRADE) -->
+<footer class="mt-32 border-t border-slate-100 bg-white/50 backdrop-blur-3xl px-6 lg:px-12 py-24 relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-brand/5 via-transparent to-indigo-500/5 -z-10"></div>
+    <div class="max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-16 mb-24">
+            <div class="md:col-span-2">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="w-10 h-10 bg-brand rounded-2xl flex items-center justify-center text-white text-xl shadow-brand">🎓</div>
+                    <span class="font-serif italic text-3xl font-bold tracking-tight text-slate-900">CEMS</span>
+                </div>
+                <p class="text-slate-500 text-lg font-light leading-relaxed mb-10 max-w-sm">
+                    Synchronizing campus life through high-fidelity management intelligence. Empowering institutions and students to co-create premium experiences.
+                </p>
+                <div class="flex gap-4">
+                    <a href="#" class="w-12 h-12 rounded-2xl bg-slate-50 text-slate-400 flex items-center justify-center hover:bg-brand hover:text-white transition-all shadow-sm">𝕏</a>
+                    <a href="#" class="w-12 h-12 rounded-2xl bg-slate-50 text-slate-400 flex items-center justify-center hover:bg-brand hover:text-white transition-all shadow-sm">📸</a>
+                    <a href="#" class="w-12 h-12 rounded-2xl bg-slate-50 text-slate-400 flex items-center justify-center hover:bg-brand hover:text-white transition-all shadow-sm">💼</a>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-8">Platform Nodes</h4>
+                <ul class="space-y-4">
+                    <li><a href="{% url 'event_list' %}" class="text-sm font-semibold text-slate-600 hover:text-brand transition-colors">Discovery Matrix</a></li>
+                    <li><a href="{% url 'tenant_home' %}" class="text-sm font-semibold text-slate-600 hover:text-brand transition-colors">Institutional Network</a></li>
+                    <li><a href="#" class="text-sm font-semibold text-slate-600 hover:text-brand transition-colors">Security Core</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-8">Account Portal</h4>
+                <ul class="space-y-4">
+                    <li><a href="{% url 'login' %}" class="text-sm font-semibold text-slate-600 hover:text-brand transition-colors">Credential Access</a></li>
+                    <li><a href="{% url 'register' %}" class="text-sm font-semibold text-slate-600 hover:text-brand transition-colors">Register Identity</a></li>
+                    <li><a href="#" class="text-sm font-semibold text-slate-600 hover:text-brand transition-colors">Help Terminal</a></li>
+                </ul>
+            </div>
         </div>
-        <p class="text-sm leading-relaxed">The College Event Management System — beautifully organized events for your campus community.</p>
-      </div>
-      <div>
-        <h4 class="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Quick Links</h4>
-        <ul class="space-y-2 text-sm">
-          <li><a href="{% url 'home' %}" class="hover:text-white transition-colors">Home</a></li>
-          <li><a href="{% url 'event_list' %}" class="hover:text-white transition-colors">Browse Events</a></li>
-          {% if not user.is_authenticated %}
-            {% if current_college %}
-              <li><a href="{% url 'register_college_scoped' current_college.slug %}" class="hover:text-white transition-colors">Register</a></li>
-            {% else %}
-              <li><a href="{% url 'register' %}" class="hover:text-white transition-colors">Register</a></li>
-            {% endif %}
-          {% endif %}
-        </ul>
-      </div>
-      <div>
-        <h4 class="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Platform</h4>
-        <ul class="space-y-2 text-sm">
-          <li><a href="{% url 'tenant_home' %}" class="hover:text-white transition-colors">All Colleges</a></li>
-          {% if user.is_superuser %}<li><a href="{% url 'register_college' %}" class="hover:text-white transition-colors">Register College</a></li>{% endif %}
-        </ul>
-      </div>
+        <div class="flex flex-col md:flex-row justify-between items-center gap-8 pt-12 border-t border-slate-50">
+            <p class="text-[10px] font-black uppercase tracking-widest text-slate-300">© 2026 CEMS PROTOCOL. ALL NODES NOMINAL.</p>
+            <div class="flex gap-10">
+                <a href="#" class="text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-brand transition-colors">Privacy Privacy</a>
+                <a href="#" class="text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-brand transition-colors">Service Terms</a>
+            </div>
+        </div>
     </div>
-    <div class="pt-8 border-t border-ink-800 flex flex-col sm:flex-row justify-between items-center gap-4">
-      <p class="text-sm">© 2026 CEMS. Built with ❤️ for campus communities.</p>
-      <p class="text-xs font-mono text-ink-600">Django 5.2 · Python 3.12</p>
-    </div>
-  </div>
 </footer>
 
 <script>

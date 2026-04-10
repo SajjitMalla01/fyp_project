@@ -1,35 +1,61 @@
 {% extends 'base.html' %}
-{% block title %}Register for {{ event.title }}{% endblock %}
+{% load static %}
+{% block title %}Verify Registration | {{ event.title }}{% endblock %}
+
 {% block content %}
-<div class="max-w-lg mx-auto px-4 py-16">
-  <div class="bg-white rounded-2xl border border-ink-100 shadow-lg overflow-hidden">
-    <div class="h-28 {{ event.gradient|default:'bg-gradient-to-br from-blue-600 to-indigo-500' }} flex items-center justify-center text-5xl relative">
-      {{ event.emoji|default:'🎉' }}
-      <div class="absolute inset-0 bg-black/20"></div>
-    </div>
-    <div class="p-8 text-center">
-      <h1 class="font-serif italic text-3xl font-bold text-ink-900 mb-2">Register for Event</h1>
-      <p class="font-bold text-brand text-xl mb-1">{{ event.title }}</p>
-      <p class="text-sm text-ink-400 mb-1">📅 {{ event.date_time|date:"F d, Y at h:i A" }}</p>
-      <p class="text-sm text-ink-400 mb-6">📍 {{ event.venue }}</p>
-      <div class="bg-ink-50 rounded-xl p-4 mb-6 text-sm text-ink-600">
-        <p>You're registering as <strong class="text-ink-900">{{ user.get_full_name|default:user.username }}</strong>.</p>
-        <p class="mt-1 text-xs text-ink-400">{{ event.spots_left }} spots remaining out of {{ event.capacity }} total.</p>
-      </div>
-      <form method="post">
-        {% csrf_token %}
-        {% if form.notes %}
-        <div class="text-left mb-6">
-          <label class="block text-xs font-bold text-ink-600 uppercase tracking-wider mb-2">Notes (Optional)</label>
-          {{ form.notes }}
+<div class="pt-32 pb-24 px-6 lg:px-12 max-w-4xl mx-auto">
+    <div class="bento-panel overflow-hidden animate-reveal">
+        <div class="h-64 relative overflow-hidden">
+            {% if event.image %}
+                <img src="{{ event.image.url }}" class="absolute inset-0 w-full h-full object-cover" alt="">
+            {% else %}
+                <div class="absolute inset-0 {{ event.gradient|default:'g-blue' }} flex items-center justify-center text-7xl animate-float">
+                    {{ event.emoji|default:'🎉' }}
+                </div>
+            {% endif %}
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent"></div>
+            <div class="absolute bottom-10 left-10">
+                <p class="text-[10px] font-black text-brand uppercase tracking-[0.4em] mb-2">Protocol Entry Request</p>
+                <h1 class="font-serif italic text-4xl font-bold text-white leading-none">{{ event.title }}</h1>
+            </div>
         </div>
-        {% endif %}
-        <div class="flex gap-3 justify-center">
-          <a href="{% url 'event_detail' event.pk %}" class="px-6 py-3 text-sm font-semibold text-ink-600 bg-ink-50 rounded-xl border border-ink-200 hover:bg-ink-100 transition-colors">Cancel</a>
-          <button type="submit" class="px-8 py-3 text-sm font-bold text-white bg-brand hover:bg-brand-dark rounded-xl shadow hover:shadow-lg transition-all">Confirm Registration →</button>
+        
+        <div class="p-12 grid md:grid-cols-5 gap-12">
+            <div class="md:col-span-3 space-y-8">
+                <div class="bg-slate-50 rounded-[2rem] p-8 space-y-4">
+                    <h2 class="font-serif italic text-2xl font-bold text-slate-900 border-b border-slate-200 pb-4">Verification Context</h2>
+                    <div class="space-y-4 text-xs font-black text-slate-400 uppercase tracking-widest">
+                        <div class="flex items-center gap-4"><span class="text-lg">🕒</span> <span>{{ event.date_time|date:"l, F d @ H:i" }}</span></div>
+                        <div class="flex items-center gap-4"><span class="text-lg">📍</span> <span>{{ event.venue }}</span></div>
+                        <div class="flex items-center gap-4"><span class="text-lg">👤</span> <span>Identity: {{ user.get_full_name|default:user.username }}</span></div>
+                    </div>
+                </div>
+                
+                <div class="p-8 border-2 border-dashed border-slate-100 rounded-[2rem]">
+                    <p class="text-slate-500 italic leading-relaxed text-sm">
+                        By confirming registration, you are reserving a unique slot in this institutional experience. Please ensure your availability as seats are limited to {{ event.capacity }} participants.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="md:col-span-2 flex flex-col justify-center gap-4">
+                <div class="bento-panel p-8 bg-slate-950 text-white text-center">
+                    <p class="text-[9px] font-black text-white/40 uppercase tracking-[0.3em] mb-6">Enrollment Status</p>
+                    <h3 class="font-serif italic text-4xl font-bold mb-1">{{ event.spots_left }}</h3>
+                    <p class="text-[10px] font-black uppercase tracking-widest text-brand">Vulnerabilities Remaining</p>
+                </div>
+                
+                <form method="post" class="space-y-3">
+                    {% csrf_token %}
+                    <button type="submit" class="w-full py-5 bg-brand text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-brand hover:brightness-110 transition-all">
+                        Execute Registration →
+                    </button>
+                    <a href="{% url 'event_detail' event.pk %}" class="block w-full text-center py-5 bg-slate-50 text-slate-500 text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-slate-100 transition-all">
+                        Abort Transaction
+                    </a>
+                </form>
+            </div>
         </div>
-      </form>
     </div>
-  </div>
 </div>
 {% endblock %}
