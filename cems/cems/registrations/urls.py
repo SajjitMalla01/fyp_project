@@ -10,5 +10,7 @@ urlpatterns = [
     path('verify/<int:registration_id>/', views.verify_registration, name='verify_registration'),
     path('<int:registration_id>/approve/', views.approve_registration, name='approve_registration'),
     path('<int:registration_id>/reject/', views.reject_registration, name='reject_registration'),
+    path('event/<int:event_id>/export/', views.export_participants_csv, name='export_participants'),
+    path('event/<int:event_id>/ticket/print/', views.print_ticket, name='print_ticket'),
     path('scanner/', views.scanner_view, name='scanner'),
 ]

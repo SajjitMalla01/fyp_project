@@ -6,6 +6,8 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.conf import settings
+from django.http import HttpResponse
+import csv
 
 from events.models import Event
 from registrations.models import Registration
@@ -241,3 +243,53 @@ def scanner_view(request):
         messages.error(request, 'Access denied. Staff only.')
         return redirect('home')
     return render(request, 'registrations/scanner.html')
+
+@login_required
+def export_participants_csv(request, event_id):
+    """Staff view to export event participants as a CSV file."""
+    event = get_object_or_404(Event, pk=event_id)
+
+    try:
+        if not (request.user.is_superuser or getattr(request.user.profile, 'is_staff', False) or getattr(request.user.profile, 'is_admin', False)):
+            messages.error(request, 'Access denied.')
+            return redirect('event_detail', pk=event_id)
+    except Exception:
+        messages.error(request, 'Access denied.')
+        return redirect('event_detail', pk=event_id)
+
+    regs = Registration.objects.filter(event=event).select_related('user', 'user__profile').order_by('-registered_at')
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="{event.slug|default:"event"}_participants.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Name', 'Username/ID', 'Email', 'Department', 'Status', 'Registration Date'])
+
+    for reg in regs:
+        writer.writerow([
+            reg.user.get_full_name() or reg.user.username,
+            reg.user.username,
+            reg.user.email,
+            getattr(reg.user.profile, 'department', '—'),
+            reg.status,
+            reg.registered_at.strftime("%Y-%m-%d %H:%M:%S")
+        ])
+
+    return response
+
+
+@login_required
+def print_ticket(request, event_id):
+    """View to return a printer-optimized ticket for a specific event registration."""
+    registration = get_object_or_404(Registration, event_id=event_id, user=request.user)
+
+    if registration.status != 'PUBLISHED' and registration.status not in ['REGISTERED', 'ATTENDED']:
+        messages.error(request, 'Only confirmed registrations can be printed.')
+        return redirect('student_dashboard')
+
+    return render(request, 'registrations/ticket_print.html', {
+        'registration': registration,
+        'event': registration.event,
+        'user': request.user,
+    })
+

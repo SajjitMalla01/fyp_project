@@ -267,6 +267,42 @@
                     <a href="{% url 'event_list' %}" class="block text-center text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 hover:text-slate-900 transition-colors py-4">Return to Repository</a>
                 </div>
             </div>
+
+            <!-- Network Amplification (Social) -->
+            <div class="bg-gradient-to-br from-brand to-indigo-600 rounded-[3rem] p-8 text-white shadow-xl relative overflow-hidden group">
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-all duration-700"></div>
+                
+                <p class="text-[9px] font-black uppercase text-white/50 tracking-[0.4em] mb-6 relative z-10">Network Amplification</p>
+                
+                <div class="space-y-3 relative z-10">
+                    <!-- WhatsApp -->
+                    <a href="https://wa.me/?text=Join me at {{ event.title|urlencode }}! %0A%0ARegister here: {{ request.build_absolute_uri|urlencode }}" target="_blank"
+                       class="flex items-center justify-between p-5 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-[2rem] border border-white/5 transition-all">
+                        <div class="flex items-center gap-4">
+                            <span class="text-xl">💬</span>
+                            <span class="text-[10px] font-black uppercase tracking-widest">WhatsApp</span>
+                        </div>
+                    </a>
+                    
+                    <!-- Email -->
+                    <a href="mailto:?subject=Join me at {{ event.title|urlencode }}&body=Check out this event: {{ request.build_absolute_uri|urlencode }}"
+                       class="flex items-center justify-between p-5 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-[2rem] border border-white/5 transition-all">
+                        <div class="flex items-center gap-4">
+                            <span class="text-xl">📧</span>
+                            <span class="text-[10px] font-black uppercase tracking-widest">Email Invite</span>
+                        </div>
+                    </a>
+
+                    <!-- Copy Link -->
+                    <button onclick="navigator.clipboard.writeText('{{ request.build_absolute_uri }}'); alert('Link Copied to Clipboard!');"
+                       class="w-full flex items-center justify-between p-5 bg-black/20 hover:bg-black/30 backdrop-blur-md rounded-[2rem] border border-white/5 transition-all">
+                        <div class="flex items-center gap-4">
+                            <span class="text-xl">🔗</span>
+                            <span class="text-[10px] font-black uppercase tracking-widest">Copy URL</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
         </div>
 
     </aside>
