@@ -1,17 +1,20 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="CEMS - College Event Management System">
   <title>CEMS | {% block title %}Home{% endblock %}</title>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
           fontFamily: {
@@ -26,11 +29,11 @@
               dark: 'var(--brand-dark, #1d4ed8)', 
               light: 'var(--brand-light, #eff6ff)', 
               accent: 'var(--brand-accent, #7c3aed)', 
-              'accent-light': '#ede9fe' 
             },
           },
           boxShadow: {
             'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
+            'glass-dark': '0 8px 32px 0 rgba(0, 0, 0, 0.4)',
             'premium': '0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02)',
             'brand': '0 10px 15px -3px var(--brand-alpha, rgba(37, 99, 235, 0.2))',
           },
@@ -50,6 +53,16 @@
       }
     }
   </script>
+  
+  <script>
+    // Theme initialization script - avoids flash of unstyled content
+    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+    } else {
+        document.documentElement.classList.remove('dark');
+    }
+  </script>
+
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
   <style>
     .g-blue { background: linear-gradient(135deg, #2563eb, #60a5fa); }
@@ -58,10 +71,18 @@
     .g-rose { background: linear-gradient(135deg, #dc2626, #f87171); }
     .g-amber { background: linear-gradient(135deg, #d97706, #fbbf24); }
     .g-slate { background: linear-gradient(135deg, #1e293b, #475569); }
+    
+    /* Bento Panel Core */
+    .bento-panel {
+      @apply bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[2.5rem] shadow-premium transition-all duration-500;
+    }
   </style>
   {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-ink-50 font-sans text-ink-700 antialiased min-h-screen flex flex-col" {% if current_college %}data-pc="{{ current_college.primary_color }}" data-ac="{{ current_college.accent_color }}"{% endif %}>
+
+<body class="bg-slate-50 dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 antialiased min-h-screen flex flex-col transition-colors duration-500" 
+      {% if current_college %}data-pc="{{ current_college.primary_color }}" data-ac="{{ current_college.accent_color }}"{% endif %}>
+
 <script>
   if (document.body.hasAttribute('data-pc')) {
     document.documentElement.style.setProperty('--brand', document.body.getAttribute('data-pc'));
@@ -71,28 +92,36 @@
 
 <!-- NAVBAR -->
 <div class="fixed top-6 left-0 right-0 z-[100] px-6">
-  <nav class="max-w-7xl mx-auto bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-[2rem] shadow-glass px-6 py-3 transition-all duration-500 hover:shadow-premium group/nav">
+  <nav class="max-w-7xl mx-auto bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-[2rem] shadow-glass dark:shadow-glass-dark px-6 py-3 transition-all duration-500 hover:shadow-premium group/nav">
     <div class="flex items-center justify-between">
+      
       <!-- Brand -->
-      <a href="{% url 'home' %}{% if current_college %}?college_id={{ current_college.id }}{% endif %}" class="flex items-center gap-3 group">
+      <a href="{% url 'home' %}" class="flex items-center gap-3 group">
         <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-brand to-brand-accent flex items-center justify-center text-white font-bold text-xl shadow-lg group-hover:rotate-12 transition-all duration-500">C</div>
         <div class="flex flex-col">
-          <span class="font-serif italic text-2xl text-ink-900 dark:text-white leading-none tracking-tight">CEMS</span>
+          <span class="font-serif italic text-2xl text-slate-900 dark:text-white leading-none tracking-tight">CEMS</span>
           {% if current_college %}<span class="text-[9px] font-black text-brand uppercase tracking-widest">{{ current_college.name }}</span>{% endif %}
         </div>
       </a>
 
       <!-- Desktop Nav -->
       <div class="hidden md:flex items-center gap-1">
+        
+        <!-- Theme Toggle -->
+        <button id="theme-toggle" class="p-2.5 mr-4 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-brand transition-all">
+            <span id="theme-toggle-dark-icon" class="hidden text-xl">🌙</span>
+            <span id="theme-toggle-light-icon" class="hidden text-xl">☀️</span>
+        </button>
+
         {% if all_colleges and user.is_superuser %}
         <!-- COLLEGE SWITCHER -->
         <div class="relative group mr-4">
-          <button class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-ink-50 border border-ink-200 text-xs font-bold text-ink-600 hover:border-brand transition-all">
+          <button class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-300 hover:border-brand transition-all">
             🏛️ Switch College <span class="text-[10px] opacity-40">▼</span>
           </button>
-          <div class="absolute left-0 top-full mt-1 w-56 bg-white rounded-xl shadow-xl border border-ink-100 py-2 hidden group-hover:block animate-fade-in z-50">
+          <div class="absolute left-0 top-full mt-1 w-56 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-100 dark:border-slate-700 py-2 hidden group-hover:block animate-fade-in z-50">
             {% for c in all_colleges %}
-            <a href="{% url 'switch_college' c.id %}" class="flex items-center justify-between px-4 py-2.5 text-xs font-semibold text-ink-700 hover:bg-brand/5 hover:text-brand transition-colors {% if current_college.id == c.id %}bg-brand/5 text-brand{% endif %}">
+            <a href="{% url 'switch_college' c.id %}" class="flex items-center justify-between px-4 py-2.5 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-brand/5 hover:text-brand transition-colors {% if current_college.id == c.id %}bg-brand/5 text-brand{% endif %}">
               {{ c.name }}
               {% if current_college.id == c.id %}<span>✓</span>{% endif %}
             </a>
@@ -101,79 +130,67 @@
         </div>
         {% endif %}
 
-        <a href="{% url 'home' %}{% if current_college %}?college_id={{ current_college.id }}{% endif %}" class="px-4 py-2 text-sm font-medium text-ink-600 hover:text-ink-900 hover:bg-ink-50 rounded-lg transition-colors">Home</a>
-        <a href="{% url 'event_list' %}{% if current_college %}?college_id={{ current_college.id }}{% endif %}" class="px-4 py-2 text-sm font-medium text-ink-600 hover:text-ink-900 hover:bg-ink-50 rounded-lg transition-colors">Events</a>
+        <a href="{% url 'home' %}" class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors">Home</a>
+        <a href="{% url 'event_list' %}" class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors">Events</a>
+        
         {% if user.is_authenticated %}
-          {% if user.profile.role == 'ADMIN' or user.is_superuser %}
-            <a href="{% url 'admin_dashboard' %}{% if current_college %}?college_id={{ current_college.id }}{% endif %}" class="px-4 py-2 text-sm font-medium text-ink-600 hover:text-ink-900 hover:bg-ink-50 rounded-lg transition-colors">Dashboard</a>
+          {% if user.is_superuser or user.profile.role == 'ADMIN' %}
+            <a href="{% url 'admin_dashboard' %}" class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors">Dashboard</a>
           {% elif user.profile.role == 'STAFF' %}
-            <a href="{% url 'staff_dashboard' %}{% if current_college %}?college_id={{ current_college.id }}{% endif %}" class="px-4 py-2 text-sm font-medium text-ink-600 hover:text-ink-900 hover:bg-ink-50 rounded-lg transition-colors">Dashboard</a>
+            <a href="{% url 'staff_dashboard' %}" class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors">Dashboard</a>
           {% else %}
-            <a href="{% url 'student_dashboard' %}{% if current_college %}?college_id={{ current_college.id }}{% endif %}" class="px-4 py-2 text-sm font-medium text-ink-600 hover:text-ink-900 hover:bg-ink-50 rounded-lg transition-colors">My Dashboard</a>
+            <a href="{% url 'student_dashboard' %}" class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors">My Dashboard</a>
           {% endif %}
-          <div class="w-px h-5 bg-ink-200 mx-1"></div>
-          <a href="{% url 'profile' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-ink-200 hover:border-ink-300 text-sm font-medium text-ink-700 transition-colors">
+          
+          <div class="w-px h-5 bg-slate-200 dark:bg-slate-700 mx-1"></div>
+          
+          <a href="{% url 'profile' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 hover:border-slate-300 text-sm font-medium text-slate-700 dark:text-slate-200 transition-colors">
             <div class="w-6 h-6 rounded-full bg-gradient-to-br from-brand to-brand-accent text-white flex items-center justify-center text-xs font-bold">{{ user.username|first|upper }}</div>
             {{ user.username }}
           </a>
+          
           <form action="{% url 'logout' %}" method="post" class="inline">
             {% csrf_token %}
-            <button type="submit" class="ml-1 px-3 py-1.5 text-sm font-medium text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors">Logout</button>
+            <button type="submit" class="ml-1 px-3 py-1.5 text-sm font-medium text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg transition-colors">Logout</button>
           </form>
         {% else %}
-          {% if current_college %}
-            <a href="{% url 'login_college_scoped' current_college.slug %}" class="px-4 py-2 text-sm font-medium text-ink-700 hover:text-ink-900 hover:bg-ink-50 rounded-lg transition-colors">Login</a>
-            <a href="{% url 'register_college_scoped' current_college.slug %}" class="px-5 py-2 text-sm font-semibold text-white bg-brand hover:bg-brand-dark rounded-xl shadow-sm hover:shadow-brand/30 transition-all">Get Started</a>
-          {% else %}
-            <a href="{% url 'login' %}" class="px-4 py-2 text-sm font-medium text-ink-700 hover:text-ink-900 hover:bg-ink-50 rounded-lg transition-colors">Login</a>
-            <a href="{% url 'register' %}" class="px-5 py-2 text-sm font-semibold text-white bg-brand hover:bg-brand-dark rounded-xl shadow-sm hover:shadow-brand/30 transition-all">Get Started</a>
-          {% endif %}
+          <a href="{% url 'login' %}" class="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors">Login</a>
+          <a href="{% url 'register' %}" class="px-5 py-2 text-sm font-semibold text-white bg-brand hover:bg-brand-dark rounded-xl shadow-sm hover:shadow-brand/30 transition-all">Get Started</a>
         {% endif %}
       </div>
 
       <!-- Mobile menu button -->
-      <button id="mob-menu-btn" class="md:hidden p-2 rounded-lg text-ink-500 hover:bg-ink-100 transition-colors">
+      <button id="mob-menu-btn" class="md:hidden p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
       </button>
     </div>
-  </div>
+  </nav>
 
   <!-- Mobile Nav -->
-  <div id="mob-menu" class="hidden md:hidden border-t border-ink-100 bg-white px-4 py-3 space-y-1">
-    <a href="{% url 'home' %}" class="block px-3 py-2.5 text-sm font-medium text-ink-700 hover:bg-ink-50 rounded-lg">Home</a>
-    <a href="{% url 'event_list' %}" class="block px-3 py-2.5 text-sm font-medium text-ink-700 hover:bg-ink-50 rounded-lg">Events</a>
+  <div id="mob-menu" class="hidden md:hidden mt-2 bg-white dark:bg-slate-900 rounded-2xl shadow-xl p-4 space-y-2 border border-slate-100 dark:border-slate-800">
+    <a href="{% url 'home' %}" class="block px-3 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg">Home</a>
+    <a href="{% url 'event_list' %}" class="block px-3 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg">Events</a>
     {% if user.is_authenticated %}
-      <a href="{% url 'profile' %}" class="block px-3 py-2.5 text-sm font-medium text-ink-700 hover:bg-ink-50 rounded-lg">Profile</a>
-      <form action="{% url 'logout' %}" method="post">
-        {% csrf_token %}
-        <button type="submit" class="w-full text-left px-3 py-2.5 text-sm font-medium text-red-500 hover:bg-red-50 rounded-lg">Logout</button>
-      </form>
+      <a href="{% url 'profile' %}" class="block px-3 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg">Profile</a>
+      <form action="{% url 'logout' %}" method="post">{% csrf_token %}<button type="submit" class="w-full text-left px-3 py-2.5 text-sm font-medium text-rose-500 rounded-lg">Logout</button></form>
     {% else %}
-      {% if current_college %}
-        <a href="{% url 'login_college_scoped' current_college.slug %}" class="block px-3 py-2.5 text-sm font-medium text-ink-700 hover:bg-ink-50 rounded-lg">Login</a>
-        <a href="{% url 'register_college_scoped' current_college.slug %}" class="block px-3 py-2.5 text-sm font-semibold text-white bg-brand rounded-xl text-center">Get Started</a>
-      {% else %}
-        <a href="{% url 'login' %}" class="block px-3 py-2.5 text-sm font-medium text-ink-700 hover:bg-ink-50 rounded-lg">Login</a>
-        <a href="{% url 'register' %}" class="block px-3 py-2.5 text-sm font-semibold text-white bg-brand rounded-xl text-center">Get Started</a>
-      {% endif %}
+      <a href="{% url 'login' %}" class="block px-3 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 rounded-lg">Login</a>
+      <a href="{% url 'register' %}" class="block px-3 py-2.5 text-sm font-semibold text-white bg-brand rounded-xl text-center">Get Started</a>
     {% endif %}
   </div>
-</nav>
+</div>
 
 <!-- MESSAGES -->
 {% if messages %}
-<div class="fixed top-20 right-4 z-50 flex flex-col gap-2 max-w-sm w-full">
+<div class="fixed top-24 right-4 z-50 flex flex-col gap-3 max-w-sm w-full">
   {% for message in messages %}
-  <div class="flex items-start gap-3 p-4 rounded-xl shadow-lg border animate-fade-up
-    {% if message.tags == 'success' %}bg-emerald-50 border-emerald-200 text-emerald-800
-    {% elif message.tags == 'error' %}bg-red-50 border-red-200 text-red-800
-    {% elif message.tags == 'warning' %}bg-amber-50 border-amber-200 text-amber-800
-    {% else %}bg-blue-50 border-blue-200 text-blue-800{% endif %}">
-    <span class="text-lg flex-shrink-0">
-      {% if message.tags == 'success' %}✅{% elif message.tags == 'error' %}❌{% elif message.tags == 'warning' %}⚠️{% else %}ℹ️{% endif %}
-    </span>
-    <p class="text-sm font-medium leading-snug">{{ message }}</p>
-    <button onclick="this.parentElement.remove()" class="ml-auto flex-shrink-0 opacity-50 hover:opacity-100 transition-opacity text-lg leading-none">&times;</button>
+  <div class="flex items-start gap-4 p-5 rounded-2xl shadow-2xl border backdrop-blur-3xl animate-fade-up
+    {% if message.tags == 'success' %}bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400
+    {% elif message.tags == 'error' %}bg-rose-500/10 border-rose-500/20 text-rose-600 dark:text-rose-400
+    {% elif message.tags == 'warning' %}bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400
+    {% else %}bg-brand/10 border-brand/20 text-brand{% endif %}">
+    <span class="text-xl">{% if message.tags == 'success' %}✅{% elif message.tags == 'error' %}❌{% elif message.tags == 'warning' %}⚠️{% else %}ℹ️{% endif %}</span>
+    <p class="text-sm font-bold leading-tight">{{ message }}</p>
   </div>
   {% endfor %}
 </div>
@@ -185,65 +202,71 @@
 </main>
 
 <!-- FOOTER -->
-<!-- FOOTER (PREMIUM UPGRADE) -->
-<footer class="mt-32 border-t border-slate-100 bg-white/50 backdrop-blur-3xl px-6 lg:px-12 py-24 relative overflow-hidden">
-    <div class="absolute inset-0 bg-gradient-to-br from-brand/5 via-transparent to-indigo-500/5 -z-10"></div>
+<footer class="mt-40 border-t border-slate-100 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 backdrop-blur-3xl px-6 lg:px-12 py-24 relative overflow-hidden transition-colors">
     <div class="max-w-7xl mx-auto">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-16 mb-24">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-20 mb-24">
             <div class="md:col-span-2">
                 <div class="flex items-center gap-3 mb-8">
                     <div class="w-10 h-10 bg-brand rounded-2xl flex items-center justify-center text-white text-xl shadow-brand">🎓</div>
-                    <span class="font-serif italic text-3xl font-bold tracking-tight text-slate-900">CEMS</span>
+                    <span class="font-serif italic text-3xl font-bold tracking-tight text-slate-900 dark:text-white">CEMS</span>
                 </div>
-                <p class="text-slate-500 text-lg font-light leading-relaxed mb-10 max-w-sm">
-                    Synchronizing campus life through high-fidelity management intelligence. Empowering institutions and students to co-create premium experiences.
+                <p class="text-slate-500 dark:text-slate-400 text-lg font-light leading-relaxed mb-10 max-w-sm">
+                    Synchronizing campus life through high-fidelity management intelligence. Empowering institutions to co-create premium experiences.
                 </p>
-                <div class="flex gap-4">
-                    <a href="#" class="w-12 h-12 rounded-2xl bg-slate-50 text-slate-400 flex items-center justify-center hover:bg-brand hover:text-white transition-all shadow-sm">𝕏</a>
-                    <a href="#" class="w-12 h-12 rounded-2xl bg-slate-50 text-slate-400 flex items-center justify-center hover:bg-brand hover:text-white transition-all shadow-sm">📸</a>
-                    <a href="#" class="w-12 h-12 rounded-2xl bg-slate-50 text-slate-400 flex items-center justify-center hover:bg-brand hover:text-white transition-all shadow-sm">💼</a>
-                </div>
             </div>
-            <div>
-                <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-8">Platform Nodes</h4>
-                <ul class="space-y-4">
-                    <li><a href="{% url 'event_list' %}" class="text-sm font-semibold text-slate-600 hover:text-brand transition-colors">Discovery Matrix</a></li>
-                    <li><a href="{% url 'tenant_home' %}" class="text-sm font-semibold text-slate-600 hover:text-brand transition-colors">Institutional Network</a></li>
-                    <li><a href="#" class="text-sm font-semibold text-slate-600 hover:text-brand transition-colors">Security Core</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-8">Account Portal</h4>
-                <ul class="space-y-4">
-                    <li><a href="{% url 'login' %}" class="text-sm font-semibold text-slate-600 hover:text-brand transition-colors">Credential Access</a></li>
-                    <li><a href="{% url 'register' %}" class="text-sm font-semibold text-slate-600 hover:text-brand transition-colors">Register Identity</a></li>
-                    <li><a href="#" class="text-sm font-semibold text-slate-600 hover:text-brand transition-colors">Help Terminal</a></li>
-                </ul>
-            </div>
+            <div><h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-8">Navigation</h4><ul class="space-y-4"><li><a href="{% url 'event_list' %}" class="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-brand transition-colors">Events Discovery</a></li><li><a href="{% url 'tenant_home' %}" class="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-brand transition-colors">Institutional Hub</a></li></ul></div>
+            <div><h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-8">Identity</h4><ul class="space-y-4"><li><a href="{% url 'login' %}" class="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-brand transition-colors">Portal Login</a></li><li><a href="{% url 'register' %}" class="text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-brand transition-colors">Create Account</a></li></ul></div>
         </div>
-        <div class="flex flex-col md:flex-row justify-between items-center gap-8 pt-12 border-t border-slate-50">
-            <p class="text-[10px] font-black uppercase tracking-widest text-slate-300">© 2026 CEMS PROTOCOL. ALL NODES NOMINAL.</p>
-            <div class="flex gap-10">
-                <a href="#" class="text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-brand transition-colors">Privacy Privacy</a>
-                <a href="#" class="text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-brand transition-colors">Service Terms</a>
-            </div>
-        </div>
+        <div class="flex justify-between items-center py-12 border-t border-slate-50 dark:border-slate-800"><p class="text-[10px] font-black uppercase tracking-widest text-slate-300 dark:text-slate-700">© 2026 CEMS PROTOCOL. NODES NOMINAL.</p></div>
     </div>
 </footer>
 
 <script>
   // Mobile menu toggle
-  document.getElementById('mob-menu-btn').addEventListener('click', () => {
-    document.getElementById('mob-menu').classList.toggle('hidden');
+  document.getElementById('mob-menu-btn').addEventListener('click', () => document.getElementById('mob-menu').classList.toggle('hidden'));
+
+  // Theme Toggle Logic
+  var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+  var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+  if (document.documentElement.classList.contains('dark')) {
+      themeToggleLightIcon.classList.remove('hidden');
+  } else {
+      themeToggleDarkIcon.classList.remove('hidden');
+  }
+
+  document.getElementById('theme-toggle').addEventListener('click', function() {
+      themeToggleDarkIcon.classList.toggle('hidden');
+      themeToggleLightIcon.classList.toggle('hidden');
+
+      if (localStorage.getItem('color-theme')) {
+          if (localStorage.getItem('color-theme') === 'light') {
+              document.documentElement.classList.add('dark');
+              localStorage.setItem('color-theme', 'dark');
+          } else {
+              document.documentElement.classList.remove('dark');
+              localStorage.setItem('color-theme', 'light');
+          }
+      } else {
+          if (document.documentElement.classList.contains('dark')) {
+              document.documentElement.classList.remove('dark');
+              localStorage.setItem('color-theme', 'light');
+          } else {
+              document.documentElement.classList.add('dark');
+              localStorage.setItem('color-theme', 'dark');
+          }
+      }
   });
+
   // Auto-dismiss messages
   setTimeout(() => {
     document.querySelectorAll('[class*="animate-fade-up"]').forEach(el => {
-      el.style.transition = 'opacity 0.5s';
+      el.style.transition = 'opacity 0.8s, transform 0.8s';
       el.style.opacity = '0';
-      setTimeout(() => el.remove(), 500);
+      el.style.transform = 'translateY(-20px)';
+      setTimeout(() => el.remove(), 800);
     });
-  }, 5000);
+  }, 4000);
 </script>
 {% block extra_js %}{% endblock %}
 </body>
