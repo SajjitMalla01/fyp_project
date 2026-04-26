@@ -28,7 +28,7 @@ class TenantMiddleware:
             subdomain = host.split('.')[0]
             try:
                 from tenants.models import College
-                request.college = College.objects.filter(slug=subdomain, status__in=['ACTIVE', 'TRIAL']).first()
+                request.college = College.objects.filter(slug=subdomain, status='ACTIVE').first()
             except: pass
 
         # 2. Detection by Path Prefix (fallback if not already detected by subdomain)
@@ -37,7 +37,7 @@ class TenantMiddleware:
             if len(parts) >= 2:
                 from tenants.models import College
                 try:
-                    request.college = College.objects.get(slug=parts[1], status__in=['ACTIVE', 'TRIAL'])
+                    request.college = College.objects.get(slug=parts[1], status='ACTIVE')
                 except: pass
 
         response = self.get_response(request)

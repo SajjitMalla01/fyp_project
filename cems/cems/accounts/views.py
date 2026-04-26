@@ -22,10 +22,10 @@ def _get_college_from_session(request):
     college_id = request.session.get('college_id')
     if college_id:
         try:
-            return College.objects.get(id=college_id, status__in=['ACTIVE', 'TRIAL'])
+            return College.objects.get(id=college_id, status__in=['ACTIVE'])
         except College.DoesNotExist:
             pass
-    return College.objects.filter(status__in=['ACTIVE', 'TRIAL']).first()
+    return College.objects.filter(status__in=['ACTIVE']).first()
 
 
 def _redirect_by_role(user):
@@ -46,103 +46,19 @@ def _redirect_by_role(user):
 
 def _send_verification_email(user, code):
     """
-    Send a beautiful HTML OTP email. Falls back to console on SMTP failure.
-    Returns True if email was sent successfully.
+    Send a professional HTML verification email.
     """
+    from django.template.loader import render_to_string
+    from django.utils.html import strip_tags
+
     subject = 'Your CEMS Verification Code'
-    html_message = f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Verify Your CEMS Account</title>
-</head>
-<body style="margin:0;padding:0;background:#f0f4f8;font-family:'Helvetica Neue',Arial,sans-serif">
-  <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 20px">
-    <tr>
-      <td align="center">
-        <table width="520" cellpadding="0" cellspacing="0"
-               style="background:#fff;border-radius:20px;overflow:hidden;
-                      box-shadow:0 8px 40px rgba(0,0,0,0.10)">
-
-          <!-- Header -->
-          <tr>
-            <td style="background:linear-gradient(135deg,#1e40af 0%,#2563eb 50%,#7c3aed 100%);
-                       padding:40px;text-align:center">
-              <div style="display:inline-block;width:56px;height:56px;
-                          background:rgba(255,255,255,0.15);border-radius:14px;
-                          font-size:28px;line-height:56px;margin-bottom:16px">🎓</div>
-              <h1 style="color:#fff;margin:0;font-size:28px;font-weight:300;
-                         font-style:italic;letter-spacing:-0.02em">CEMS</h1>
-              <p style="color:rgba(255,255,255,0.65);margin:6px 0 0;font-size:12px;
-                        font-weight:700;letter-spacing:0.12em;text-transform:uppercase">
-                College Event Management System
-              </p>
-            </td>
-          </tr>
-
-          <!-- Body -->
-          <tr>
-            <td style="padding:48px 48px 32px">
-              <h2 style="color:#0f172a;font-size:22px;font-weight:600;
-                         margin:0 0 12px">Verify your account</h2>
-              <p style="color:#475569;line-height:1.7;margin:0 0 36px;font-size:15px">
-                Hi <strong style="color:#0f172a">{user.get_full_name() or user.username}</strong>,<br>
-                Enter the 6-digit code below to activate your CEMS account.
-              </p>
-
-              <!-- OTP Code Box -->
-              <div style="background:linear-gradient(135deg,#f8fafc,#f0f4f8);
-                          border:1.5px solid #e2e8f0;border-radius:16px;
-                          padding:32px;text-align:center;margin-bottom:32px">
-                <p style="color:#64748b;font-size:11px;font-weight:700;
-                          letter-spacing:0.12em;text-transform:uppercase;margin:0 0 16px">
-                  Your Verification Code
-                </p>
-                <div style="font-family:'Courier New',Courier,monospace;
-                            font-size:42px;font-weight:700;color:#0f172a;
-                            letter-spacing:0.5em;padding-left:0.5em">
-                  {code}
-                </div>
-              </div>
-
-              <!-- Warning -->
-              <div style="background:#fffbeb;border:1.5px solid #fde68a;
-                          border-radius:10px;padding:14px 18px;margin-bottom:32px;
-                          display:flex;align-items:flex-start;gap:10px">
-                <span style="font-size:18px">⏱</span>
-                <p style="color:#78350f;font-size:13px;margin:0;line-height:1.6">
-                  This code expires in <strong>30 minutes</strong>.
-                  If you didn't create a CEMS account, you can safely ignore this email.
-                </p>
-              </div>
-            </td>
-          </tr>
-
-          <!-- Footer -->
-          <tr>
-            <td style="padding:20px 48px 36px;border-top:1px solid #f1f5f9">
-              <p style="color:#94a3b8;font-size:12px;margin:0;line-height:1.6">
-                Sent to <strong>{user.email}</strong> · CEMS Platform<br>
-                <a href="#" style="color:#2563eb;text-decoration:none">Unsubscribe</a> ·
-                <a href="#" style="color:#2563eb;text-decoration:none">Privacy Policy</a>
-              </p>
-            </td>
-          </tr>
-
-        </table>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>"""
-
-    plain_message = (
-        f"Hi {user.get_full_name() or user.username},\n\n"
-        f"Your CEMS verification code is: {code}\n\n"
-        f"This code expires in 30 minutes.\n\n"
-        f"If you did not register, ignore this email."
-    )
+    context = {
+        'user': user,
+        'code': code,
+    }
+    
+    html_message = render_to_string('emails/verify_email.html', context)
+    plain_message = strip_tags(html_message)
 
     try:
         send_mail(
@@ -218,6 +134,13 @@ def register(request, college_slug=None):
             profile, _ = Profile.objects.get_or_create(user=user)
             profile.role = role
             profile.college = target_college
+            
+            # Staff accounts require approval
+            if role == 'STAFF':
+                profile.is_approved = False
+            else:
+                profile.is_approved = True
+                
             profile.save()
 
             # Generate 6-digit OTP with 30-minute expiry
@@ -298,7 +221,12 @@ def login_view(request, college_slug=None):
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
-            Profile.objects.get_or_create(user=user, defaults={'role': 'STUDENT'})
+            profile, _ = Profile.objects.get_or_create(user=user, defaults={'role': 'STUDENT'})
+            
+            if not profile.is_approved:
+                messages.warning(request, 'Your staff account is pending administrative approval. Please wait for an administrator to activate your access.')
+                return redirect('login')
+                
             login(request, user)
             messages.success(request, f'Welcome back, {user.get_full_name() or user.username}!')
             return _redirect_by_role(user)
@@ -314,7 +242,7 @@ def admin_gateway(request):
         return _redirect_by_role(request.user)
         
     from tenants.models import College
-    colleges = College.objects.filter(status__in=['ACTIVE', 'TRIAL']).order_by('name')[:2]
+    colleges = College.objects.filter(status__in=['ACTIVE']).order_by('name')[:2]
     
     # If no colleges exist, let's show a helpful state
     if not colleges.exists():
@@ -388,10 +316,17 @@ def verify_email(request):
 
             from django.contrib.auth.models import User
             user = User.objects.get(pk=user_id)
+            
+            # If staff, check if they need approval
+            if user.profile.role == 'STAFF' and not user.profile.is_approved:
+                del request.session['pending_user_id']
+                messages.success(request, 'Email verified! Your staff account is now pending administrative approval. You will be able to log in once an admin approves your request.')
+                return redirect('login')
+
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             login(request, user)
             del request.session['pending_user_id']
-            messages.success(request, 'Email verified! Welcome to CEMS 🎉')
+            messages.success(request, 'Email verified! Welcome to CEMS.')
             return _redirect_by_role(user)
 
         except EmailVerification.DoesNotExist:
@@ -472,3 +407,33 @@ def profile(request):
     return render(request, 'accounts/profile.html', {
         'profile': user_profile,
     })
+
+
+@login_required
+def approve_staff(request, user_id):
+    """Admin view to approve a pending staff user."""
+    if not (request.user.is_superuser or request.user.profile.role == 'ADMIN'):
+        messages.error(request, 'Permission denied.')
+        return redirect('home')
+        
+    staff_profile = get_object_or_404(Profile, user_id=user_id, role='STAFF')
+    staff_profile.is_approved = True
+    staff_profile.save()
+    
+    messages.success(request, f'Approved staff account: {staff_profile.user.username}')
+    return redirect('admin_dashboard')
+
+
+@login_required
+def reject_staff(request, user_id):
+    """Admin view to reject/delete a pending staff user."""
+    if not (request.user.is_superuser or request.user.profile.role == 'ADMIN'):
+        messages.error(request, 'Permission denied.')
+        return redirect('home')
+        
+    staff_profile = get_object_or_404(Profile, user_id=user_id, role='STAFF')
+    username = staff_profile.user.username
+    staff_profile.user.delete() # Deleting user deletes profile
+    
+    messages.warning(request, f'Rejected and removed staff account: {username}')
+    return redirect('admin_dashboard')

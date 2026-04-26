@@ -6,446 +6,446 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
 <style>
-    .sb-btn.active { background: var(--brand); color: white; shadow: 0 10px 15px -3px rgba(37,99,235,0.3); }
-    .bento-panel { background: white; border: 1px solid #f1f5f9; border-radius: 2.5rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.02); overflow: hidden; }
+ .sb-btn.active { background: var(--brand); color: white; shadow: 0 10px 15px -3px rgba(37,99,235,0.3); }
+ .bento-panel { background: white; border: 1px solid #f1f5f9; border-radius: 2.5rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.02); overflow: hidden; }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="pt-32 pb-24 px-6 lg:px-12 max-w-[1600px] mx-auto flex flex-col lg:flex-row gap-12">
-    
-    <!-- ADMIN COMMAND RAIL (FULL RESTORATION) -->
-    <aside class="lg:w-72 flex-shrink-0">
-        <div class="sticky top-32 space-y-2 bg-white/50 backdrop-blur-xl p-4 rounded-[2.5rem] border border-white/50 shadow-premium">
-            <p class="text-[9px] font-black uppercase text-slate-400 tracking-[0.4em] px-4 mb-4">Command Rail</p>
-            <button onclick="goTab('dashboard', this)" class="sb-btn active w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
-                <span class="text-lg">⊞</span> Overview
-            </button>
-            <button onclick="goTab('calendar', this)" class="sb-btn w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
-                <span class="text-lg">📅</span> Schedule
-            </button>
-            <button onclick="goTab('analytics', this)" class="sb-btn w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
-                <span class="text-lg">📊</span> Insights
-            </button>
-            
-            <div class="h-px bg-slate-100 my-4 mx-4"></div>
-            <p class="text-[9px] font-black uppercase text-slate-400 tracking-[0.4em] px-4 mb-4">Management</p>
-            
-            <button onclick="goTab('events', this)" class="sb-btn w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
-                <span class="text-lg">📋</span> Events Hub
-            </button>
-            <button onclick="goTab('social', this)" class="sb-btn w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
-                <span class="text-lg">💬</span> Community
-            </button>
-            <button onclick="goTab('pending', this)" class="sb-btn w-full flex items-center justify-between px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
-                <div class="flex items-center gap-3"><span class="text-lg">⏳</span> Moderation</div>
-                {% if pending_events > 0 %}<span class="px-2 py-0.5 bg-amber-500 text-white rounded-lg text-[8px]">{{ pending_events }}</span>{% endif %}
-            </button>
-            <button onclick="goTab('attendance', this)" class="sb-btn w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
-                <span class="text-lg">✅</span> Attendance
-            </button>
-            
-            <div class="h-px bg-slate-100 my-4 mx-4"></div>
-            <p class="text-[9px] font-black uppercase text-slate-400 tracking-[0.4em] px-4 mb-4">Infrastructure</p>
-            <button onclick="goTab('tenants', this)" class="sb-btn w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
-                <span class="text-lg">🏫</span> Institutions
-            </button>
-            <button onclick="goTab('notifications', this)" class="sb-btn w-full flex items-center justify-between px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
-                <div class="flex items-center gap-3"><span class="text-lg">🔔</span> Notifications</div>
-                {% if pending_events > 0 %}<span class="w-1.5 h-1.5 bg-brand rounded-full"></span>{% endif %}
-            </button>
-            <button onclick="goTab('reports', this)" class="sb-btn w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
-                <span class="text-lg">📦</span> Data Reports
-            </button>
-        </div>
-    </aside>
+ 
+ <!-- ADMIN COMMAND RAIL (FULL RESTORATION) -->
+ <aside class="lg:w-72 flex-shrink-0">
+ <div class="sticky top-32 space-y-2 bg-white/50 backdrop-blur-xl p-4 rounded-[2.5rem] border border-white/50 shadow-premium">
+ <p class="text-[9px] font-black uppercase text-slate-400 tracking-[0.4em] px-4 mb-4">Command Rail</p>
+ <button onclick="goTab('dashboard', this)" class="sb-btn active w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
+ <span class="text-lg">⊞</span> Overview
+ </button>
+ <button onclick="goTab('calendar', this)" class="sb-btn w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
+ <span class="text-lg"></span> Schedule
+ </button>
+ <button onclick="goTab('analytics', this)" class="sb-btn w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
+ <span class="text-lg"></span> Insights
+ </button>
+ 
+ <div class="h-px bg-slate-100 my-4 mx-4"></div>
+ <p class="text-[9px] font-black uppercase text-slate-400 tracking-[0.4em] px-4 mb-4">Management</p>
+ 
+ <button onclick="goTab('events', this)" class="sb-btn w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
+ <span class="text-lg"></span> Events Hub
+ </button>
+ <button onclick="goTab('social', this)" class="sb-btn w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
+ <span class="text-lg"></span> Community
+ </button>
+ <button onclick="goTab('pending', this)" class="sb-btn w-full flex items-center justify-between px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
+ <div class="flex items-center gap-3"><span class="text-lg"></span> Moderation</div>
+ {% if pending_events > 0 %}<span class="px-2 py-0.5 bg-amber-500 text-white rounded-lg text-[8px]">{{ pending_events }}</span>{% endif %}
+ </button>
+ <button onclick="goTab('attendance', this)" class="sb-btn w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
+ <span class="text-lg"></span> Attendance
+ </button>
+ 
+ <div class="h-px bg-slate-100 my-4 mx-4"></div>
+ <p class="text-[9px] font-black uppercase text-slate-400 tracking-[0.4em] px-4 mb-4">Infrastructure</p>
+ <button onclick="goTab('tenants', this)" class="sb-btn w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
+ <span class="text-lg"></span> Institutions
+ </button>
+ <button onclick="goTab('notifications', this)" class="sb-btn w-full flex items-center justify-between px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
+ <div class="flex items-center gap-3"><span class="text-lg"></span> Notifications</div>
+ {% if pending_events > 0 %}<span class="w-1.5 h-1.5 bg-brand rounded-full"></span>{% endif %}
+ </button>
+ <button onclick="goTab('reports', this)" class="sb-btn w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
+ <span class="text-lg"></span> Data Reports
+ </button>
+ </div>
+ </aside>
 
-    <!-- CONTENT ENGINE (FULL FEATURE SET) -->
-    <div class="flex-1 min-w-0">
-        
-        <!-- PAGE: OVERVIEW -->
-        <div class="space-y-12 animate-reveal" id="tab-dashboard">
-            <!-- Global Stats Bento -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div class="bento-panel p-10 bg-slate-950 text-white relative group overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-tr from-brand/40 to-transparent"></div>
-                    <p class="text-[9px] font-black text-white/40 uppercase tracking-[0.3em] mb-6">Global Registry</p>
-                    <h3 class="font-serif italic text-6xl font-bold leading-none mb-1 group-hover:scale-110 transition-transform">{{ total_events }}</h3>
-                    <p class="text-[10px] font-black uppercase tracking-widest text-brand">Institutional Events</p>
-                </div>
-                <div class="bento-panel p-10 group hover:border-brand/20 transition-all">
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6">Network Reach</p>
-                    <h3 class="font-serif italic text-6xl font-bold text-slate-900 leading-none mb-1">{{ total_users }}</h3>
-                    <p class="text-[10px] font-black uppercase tracking-widest text-indigo-500">Authenticated Users</p>
-                </div>
-                <div class="bento-panel p-10 group hover:border-brand/20 transition-all">
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6">Partner Scale</p>
-                    <h3 class="font-serif italic text-6xl font-bold text-slate-900 leading-none mb-1">{{ total_colleges }}</h3>
-                    <p class="text-[10px] font-black uppercase tracking-widest text-emerald-500">Active Tenants</p>
-                </div>
-                <div class="bento-panel p-10 group hover:border-brand/20 transition-all">
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6">Platform Drift</p>
-                    <h3 class="font-serif italic text-6xl font-bold text-slate-900 leading-none mb-1">{{ total_comments }}</h3>
-                    <p class="text-[10px] font-black uppercase tracking-widest text-rose-500">Total Interactions</p>
-                </div>
-            </div>
+ <!-- CONTENT ENGINE (FULL FEATURE SET) -->
+ <div class="flex-1 min-w-0">
+ 
+ <!-- PAGE: OVERVIEW -->
+ <div class="space-y-12 animate-reveal" id="tab-dashboard">
+ <!-- Global Stats Bento -->
+ <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+ <div class="bento-panel p-10 bg-slate-950 text-white relative group overflow-hidden">
+ <div class="absolute inset-0 /40 "></div>
+ <p class="text-[9px] font-black text-white/40 uppercase tracking-[0.3em] mb-6">Global Registry</p>
+ <h3 class="text-6xl font-bold leading-none mb-1 group-hover:scale-110 transition-transform">{{ total_events }}</h3>
+ <p class="text-[10px] font-black uppercase tracking-widest text-brand">Institutional Events</p>
+ </div>
+ <div class="bento-panel p-10 group hover:border-brand/20 transition-all">
+ <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6">Network Reach</p>
+ <h3 class="text-6xl font-bold text-slate-900 leading-none mb-1">{{ total_users }}</h3>
+ <p class="text-[10px] font-black uppercase tracking-widest text-indigo-500">Authenticated Users</p>
+ </div>
+ <div class="bento-panel p-10 group hover:border-brand/20 transition-all">
+ <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6">Partner Scale</p>
+ <h3 class="text-6xl font-bold text-slate-900 leading-none mb-1">{{ total_colleges }}</h3>
+ <p class="text-[10px] font-black uppercase tracking-widest text-emerald-500">Active Tenants</p>
+ </div>
+ <div class="bento-panel p-10 group hover:border-brand/20 transition-all">
+ <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6">Platform Drift</p>
+ <h3 class="text-6xl font-bold text-slate-900 leading-none mb-1">{{ total_comments }}</h3>
+ <p class="text-[10px] font-black uppercase tracking-widest text-rose-500">Total Interactions</p>
+ </div>
+ </div>
 
-            <!-- Global Insights -->
-            <div class="grid lg:grid-cols-3 gap-12">
-                <div class="lg:col-span-2 bento-panel p-10">
-                    <div class="flex items-center justify-between mb-12">
-                        <h4 class="font-serif italic text-3xl text-slate-900">Registration Velocity</h4>
-                        <span class="text-[9px] font-black text-brand uppercase tracking-widest">Global Aggregate</span>
-                    </div>
-                    <div class="h-80"><canvas id="cPerformance"></canvas></div>
-                </div>
-                <div class="bento-panel p-10">
-                    <div class="flex items-center justify-between mb-12">
-                        <h4 class="font-serif italic text-3xl text-slate-900">Status Mix</h4>
-                    </div>
-                    <div class="h-64 mb-10"><canvas id="cStatus"></canvas></div>
-                    <div class="space-y-4">
-                        {% for label, count, color in status_breakdown %}
-                        <div class="flex items-center justify-between py-3 border-b border-slate-50 last:border-0">
-                            <div class="flex items-center gap-3">
-                                <div class="w-2 h-2 rounded-full" style="background-color: {{ color }}"></div>
-                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ label }}</span>
-                            </div>
-                            <span class="text-sm font-bold text-slate-900">{{ count }}</span>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
+ <!-- Global Insights -->
+ <div class="grid lg:grid-cols-3 gap-12">
+ <div class="lg:col-span-2 bento-panel p-10">
+ <div class="flex items-center justify-between mb-12">
+ <h4 class="text-3xl text-slate-900">Registration Velocity</h4>
+ <span class="text-[9px] font-black text-brand uppercase tracking-widest">Global Aggregate</span>
+ </div>
+ <div class="h-80"><canvas id="cPerformance"></canvas></div>
+ </div>
+ <div class="bento-panel p-10">
+ <div class="flex items-center justify-between mb-12">
+ <h4 class="text-3xl text-slate-900">Status Mix</h4>
+ </div>
+ <div class="h-64 mb-10"><canvas id="cStatus"></canvas></div>
+ <div class="space-y-4">
+ {% for label, count, color in status_breakdown %}
+ <div class="flex items-center justify-between py-3 border-b border-slate-50 last:border-0">
+ <div class="flex items-center gap-3">
+ <div class="w-2 h-2 rounded-full" style="background-color: {{ color }}"></div>
+ <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ label }}</span>
+ </div>
+ <span class="text-sm font-bold text-slate-900">{{ count }}</span>
+ </div>
+ {% endfor %}
+ </div>
+ </div>
+ </div>
 
-            <!-- Recent Ledger -->
-            <div class="space-y-6">
-                <h4 class="font-serif italic text-3xl px-4">Global Ledger</h4>
-                <div class="bento-panel">
-                    <table class="w-full text-left">
-                        <thead>
-                            <tr class="bg-slate-50 border-b border-slate-100">
-                                <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Institutional Event</th>
-                                <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Date</th>
-                                <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Enrollment</th>
-                                <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400 text-right">Command</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-50">
-                            {% for e in recent_events %}
-                            <tr class="group hover:bg-slate-50/50 transition-all">
-                                <td class="px-8 py-6">
-                                    <p class="font-serif italic text-xl font-bold text-slate-900 leading-none mb-1">{{ e.title }}</p>
-                                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ e.college.name }}</p>
-                                </td>
-                                <td class="px-8 py-6 text-xs text-slate-400 font-mono">{{ e.date_time|date:"M d, Y" }}</td>
-                                <td class="px-8 py-6">
-                                    <div class="flex items-center gap-4">
-                                        <div class="flex-1 w-24 h-1.5 bg-slate-100 rounded-full overflow-hidden p-[1px]">
-                                            <div class="h-full bg-brand rounded-full" style="width: {% widthratio e.reg_count e.capacity|default:1 100 %}%"></div>
-                                        </div>
-                                        <span class="text-[10px] font-bold text-slate-900">{{ e.reg_count }}/{{ e.capacity }}</span>
-                                    </div>
-                                </td>
-                                <td class="px-8 py-6 text-right">
-                                    <button class="px-5 py-2.5 bg-slate-900 text-white rounded-xl text-[9px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all" data-id="{{ e.pk }}" onclick="openDrawer(this)">Inspect Hub</button>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+ <!-- Recent Ledger -->
+ <div class="space-y-6">
+ <h4 class="text-3xl px-4">Global Ledger</h4>
+ <div class="bento-panel">
+ <table class="w-full text-left">
+ <thead>
+ <tr class="bg-slate-50 border-b border-slate-100">
+ <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Institutional Event</th>
+ <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Date</th>
+ <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Enrollment</th>
+ <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400 text-right">Command</th>
+ </tr>
+ </thead>
+ <tbody class="divide-y divide-slate-50">
+ {% for e in recent_events %}
+ <tr class="group hover:bg-slate-50/50 transition-all">
+ <td class="px-8 py-6">
+ <p class="text-xl font-bold text-slate-900 leading-none mb-1">{{ e.title }}</p>
+ <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ e.college.name }}</p>
+ </td>
+ <td class="px-8 py-6 text-xs text-slate-400 font-mono">{{ e.date_time|date:"M d, Y" }}</td>
+ <td class="px-8 py-6">
+ <div class="flex items-center gap-4">
+ <div class="flex-1 w-24 h-1.5 bg-slate-100 rounded-full overflow-hidden p-[1px]">
+ <div class="h-full bg-brand rounded-full" style="width: {% widthratio e.reg_count e.capacity|default:1 100 %}%"></div>
+ </div>
+ <span class="text-[10px] font-bold text-slate-900">{{ e.reg_count }}/{{ e.capacity }}</span>
+ </div>
+ </td>
+ <td class="px-8 py-6 text-right">
+ <button class="px-5 py-2.5 bg-slate-900 text-white rounded-xl text-[9px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all" data-id="{{ e.pk }}" onclick="openDrawer(this)">Inspect Hub</button>
+ </td>
+ </tr>
+ {% endfor %}
+ </tbody>
+ </table>
+ </div>
+ </div>
+ </div>
 
-        <!-- PAGE: CALENDAR (RESTORED) -->
-        <div class="hidden animate-reveal space-y-12" id="tab-calendar">
-            <h3 class="font-serif italic text-4xl text-slate-900 px-4">Logistics Timeline</h3>
-            <div class="bento-panel p-10"><div id="calendar" style="min-height: 700px;"></div></div>
-        </div>
+ <!-- PAGE: CALENDAR (RESTORED) -->
+ <div class="hidden animate-reveal space-y-12" id="tab-calendar">
+ <h3 class="text-4xl text-slate-900 px-4">Logistics Timeline</h3>
+ <div class="bento-panel p-10"><div id="calendar" style="min-height: 700px;"></div></div>
+ </div>
 
-        <!-- PAGE: ALL EVENTS (RESTORED GRID) -->
-        <div class="hidden animate-reveal space-y-12" id="tab-events">
-            <div class="flex items-center justify-between px-4">
-                <h3 class="font-serif italic text-4xl text-slate-900">Event Matrix</h3>
-                <div class="relative w-72">
-                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
-                    <input type="text" placeholder="Search Matrix..." oninput="globalSearch(this.value)" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl text-xs focus:outline-none focus:border-brand">
-                </div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="eventsGrid">
-                {% for e in all_events %}
-                <div class="bento-panel group cursor-pointer hover:-translate-y-2 transition-all p-2" data-id="{{ e.pk }}" onclick="openDrawer(this)">
-                    <div class="h-40 rounded-[2rem] bg-slate-950 flex items-center justify-center text-4xl relative overflow-hidden">
-                        <div class="absolute inset-0 opacity-20 bg-gradient-to-br from-brand via-transparent to-indigo-500"></div>
-                        <span class="relative z-10">{{ e.emoji|default:'🎉' }}</span>
-                        <div class="absolute top-4 right-4 px-3 py-1 glass-dark text-[8px] font-black uppercase tracking-widest text-white rounded-lg">{{ e.status }}</div>
-                    </div>
-                    <div class="p-6">
-                        <p class="text-[9px] font-black text-brand uppercase tracking-widest mb-2">{{ e.date_time|date:"M d, Y" }}</p>
-                        <h4 class="font-serif italic text-xl font-bold text-slate-900 mb-4">{{ e.title }}</h4>
-                        <div class="flex items-center justify-between pt-4 border-t border-slate-50">
-                            <p class="text-[9px] font-black text-slate-300 uppercase underline">{{ e.college.name|truncatechars:15 }}</p>
-                            <span class="text-[10px] font-bold text-slate-900">{{ e.reg_count }}/{{ e.capacity }}</span>
-                        </div>
-                    </div>
-                </div>
-                {% empty %}
-                <div class="col-span-full py-32 text-center text-slate-300 italic font-serif text-2xl">Matrix Depleted.</div>
-                {% endfor %}
-            </div>
-        </div>
+ <!-- PAGE: ALL EVENTS (RESTORED GRID) -->
+ <div class="hidden animate-reveal space-y-12" id="tab-events">
+ <div class="flex items-center justify-between px-4">
+ <h3 class="text-4xl text-slate-900">Event Matrix</h3>
+ <div class="relative w-72">
+ <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></span>
+ <input type="text" placeholder="Search Matrix..." oninput="globalSearch(this.value)" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl text-xs focus:outline-none focus:border-brand">
+ </div>
+ </div>
+ <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="eventsGrid">
+ {% for e in all_events %}
+ <div class="bento-panel group cursor-pointer hover:-translate-y-2 transition-all p-2" data-id="{{ e.pk }}" onclick="openDrawer(this)">
+ <div class="h-40 rounded-[2rem] bg-slate-950 flex items-center justify-center text-4xl relative overflow-hidden">
+ <div class="absolute inset-0 opacity-20 "></div>
+ <span class="relative z-10">{{ e.emoji|default:'' }}</span>
+ <div class="absolute top-4 right-4 px-3 py-1 glass-dark text-[8px] font-black uppercase tracking-widest text-white rounded-lg">{{ e.status }}</div>
+ </div>
+ <div class="p-6">
+ <p class="text-[9px] font-black text-brand uppercase tracking-widest mb-2">{{ e.date_time|date:"M d, Y" }}</p>
+ <h4 class="text-xl font-bold text-slate-900 mb-4">{{ e.title }}</h4>
+ <div class="flex items-center justify-between pt-4 border-t border-slate-50">
+ <p class="text-[9px] font-black text-slate-300 uppercase underline">{{ e.college.name|truncatechars:15 }}</p>
+ <span class="text-[10px] font-bold text-slate-900">{{ e.reg_count }}/{{ e.capacity }}</span>
+ </div>
+ </div>
+ </div>
+ {% empty %}
+ <div class="col-span-full py-32 text-center text-slate-300 italic font-serif text-2xl">Matrix Depleted.</div>
+ {% endfor %}
+ </div>
+ </div>
 
-        <!-- PAGE: MODERATION -->
-        <div class="hidden animate-reveal space-y-12" id="tab-pending">
-            <h3 class="font-serif italic text-4xl text-slate-900 px-4">System Moderation</h3>
-            <div class="bento-panel">
-                <table class="w-full text-left">
-                    <thead>
-                        <tr class="bg-slate-50 border-b border-slate-100">
-                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Institutional Event</th>
-                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Author</th>
-                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400 text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-50">
-                        {% for e in pending_list %}
-                        <tr class="hover:bg-slate-50/50 transition-all">
-                            <td class="px-8 py-6">
-                                <p class="font-serif italic text-xl font-bold text-slate-900 leading-none mb-1">{{ e.title }}</p>
-                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ e.date_time|date:"M d, Y @ H:i" }}</p>
-                            </td>
-                            <td class="px-8 py-6">
-                                <p class="text-xs font-bold text-slate-700">{{ e.created_by.get_full_name|default:e.created_by.username }}</p>
-                            </td>
-                            <td class="px-8 py-6 text-right flex items-center justify-end gap-3">
-                                <a href="{% url 'approve_event' e.pk %}" class="px-5 py-2.5 bg-brand text-white rounded-xl text-[9px] font-black uppercase tracking-widest shadow-brand hover:brightness-110 transition-all">✅ Approve</a>
-                                <button class="px-5 py-2.5 bg-rose-50 text-rose-600 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-rose-600 hover:text-white transition-all" data-id="{{ e.pk }}" data-title="{{ e.title|escapejs }}" onclick="openReject(this)">❌ Reject</button>
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr><td colspan="4" class="py-32 text-center text-slate-300 italic font-serif text-2xl">Moderation Queue Clear.</td></tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+ <!-- PAGE: MODERATION -->
+ <div class="hidden animate-reveal space-y-12" id="tab-pending">
+ <h3 class="text-4xl text-slate-900 px-4">System Moderation</h3>
+ <div class="bento-panel">
+ <table class="w-full text-left">
+ <thead>
+ <tr class="bg-slate-50 border-b border-slate-100">
+ <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Institutional Event</th>
+ <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Author</th>
+ <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400 text-right">Actions</th>
+ </tr>
+ </thead>
+ <tbody class="divide-y divide-slate-50">
+ {% for e in pending_list %}
+ <tr class="hover:bg-slate-50/50 transition-all">
+ <td class="px-8 py-6">
+ <p class="text-xl font-bold text-slate-900 leading-none mb-1">{{ e.title }}</p>
+ <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ e.date_time|date:"M d, Y @ H:i" }}</p>
+ </td>
+ <td class="px-8 py-6">
+ <p class="text-xs font-bold text-slate-700">{{ e.created_by.get_full_name|default:e.created_by.username }}</p>
+ </td>
+ <td class="px-8 py-6 text-right flex items-center justify-end gap-3">
+ <a href="{% url 'approve_event' e.pk %}" class="px-5 py-2.5 bg-brand text-white rounded-xl text-[9px] font-black uppercase tracking-widest shadow-brand hover:brightness-110 transition-all"> Approve</a>
+ <button class="px-5 py-2.5 bg-rose-50 text-rose-600 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-rose-600 hover:text-white transition-all" data-id="{{ e.pk }}" data-title="{{ e.title|escapejs }}" onclick="openReject(this)"> Reject</button>
+ </td>
+ </tr>
+ {% empty %}
+ <tr><td colspan="4" class="py-32 text-center text-slate-300 italic font-serif text-2xl">Moderation Queue Clear.</td></tr>
+ {% endfor %}
+ </tbody>
+ </table>
+ </div>
+ </div>
 
-        <!-- PAGE: ANALYTICS -->
-        <div class="hidden animate-reveal space-y-12" id="tab-analytics">
-            <h3 class="font-serif italic text-4xl text-slate-900 px-4">Institutional Insights</h3>
-            <div class="bento-panel p-12">
-                <div class="h-96"><canvas id="cAnalytics"></canvas></div>
-            </div>
-            
-            <div class="grid lg:grid-cols-2 gap-12">
-                <div class="bento-panel p-10">
-                    <h4 class="font-serif italic text-2xl mb-8">Engagement by Category</h4>
-                    <div class="h-80"><canvas id="cCategory"></canvas></div>
-                </div>
-                <div class="bento-panel p-10">
-                    <h4 class="font-serif italic text-2xl mb-8">Performance Index</h4>
-                    <div class="space-y-6">
-                        {% for e in performance_events %}
-                        <div>
-                            <div class="flex justify-between text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">
-                                <span>{{ e.title|truncatechars:30 }}</span>
-                                <span class="text-brand">{% if e.reg_count > 0 %}{% widthratio e.att_count e.reg_count 100 %}%{% else %}0%{% endif %} Impact</span>
-                            </div>
-                            <div class="h-2 bg-slate-50 rounded-full overflow-hidden p-[1px]">
-                                <div class="h-full bg-brand rounded-full transition-all duration-1000" style="width: {% if e.reg_count > 0 %}{% widthratio e.att_count e.reg_count 100 %}{% else %}0{% endif %}%"></div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-        </div>
+ <!-- PAGE: ANALYTICS -->
+ <div class="hidden animate-reveal space-y-12" id="tab-analytics">
+ <h3 class="text-4xl text-slate-900 px-4">Institutional Insights</h3>
+ <div class="bento-panel p-12">
+ <div class="h-96"><canvas id="cAnalytics"></canvas></div>
+ </div>
+ 
+ <div class="grid lg:grid-cols-2 gap-12">
+ <div class="bento-panel p-10">
+ <h4 class="text-2xl mb-8">Engagement by Category</h4>
+ <div class="h-80"><canvas id="cCategory"></canvas></div>
+ </div>
+ <div class="bento-panel p-10">
+ <h4 class="text-2xl mb-8">Performance Index</h4>
+ <div class="space-y-6">
+ {% for e in performance_events %}
+ <div>
+ <div class="flex justify-between text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">
+ <span>{{ e.title|truncatechars:30 }}</span>
+ <span class="text-brand">{% if e.reg_count > 0 %}{% widthratio e.att_count e.reg_count 100 %}%{% else %}0%{% endif %} Impact</span>
+ </div>
+ <div class="h-2 bg-slate-50 rounded-full overflow-hidden p-[1px]">
+ <div class="h-full bg-brand rounded-full transition-all duration-1000" style="width: {% if e.reg_count > 0 %}{% widthratio e.att_count e.reg_count 100 %}{% else %}0{% endif %}%"></div>
+ </div>
+ </div>
+ {% endfor %}
+ </div>
+ </div>
+ </div>
+ </div>
 
-        <!-- PAGE: ATTENDANCE (RESTORED) -->
-        <div class="hidden animate-reveal space-y-12" id="tab-attendance">
-            <h3 class="font-serif italic text-4xl text-slate-900 px-4">Operational Ledger</h3>
-            <div class="bento-panel">
-                <table class="w-full text-left">
-                    <thead>
-                        <tr class="bg-slate-50 border-b border-slate-100">
-                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Subject</th>
-                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Experience Node</th>
-                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Validation</th>
-                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Timestamp</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-50">
-                        {% for r in attendance_log %}
-                        <tr class="hover:bg-slate-50/50 transition-all">
-                            <td class="px-8 py-6">
-                                <p class="text-xs font-bold text-slate-900">{{ r.user.get_full_name|default:r.user.username }}</p>
-                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">ID: {{ r.user.username }}</p>
-                            </td>
-                            <td class="px-8 py-6 font-serif italic text-lg text-slate-600">{{ r.event.title|truncatechars:30 }}</td>
-                            <td class="px-8 py-6">
-                                <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest
-                                    {% if r.status == 'ATTENDED' %}bg-emerald-50 text-emerald-600 border border-emerald-100
-                                    {% elif r.status == 'CANCELLED' %}bg-rose-50 text-rose-600 border border-rose-100
-                                    {% else %}bg-blue-50 text-blue-600 border border-blue-100{% endif %}">
-                                    {{ r.status }}
-                                </span>
-                            </td>
-                            <td class="px-8 py-6 text-xs text-slate-400 font-mono">{{ r.registered_at|date:"M d, H:i" }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+ <!-- PAGE: ATTENDANCE (RESTORED) -->
+ <div class="hidden animate-reveal space-y-12" id="tab-attendance">
+ <h3 class="text-4xl text-slate-900 px-4">Operational Ledger</h3>
+ <div class="bento-panel">
+ <table class="w-full text-left">
+ <thead>
+ <tr class="bg-slate-50 border-b border-slate-100">
+ <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Subject</th>
+ <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Experience Node</th>
+ <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Validation</th>
+ <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Timestamp</th>
+ </tr>
+ </thead>
+ <tbody class="divide-y divide-slate-50">
+ {% for r in attendance_log %}
+ <tr class="hover:bg-slate-50/50 transition-all">
+ <td class="px-8 py-6">
+ <p class="text-xs font-bold text-slate-900">{{ r.user.get_full_name|default:r.user.username }}</p>
+ <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">ID: {{ r.user.username }}</p>
+ </td>
+ <td class="px-8 py-6 text-lg text-slate-600">{{ r.event.title|truncatechars:30 }}</td>
+ <td class="px-8 py-6">
+ <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest
+ {% if r.status == 'ATTENDED' %}bg-emerald-50 text-emerald-600 border border-emerald-100
+ {% elif r.status == 'CANCELLED' %}bg-rose-50 text-rose-600 border border-rose-100
+ {% else %}bg-blue-50 text-blue-600 border border-blue-100{% endif %}">
+ {{ r.status }}
+ </span>
+ </td>
+ <td class="px-8 py-6 text-xs text-slate-400 font-mono">{{ r.registered_at|date:"M d, H:i" }}</td>
+ </tr>
+ {% endfor %}
+ </tbody>
+ </table>
+ </div>
+ </div>
 
-        <!-- PAGE: SOCIAL (RESTORED) -->
-        <div class="hidden animate-reveal space-y-12" id="tab-social">
-            <h3 class="font-serif italic text-4xl text-slate-900 px-4">Collective Pulse</h3>
-            <div class="grid gap-8 max-w-4xl mx-auto">
-                {% for c in recent_comments %}
-                <div class="bento-panel p-10 group relative overflow-hidden">
-                    <div class="absolute top-0 right-0 w-24 h-4 g-blue opacity-10"></div>
-                    <div class="flex items-start gap-8">
-                        <div class="w-16 h-16 rounded-[1.5rem] bg-brand text-white flex items-center justify-center text-xl font-black shadow-xl">
-                            {{ c.user.username|first|upper }}
-                        </div>
-                        <div class="flex-1">
-                            <div class="flex justify-between items-center mb-4">
-                                <p class="text-sm font-bold text-slate-900">@{{ c.user.username }}</p>
-                                <span class="text-[9px] font-black uppercase tracking-widest text-slate-300">{{ c.created_at|date:"M d, H:i" }}</span>
-                            </div>
-                            <p class="text-xl font-serif italic text-slate-600 leading-relaxed mb-6">"{{ c.text }}"</p>
-                            <div class="pt-4 border-t border-slate-50 flex items-center justify-between">
-                                <p class="text-[9px] font-black text-brand uppercase tracking-widest">{{ c.event.title }}</p>
-                                <span class="px-3 py-1 bg-slate-50 text-slate-400 rounded-lg text-[8px] font-black uppercase tracking-widest">
-                                    {% if c.is_pre_event %}Anticipation{% else %}Feedback{% endif %}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% empty %}
-                <div class="py-32 text-center text-slate-300 italic font-serif text-2xl">Silences in the network.</div>
-                {% endfor %}
-            </div>
-        </div>
+ <!-- PAGE: SOCIAL (RESTORED) -->
+ <div class="hidden animate-reveal space-y-12" id="tab-social">
+ <h3 class="text-4xl text-slate-900 px-4">Collective Pulse</h3>
+ <div class="grid gap-8 max-w-4xl mx-auto">
+ {% for c in recent_comments %}
+ <div class="bento-panel p-10 group relative overflow-hidden">
+ <div class="absolute top-0 right-0 w-24 h-4 opacity-10"></div>
+ <div class="flex items-start gap-8">
+ <div class="w-16 h-16 rounded-[1.5rem] bg-brand text-white flex items-center justify-center text-xl font-black shadow-xl">
+ {{ c.user.username|first|upper }}
+ </div>
+ <div class="flex-1">
+ <div class="flex justify-between items-center mb-4">
+ <p class="text-sm font-bold text-slate-900">@{{ c.user.username }}</p>
+ <span class="text-[9px] font-black uppercase tracking-widest text-slate-300">{{ c.created_at|date:"M d, H:i" }}</span>
+ </div>
+ <p class="text-xl text-slate-600 leading-relaxed mb-6">"{{ c.text }}"</p>
+ <div class="pt-4 border-t border-slate-50 flex items-center justify-between">
+ <p class="text-[9px] font-black text-brand uppercase tracking-widest">{{ c.event.title }}</p>
+ <span class="px-3 py-1 bg-slate-50 text-slate-400 rounded-lg text-[8px] font-black uppercase tracking-widest">
+ {% if c.is_pre_event %}Anticipation{% else %}Feedback{% endif %}
+ </span>
+ </div>
+ </div>
+ </div>
+ </div>
+ {% empty %}
+ <div class="py-32 text-center text-slate-300 italic font-serif text-2xl">Silences in the network.</div>
+ {% endfor %}
+ </div>
+ </div>
 
-        <!-- PAGE: NOTIFICATIONS (RESTORED) -->
-        <div class="hidden animate-reveal space-y-12" id="tab-notifications">
-            <h3 class="font-serif italic text-4xl text-slate-900 px-4">Intelligence Alerts</h3>
-            <div class="grid gap-6">
-                {% if pending_events > 0 %}
-                <div class="bento-panel p-10 bg-amber-50 border-amber-100 flex items-center justify-between group">
-                    <div class="flex items-center gap-8">
-                        <div class="text-4xl animate-bounce">⏳</div>
-                        <div>
-                            <h4 class="text-lg font-bold text-amber-900">{{ pending_events }} Protocol{{ pending_events|pluralize }} Awaiting Moderation</h4>
-                            <p class="text-xs text-amber-700/60 uppercase tracking-widest font-black mt-1">Institutional Review Required</p>
-                        </div>
-                    </div>
-                    <button onclick="goTab('pending')" class="px-8 py-4 bg-amber-600 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-amber-500/20 hover:brightness-110 transition-all">Execute Review</button>
-                </div>
-                {% endif %}
-                <div class="bento-panel p-10 bg-emerald-50 border-emerald-100 flex items-center gap-8">
-                    <div class="text-4xl">📊</div>
-                    <div>
-                        <h4 class="text-lg font-bold text-emerald-900">Platform Synchronized</h4>
-                        <p class="text-xs text-emerald-700/60 uppercase tracking-widest font-black mt-1">All institutional nodes nominal</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+ <!-- PAGE: NOTIFICATIONS (RESTORED) -->
+ <div class="hidden animate-reveal space-y-12" id="tab-notifications">
+ <h3 class="text-4xl text-slate-900 px-4">Intelligence Alerts</h3>
+ <div class="grid gap-6">
+ {% if pending_events > 0 %}
+ <div class="bento-panel p-10 bg-amber-50 border-amber-100 flex items-center justify-between group">
+ <div class="flex items-center gap-8">
+ <div class="text-4xl animate-bounce"></div>
+ <div>
+ <h4 class="text-lg font-bold text-amber-900">{{ pending_events }} Protocol{{ pending_events|pluralize }} Awaiting Moderation</h4>
+ <p class="text-xs text-amber-700/60 uppercase tracking-widest font-black mt-1">Institutional Review Required</p>
+ </div>
+ </div>
+ <button onclick="goTab('pending')" class="px-8 py-4 bg-amber-600 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-amber-500/20 hover:brightness-110 transition-all">Execute Review</button>
+ </div>
+ {% endif %}
+ <div class="bento-panel p-10 bg-emerald-50 border-emerald-100 flex items-center gap-8">
+ <div class="text-4xl"></div>
+ <div>
+ <h4 class="text-lg font-bold text-emerald-900">Platform Synchronized</h4>
+ <p class="text-xs text-emerald-700/60 uppercase tracking-widest font-black mt-1">All institutional nodes nominal</p>
+ </div>
+ </div>
+ </div>
+ </div>
 
-        <!-- PAGE: REPORTS (RESTORED) -->
-        <div class="hidden animate-reveal space-y-12" id="tab-reports">
-            <h3 class="font-serif italic text-4xl text-slate-900 px-4">Analytical Snapshot</h3>
-            <div class="bento-panel">
-                <table class="w-full text-left">
-                    <thead>
-                        <tr class="bg-slate-50 border-b border-slate-100">
-                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Metric Descriptor</th>
-                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Quantitative Value</th>
-                            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Operational Context</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-50">
-                        <tr><td class="px-8 py-6 font-bold">Global Event Volume</td><td class="px-8 py-6 font-serif italic text-xl">{{ total_events }}</td><td class="px-8 py-6 text-xs text-slate-400">All-time repository entries</td></tr>
-                        <tr><td class="px-8 py-6 font-bold">Active Transmissions</td><td class="px-8 py-6 font-serif italic text-xl text-emerald-600">{{ published_events }}</td><td class="px-8 py-6 text-xs text-slate-400">Live Experiences accepting traffic</td></tr>
-                        <tr><td class="px-8 py-6 font-bold">Awaiting Authorization</td><td class="px-8 py-6 font-serif italic text-xl text-amber-600">{{ pending_events }}</td><td class="px-8 py-6 text-xs text-slate-400">Pending admin verification</td></tr>
-                        <tr><td class="px-8 py-6 font-bold">Total Network Enlistment</td><td class="px-8 py-6 font-serif italic text-xl">{{ total_users }}</td><td class="px-8 py-6 text-xs text-slate-400">Verified platform identities</td></tr>
-                        <tr><td class="px-8 py-6 font-bold">Institutional Scale</td><td class="px-8 py-6 font-serif italic text-xl">{{ total_colleges }}</td><td class="px-8 py-6 text-xs text-slate-400">Partner university nodes</td></tr>
-                        <tr><td class="px-8 py-6 font-bold">Total Interactions</td><td class="px-8 py-6 font-serif italic text-xl text-rose-600">{{ total_comments }}</td><td class="px-8 py-6 text-xs text-slate-400">Community wall participation</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+ <!-- PAGE: REPORTS (RESTORED) -->
+ <div class="hidden animate-reveal space-y-12" id="tab-reports">
+ <h3 class="text-4xl text-slate-900 px-4">Analytical Snapshot</h3>
+ <div class="bento-panel">
+ <table class="w-full text-left">
+ <thead>
+ <tr class="bg-slate-50 border-b border-slate-100">
+ <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Metric Descriptor</th>
+ <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Quantitative Value</th>
+ <th class="px-8 py-6 text-[9px] font-black uppercase tracking-widest text-slate-400">Operational Context</th>
+ </tr>
+ </thead>
+ <tbody class="divide-y divide-slate-50">
+ <tr><td class="px-8 py-6 font-bold">Global Event Volume</td><td class="px-8 py-6 text-xl">{{ total_events }}</td><td class="px-8 py-6 text-xs text-slate-400">All-time repository entries</td></tr>
+ <tr><td class="px-8 py-6 font-bold">Active Transmissions</td><td class="px-8 py-6 text-xl text-emerald-600">{{ published_events }}</td><td class="px-8 py-6 text-xs text-slate-400">Live Experiences accepting traffic</td></tr>
+ <tr><td class="px-8 py-6 font-bold">Awaiting Authorization</td><td class="px-8 py-6 text-xl text-amber-600">{{ pending_events }}</td><td class="px-8 py-6 text-xs text-slate-400">Pending admin verification</td></tr>
+ <tr><td class="px-8 py-6 font-bold">Total Network Enlistment</td><td class="px-8 py-6 text-xl">{{ total_users }}</td><td class="px-8 py-6 text-xs text-slate-400">Verified platform identities</td></tr>
+ <tr><td class="px-8 py-6 font-bold">Institutional Scale</td><td class="px-8 py-6 text-xl">{{ total_colleges }}</td><td class="px-8 py-6 text-xs text-slate-400">Partner university nodes</td></tr>
+ <tr><td class="px-8 py-6 font-bold">Total Interactions</td><td class="px-8 py-6 text-xl text-rose-600">{{ total_comments }}</td><td class="px-8 py-6 text-xs text-slate-400">Community wall participation</td></tr>
+ </tbody>
+ </table>
+ </div>
+ </div>
 
-        <!-- PAGE: TENANTS (COLLEGES) -->
-        <div class="hidden animate-reveal space-y-12" id="tab-tenants">
-            <div class="flex items-center justify-between px-4">
-                <h3 class="font-serif italic text-4xl text-slate-900">Institutional Network</h3>
-                <a href="{% url 'register_college' %}" class="px-8 py-4 bg-indigo-600 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-xl hover:brightness-110 transition-all">+ Add Institutional Node</a>
-            </div>
-            <div class="grid md:grid-cols-2 gap-8" id="tenantsGrid">
-                {% for college in colleges %}
-                <div class="bento-panel p-10 group relative overflow-hidden">
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700"></div>
-                    <div class="flex items-center gap-8 mb-10 relative z-10">
-                        <div class="w-20 h-20 rounded-[2rem] bg-indigo-50 border border-indigo-100 flex items-center justify-center text-3xl font-black text-indigo-600 shadow-xl group-hover:scale-110 transition-transform">{{ college.name|first }}</div>
-                        <div>
-                            <h4 class="font-serif italic text-3xl font-bold text-slate-900 leading-none mb-2">{{ college.name }}</h4>
-                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">SLUG-DOMAIN: {{ college.slug }}</p>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4 mb-10 text-center relative z-10">
-                        <div class="p-4 bg-slate-50 rounded-3xl group-hover:bg-white transition-colors">
-                            <p class="text-[9px] font-black text-slate-300 uppercase mb-1">Live Events</p>
-                            <p class="text-2xl font-bold text-slate-900">{{ college.events.count }}</p>
-                        </div>
-                        <div class="p-4 bg-slate-50 rounded-3xl group-hover:bg-white transition-colors">
-                            <p class="text-[9px] font-black text-slate-300 uppercase mb-1">Scale</p>
-                            <p class="text-2xl font-bold text-slate-900">{{ college.user_profiles.count }} <span class="text-[10px] font-normal text-slate-400">Users</span></p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-4 relative z-10">
-                        <a href="{% url 'college_portal' college.slug %}" target="_blank" class="flex-1 text-center py-4 bg-slate-950 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl hover:brightness-150 transition-all">Visit Portal</a>
-                        <button class="w-14 h-14 bg-white border border-slate-100 rounded-2xl flex items-center justify-center hover:bg-slate-50 transition-all">✏️</button>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
+ <!-- PAGE: TENANTS (COLLEGES) -->
+ <div class="hidden animate-reveal space-y-12" id="tab-tenants">
+ <div class="flex items-center justify-between px-4">
+ <h3 class="text-4xl text-slate-900">Institutional Network</h3>
+ <a href="{% url 'register_college' %}" class="px-8 py-4 bg-indigo-600 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-xl hover:brightness-110 transition-all">+ Add Institutional Node</a>
+ </div>
+ <div class="grid md:grid-cols-2 gap-8" id="tenantsGrid">
+ {% for college in colleges %}
+ <div class="bento-panel p-10 group relative overflow-hidden">
+ <div class="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700"></div>
+ <div class="flex items-center gap-8 mb-10 relative z-10">
+ <div class="w-20 h-20 rounded-[2rem] bg-indigo-50 border border-indigo-100 flex items-center justify-center text-3xl font-black text-indigo-600 shadow-xl group-hover:scale-110 transition-transform">{{ college.name|first }}</div>
+ <div>
+ <h4 class="text-3xl font-bold text-slate-900 leading-none mb-2">{{ college.name }}</h4>
+ <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">SLUG-DOMAIN: {{ college.slug }}</p>
+ </div>
+ </div>
+ <div class="grid grid-cols-2 gap-4 mb-10 text-center relative z-10">
+ <div class="p-4 bg-slate-50 rounded-3xl group-hover:bg-white transition-colors">
+ <p class="text-[9px] font-black text-slate-300 uppercase mb-1">Live Events</p>
+ <p class="text-2xl font-bold text-slate-900">{{ college.events.count }}</p>
+ </div>
+ <div class="p-4 bg-slate-50 rounded-3xl group-hover:bg-white transition-colors">
+ <p class="text-[9px] font-black text-slate-300 uppercase mb-1">Scale</p>
+ <p class="text-2xl font-bold text-slate-900">{{ college.user_profiles.count }} <span class="text-[10px] font-normal text-slate-400">Users</span></p>
+ </div>
+ </div>
+ <div class="flex items-center gap-4 relative z-10">
+ <a href="{% url 'college_portal' college.slug %}" target="_blank" class="flex-1 text-center py-4 bg-slate-950 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl hover:brightness-150 transition-all">Visit Portal</a>
+ <button class="w-14 h-14 bg-white border border-slate-100 rounded-2xl flex items-center justify-center hover:bg-slate-50 transition-all"></button>
+ </div>
+ </div>
+ {% endfor %}
+ </div>
+ </div>
 
-    </div>
+ </div>
 </div>
 
 <!-- DRAWER & MODALS -->
 <div class="fixed inset-0 z-[1000] hidden flex items-center justify-center p-6 bg-slate-950/40 backdrop-blur-sm animate-fade-in" id="ticket-modal">
-    <div class="relative bg-white rounded-[3.5rem] shadow-2xl w-full max-w-sm overflow-hidden border border-slate-100 animate-fade-up">
-        <div class="h-4 g-blue"></div>
-        <div class="p-12 text-center">
-            <h3 class="font-serif italic text-4xl font-bold text-slate-900 mb-2" id="drTitle">Discovery Hub</h3>
-            <p id="drBadge" class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-12">Institutional Node</p>
-            <div id="drDesc" class="text-slate-500 italic text-lg mb-12">Loading intelligence...</div>
-            <div class="space-y-3">
-                <a href="#" id="drLink" class="block w-full py-5 bg-brand text-white text-[10px] font-black uppercase tracking-widest rounded-[2rem] shadow-brand hover:brightness-110 transition-all">Execute Pivot →</a>
-                <button onclick="closeDrawer()" class="w-full py-5 bg-slate-50 text-slate-600 font-bold rounded-[2rem] hover:bg-slate-100 transition-all">Dismiss Intelligent Interface</button>
-            </div>
-        </div>
-    </div>
+ <div class="relative bg-white rounded-[3.5rem] shadow-2xl w-full max-w-sm overflow-hidden border border-slate-100 animate-fade-up">
+ <div class="h-4 "></div>
+ <div class="p-12 text-center">
+ <h3 class="text-4xl font-bold text-slate-900 mb-2" id="drTitle">Discovery Hub</h3>
+ <p id="drBadge" class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-12">Institutional Node</p>
+ <div id="drDesc" class="text-slate-500 italic text-lg mb-12">Loading intelligence...</div>
+ <div class="space-y-3">
+ <a href="#" id="drLink" class="block w-full py-5 bg-brand text-white text-[10px] font-black uppercase tracking-widest rounded-[2rem] shadow-brand hover:brightness-110 transition-all">Execute Pivot →</a>
+ <button onclick="closeDrawer()" class="w-full py-5 bg-slate-50 text-slate-600 font-bold rounded-[2rem] hover:bg-slate-100 transition-all">Dismiss Intelligent Interface</button>
+ </div>
+ </div>
+ </div>
 </div>
 
 <div class="fixed inset-0 z-[1000] hidden flex items-center justify-center p-6 bg-slate-950/40 backdrop-blur-sm" id="rejectModal">
-    <div class="bg-white rounded-[3rem] shadow-2xl w-full max-w-md p-12 relative border border-slate-100">
-        <h3 class="font-serif italic text-3xl font-bold text-slate-900 mb-6">Reject Transaction</h3>
-        <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-8">Specify reason for disapproval</p>
-        <textarea id="rejReason" rows="5" class="w-full p-6 bg-slate-50 border border-slate-100 rounded-[2rem] text-sm focus:outline-none focus:border-rose-500 transition-all mb-8" placeholder="Reason for rejection..."></textarea>
-        <div class="flex gap-4">
-            <button onclick="closeModal()" class="flex-1 py-5 bg-slate-100 text-slate-500 font-bold rounded-2xl hover:bg-slate-200 transition-all">Cancel</button>
-            <button id="rejBtn" class="flex-1 py-5 bg-rose-600 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-rose-500/20 hover:brightness-110 transition-all">Transmit Rejection</button>
-        </div>
-    </div>
+ <div class="bg-white rounded-[3rem] shadow-2xl w-full max-w-md p-12 relative border border-slate-100">
+ <h3 class="text-3xl font-bold text-slate-900 mb-6">Reject Transaction</h3>
+ <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-8">Specify reason for disapproval</p>
+ <textarea id="rejReason" rows="5" class="w-full p-6 bg-slate-50 border border-slate-100 rounded-[2rem] text-sm focus:outline-none focus:border-rose-500 transition-all mb-8" placeholder="Reason for rejection..."></textarea>
+ <div class="flex gap-4">
+ <button onclick="closeModal()" class="flex-1 py-5 bg-slate-100 text-slate-500 font-bold rounded-2xl hover:bg-slate-200 transition-all">Cancel</button>
+ <button id="rejBtn" class="flex-1 py-5 bg-rose-600 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-rose-500/20 hover:brightness-110 transition-all">Transmit Rejection</button>
+ </div>
+ </div>
 </div>
 
 {% endblock %}
@@ -457,118 +457,118 @@
 <script id="data-category" type="application/json">{{ category_data_json|safe }}</script>
 <script id="data-att" type="application/json">{{ performance_data_json|safe }}</script>
 <script>
-    const EVENTS = JSON.parse(document.getElementById('data-events').textContent || '[]');
-    let calendar;
-    const charts = [];
+ const EVENTS = JSON.parse(document.getElementById('data-events').textContent || '[]');
+ let calendar;
+ const charts = [];
 
-    function goTab(id, btn) {
-        ['tab-dashboard', 'tab-pending', 'tab-events', 'tab-analytics', 'tab-attendance', 'tab-tenants', 'tab-calendar', 'tab-social', 'tab-notifications', 'tab-reports'].forEach(tid => {
-            const el = document.getElementById(tid);
-            if(el) el.classList.add('hidden');
-        });
-        const target = document.getElementById('tab-' + id);
-        if(target) target.classList.remove('hidden');
-        document.querySelectorAll('.sb-btn').forEach(b => b.classList.remove('active'));
-        if(btn) btn.classList.add('active');
-        if(id === 'calendar' && calendar) setTimeout(() => calendar.updateSize(), 100);
-    }
+ function goTab(id, btn) {
+ ['tab-dashboard', 'tab-pending', 'tab-events', 'tab-analytics', 'tab-attendance', 'tab-tenants', 'tab-calendar', 'tab-social', 'tab-notifications', 'tab-reports'].forEach(tid => {
+ const el = document.getElementById(tid);
+ if(el) el.classList.add('hidden');
+ });
+ const target = document.getElementById('tab-' + id);
+ if(target) target.classList.remove('hidden');
+ document.querySelectorAll('.sb-btn').forEach(b => b.classList.remove('active'));
+ if(btn) btn.classList.add('active');
+ if(id === 'calendar' && calendar) setTimeout(() => calendar.updateSize(), 100);
+ }
 
-    function openDrawer(target) {
-        const id = parseInt(target.getAttribute('data-id'));
-        const ev = EVENTS.find(e => e.id === id);
-        if(!ev) return;
-        document.getElementById('drTitle').textContent = ev.title;
-        document.getElementById('drDesc').textContent = ev.desc || 'System node operational.';
-        document.getElementById('drLink').href = '/events/' + id + '/';
-        document.getElementById('ticket-modal').classList.remove('hidden');
-    }
+ function openDrawer(target) {
+ const id = parseInt(target.getAttribute('data-id'));
+ const ev = EVENTS.find(e => e.id === id);
+ if(!ev) return;
+ document.getElementById('drTitle').textContent = ev.title;
+ document.getElementById('drDesc').textContent = ev.desc || 'System node operational.';
+ document.getElementById('drLink').href = '/events/' + id + '/';
+ document.getElementById('ticket-modal').classList.remove('hidden');
+ }
 
-    function closeDrawer() { document.getElementById('ticket-modal').classList.add('hidden'); }
-    function closeModal() { document.getElementById('rejectModal').classList.add('hidden'); }
+ function closeDrawer() { document.getElementById('ticket-modal').classList.add('hidden'); }
+ function closeModal() { document.getElementById('rejectModal').classList.add('hidden'); }
 
-    let activeRejId = null;
-    function openReject(target) {
-        activeRejId = target.getAttribute('data-id');
-        document.getElementById('rejectModal').classList.remove('hidden');
-    }
+ let activeRejId = null;
+ function openReject(target) {
+ activeRejId = target.getAttribute('data-id');
+ document.getElementById('rejectModal').classList.remove('hidden');
+ }
 
-    document.getElementById('rejBtn').onclick = async () => {
-        const reason = document.getElementById('rejReason').value.trim();
-        if(!reason) return alert('Reason required.');
-        const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        try {
-            const r = await fetch(`/api/event/${activeRejId}/update-status/`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrf },
-                body: JSON.stringify({ status: 'REJECTED', reason })
-            });
-            const res = await r.json();
-            if(res.success) window.location.reload();
-            else alert(res.message);
-        } catch(e) { alert('Request failed.'); }
-    };
+ document.getElementById('rejBtn').onclick = async () => {
+ const reason = document.getElementById('rejReason').value.trim();
+ if(!reason) return alert('Reason required.');
+ const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
+ try {
+ const r = await fetch(`/api/event/${activeRejId}/update-status/`, {
+ method: 'POST',
+ headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrf },
+ body: JSON.stringify({ status: 'REJECTED', reason })
+ });
+ const res = await r.json();
+ if(res.success) window.location.reload();
+ else alert(res.message);
+ } catch(e) { alert('Request failed.'); }
+ };
 
-    function globalSearch(q) {
-        const low = q.toLowerCase();
-        document.querySelectorAll('#eventsGrid > div').forEach(el => {
-            el.style.display = el.textContent.toLowerCase().includes(low) ? '' : 'none';
-        });
-    }
+ function globalSearch(q) {
+ const low = q.toLowerCase();
+ document.querySelectorAll('#eventsGrid > div').forEach(el => {
+ el.style.display = el.textContent.toLowerCase().includes(low) ? '' : 'none';
+ });
+ }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        // Init FullCalendar
-        const calEl = document.getElementById('calendar');
-        if(calEl) {
-            calendar = new FullCalendar.Calendar(calEl, {
-                initialView: 'dayGridMonth',
-                events: EVENTS.map(e => ({ title: e.title, start: e.date, color: '#2563eb' }))
-            });
-            calendar.render();
-        }
+ document.addEventListener('DOMContentLoaded', () => {
+ // Init FullCalendar
+ const calEl = document.getElementById('calendar');
+ if(calEl) {
+ calendar = new FullCalendar.Calendar(calEl, {
+ initialView: 'dayGridMonth',
+ events: EVENTS.map(e => ({ title: e.title, start: e.date, color: '#2563eb' }))
+ });
+ calendar.render();
+ }
 
-        // Init Charts
-        const attRaw = JSON.parse(document.getElementById('data-att').textContent || '{}');
-        new Chart(document.getElementById('cPerformance'), {
-            type: 'bar',
-            data: {
-                labels: attRaw.labels,
-                datasets: [
-                    { label: 'Registered', data: attRaw.regs, backgroundColor: 'rgba(37,99,235,0.05)', borderColor: '#2563eb', borderWidth: 2, borderRadius: 12 },
-                    { label: 'Attended', data: attRaw.atts, backgroundColor: '#059669', borderRadius: 12 }
-                ]
-            },
-            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } } }
-        });
+ // Init Charts
+ const attRaw = JSON.parse(document.getElementById('data-att').textContent || '{}');
+ new Chart(document.getElementById('cPerformance'), {
+ type: 'bar',
+ data: {
+ labels: attRaw.labels,
+ datasets: [
+ { label: 'Registered', data: attRaw.regs, backgroundColor: 'rgba(37,99,235,0.05)', borderColor: '#2563eb', borderWidth: 2, borderRadius: 12 },
+ { label: 'Attended', data: attRaw.atts, backgroundColor: '#059669', borderRadius: 12 }
+ ]
+ },
+ options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } } }
+ });
 
-        const statusRaw = JSON.parse(document.getElementById('data-status').textContent);
-        new Chart(document.getElementById('cStatus'), {
-            type: 'doughnut',
-            data: {
-                labels: ['Published', 'Pending', 'Approved', 'Rejected'],
-                datasets: [{ data: statusRaw, backgroundColor: ['#059669', '#f59e0b', '#2563eb', '#ef4444'], borderWidth: 0 }]
-            },
-            options: { cutout: '80%', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-        });
+ const statusRaw = JSON.parse(document.getElementById('data-status').textContent);
+ new Chart(document.getElementById('cStatus'), {
+ type: 'doughnut',
+ data: {
+ labels: ['Published', 'Pending', 'Approved', 'Rejected'],
+ datasets: [{ data: statusRaw, backgroundColor: ['#059669', '#f59e0b', '#2563eb', '#ef4444'], borderWidth: 0 }]
+ },
+ options: { cutout: '80%', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+ });
 
-        const monthRaw = JSON.parse(document.getElementById('data-monthly').textContent);
-        new Chart(document.getElementById('cAnalytics'), {
-            type: 'line',
-            data: {
-                labels: monthRaw.labels,
-                datasets: [{ label: 'Growth', data: monthRaw.regs, borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,0.05)', fill: true, tension: 0.4, pointRadius: 6, pointBackgroundColor: '#fff', pointBorderWidth: 3 }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, scales: { y: { grid: { color: '#f1f5f9' } } } }
-        });
+ const monthRaw = JSON.parse(document.getElementById('data-monthly').textContent);
+ new Chart(document.getElementById('cAnalytics'), {
+ type: 'line',
+ data: {
+ labels: monthRaw.labels,
+ datasets: [{ label: 'Growth', data: monthRaw.regs, borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,0.05)', fill: true, tension: 0.4, pointRadius: 6, pointBackgroundColor: '#fff', pointBorderWidth: 3 }]
+ },
+ options: { responsive: true, maintainAspectRatio: false, scales: { y: { grid: { color: '#f1f5f9' } } } }
+ });
 
-        const catRaw = JSON.parse(document.getElementById('data-category').textContent);
-        new Chart(document.getElementById('cCategory'), {
-            type: 'polarArea',
-            data: {
-                labels: catRaw.map(c => c.label),
-                datasets: [{ data: catRaw.map(c => c.count), backgroundColor: ['#2563eb', '#059669', '#7c3aed', '#f59e0b', '#ef4444'], borderWidth: 0 }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
-        });
-    });
+ const catRaw = JSON.parse(document.getElementById('data-category').textContent);
+ new Chart(document.getElementById('cCategory'), {
+ type: 'polarArea',
+ data: {
+ labels: catRaw.map(c => c.label),
+ datasets: [{ data: catRaw.map(c => c.count), backgroundColor: ['#2563eb', '#059669', '#7c3aed', '#f59e0b', '#ef4444'], borderWidth: 0 }]
+ },
+ options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+ });
+ });
 </script>
 {% endblock %}

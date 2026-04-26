@@ -6,7 +6,7 @@ from tenants.forms import CollegeRegistrationForm
 
 def tenant_home(request):
     """Landing page showing all active colleges with direct portal links."""
-    colleges = College.objects.filter(status__in=['ACTIVE', 'TRIAL']).order_by('name')
+    colleges = College.objects.filter(status='ACTIVE').order_by('name')
     return render(request, 'tenants/home.html', {'colleges': colleges})
 
 
@@ -37,7 +37,7 @@ def college_portal(request, slug):
     URL: /colleges/<slug>/
     Shows college branding, events, login & register options.
     """
-    college = get_object_or_404(College, slug=slug, status__in=['ACTIVE', 'TRIAL'])
+    college = get_object_or_404(College, slug=slug, status='ACTIVE')
     # Set the session so all subsequent requests are scoped to this college
     request.session['college_id'] = str(college.id)
     request.session['college_name'] = college.name

@@ -15,4 +15,8 @@ urlpatterns = [
     path('verify-email/', views.verify_email, name='verify_email'),
     path('resend-verification/', views.resend_verification, name='resend_verification'),
     path('switch-college/<uuid:college_id>/', views.switch_college, name='switch_college'),
+    
+    # Staff Moderation
+    path('approve-staff/<int:user_id>/', views.approve_staff, name='approve_staff'),
+    path('reject-staff/<int:user_id>/', views.reject_staff, name='reject_staff'),
 ]

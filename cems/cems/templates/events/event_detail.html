@@ -5,306 +5,305 @@
 {% block extra_head %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
-    .hero-mask { mask-image: linear-gradient(to bottom, black 60%, transparent 100%); }
-    .glass-dark { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
+ .glass-dark { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
 </style>
 {% endblock %}
 
 {% block content %}
 <!-- HERO SECTION -->
 <div class="relative h-[600px] w-full flex items-center justify-center overflow-hidden bg-slate-950">
-    <!-- Background Layer with elite blending -->
-    {% if event.image %}
-        <img src="{{ event.image.url }}" class="absolute inset-0 w-full h-full object-cover opacity-50 scale-105 blur-[1px] hero-mask" alt="">
-    {% else %}
-        <div class="absolute inset-0 {{ event.gradient|default:'g-slate' }} opacity-80 hero-mask"></div>
-    {% endif %}
-    
-    <div class="absolute inset-0 bg-gradient-to-t from-slate-50 via-transparent to-transparent"></div>
-    
-    <!-- Content -->
-    <div class="relative z-10 max-w-5xl mx-auto px-6 text-center animate-fade-up">
-        <div class="flex flex-wrap justify-center gap-3 mb-10">
-            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-dark">
-                <span class="w-2 h-2 rounded-full bg-brand animate-pulse"></span>
-                <span class="text-[10px] font-black text-white uppercase tracking-[0.3em]">{{ event.get_category_display }}</span>
-            </div>
-            {% if event.spots_left < 10 and event.spots_left > 0 %}
-            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-500 text-white shadow-brand">
-                <span class="text-[10px] font-black uppercase tracking-[0.3em]">⚠️ Almost Full</span>
-            </div>
-            {% endif %}
-            {% if event.get_registered_count > 20 %}
-            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-600 text-white shadow-premium">
-                <span class="text-[10px] font-black uppercase tracking-[0.3em]">🔥 Popular Experience</span>
-            </div>
-            {% endif %}
-        </div>
-        
-        <h1 class="font-serif italic text-7xl md:text-9xl text-slate-900 md:text-white font-bold leading-[0.85] mb-8 drop-shadow-2xl">
-            {{ event.title }}
-        </h1>
-        
-        <div class="flex flex-wrap justify-center items-center gap-8 text-slate-600 md:text-white/70">
-            <div class="flex items-center gap-3">
-                <span class="text-2xl">📍</span>
-                <span class="text-xs font-black uppercase tracking-widest">{{ event.venue }}</span>
-            </div>
-            <div class="hidden md:block w-px h-6 bg-current opacity-20"></div>
-            <div class="flex items-center gap-3">
-                <span class="text-2xl">📅</span>
-                <span class="text-xs font-black uppercase tracking-widest">{{ event.date_time|date:"l, F d, Y" }}</span>
-            </div>
-        </div>
-    </div>
+ <!-- Background Layer with elite blending -->
+ {% if event.image %}
+ <img src="{{ event.image.url }}" class="absolute inset-0 w-full h-full object-cover opacity-50 blur-[1px]" alt="">
+ {% else %}
+ <div class="absolute inset-0 opacity-80"></div>
+ {% endif %}
+ 
+ <div class="absolute inset-0 "></div>
+ 
+ <!-- Content -->
+ <div class="relative z-10 max-w-5xl mx-auto px-6 text-center">
+ <div class="flex flex-wrap justify-center gap-3 mb-10">
+ <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-dark">
+ <span class="w-2 h-2 rounded-full bg-brand"></span>
+ <span class="text-[10px] font-black text-white uppercase tracking-[0.3em]">{{ event.get_category_display }}</span>
+ </div>
+ {% if event.spots_left < 10 and event.spots_left > 0 %}
+ <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-500 text-white shadow-brand">
+ <span class="text-[10px] font-black uppercase tracking-[0.3em]"> Almost Full</span>
+ </div>
+ {% endif %}
+ {% if event.get_registered_count > 20 %}
+ <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-600 text-white shadow-sm">
+ <span class="text-[10px] font-black uppercase tracking-[0.3em]"> Popular</span>
+ </div>
+ {% endif %}
+ </div>
+ 
+ <h1 class="text-7xl md:text-9xl text-slate-900 md:text-white font-bold leading-[0.85] mb-8 drop-shadow-2xl">
+ {{ event.title }}
+ </h1>
+ 
+ <div class="flex flex-wrap justify-center items-center gap-8 text-slate-600 md:text-white/70">
+ <div class="flex items-center gap-3">
+ <span class="text-2xl"></span>
+ <span class="text-xs font-black uppercase tracking-widest">{{ event.venue }}</span>
+ </div>
+ <div class="hidden md:block w-px h-6 bg-current opacity-20"></div>
+ <div class="flex items-center gap-3">
+ <span class="text-2xl"></span>
+ <span class="text-xs font-black uppercase tracking-widest">{{ event.date_time|date:"l, F d, Y" }}</span>
+ </div>
+ </div>
+ </div>
 </div>
 
 <!-- CONTENT GRID -->
 <main class="max-w-7xl mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-12 gap-16 -mt-32 relative z-20 pb-32">
-    
-    <!-- Main Content Panel (Bento Style) -->
-    <div class="lg:col-span-8 space-y-12">
-        <div class="bg-white rounded-[3rem] p-12 shadow-premium border border-slate-100 animate-reveal">
-            
-            <!-- Information Bento Grid -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 pb-12 border-b border-slate-50">
-                <div class="space-y-2">
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em]">Time Detail</p>
-                    <p class="text-xl font-bold text-slate-900">{{ event.date_time|time:"H:i" }} <span class="text-slate-300 font-normal">GMT</span></p>
-                </div>
-                <div class="space-y-2">
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em]">Entry Access</p>
-                    <p class="text-xl font-bold text-emerald-600">Free Pass</p>
-                </div>
-                <div class="space-y-2">
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em]">Vacancy</p>
-                    <p class="text-xl font-bold text-brand">{{ event.spots_left }} <span class="text-slate-300 font-normal">Left</span></p>
-                </div>
-                <div class="space-y-2">
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em]">Status Code</p>
-                    <span class="inline-block px-3 py-1 bg-slate-950 text-white rounded-lg text-[9px] font-black tracking-widest">{{ event.status }}</span>
-                </div>
-            </div>
+ 
+ <!-- Main Content Panel (Bento Style) -->
+ <div class="lg:col-span-8 space-y-12">
+ <div class="bg-white rounded-[3rem] p-12 shadow-sm border border-slate-200">
+ 
+ <!-- Information Bento Grid -->
+ <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 pb-12 border-b border-slate-50">
+ <div class="space-y-2">
+ <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em]">Time Detail</p>
+ <p class="text-xl font-bold text-slate-900">{{ event.date_time|time:"H:i" }} <span class="text-slate-300 font-normal">GMT</span></p>
+ </div>
+ <div class="space-y-2">
+ <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em]">Entry Access</p>
+ <p class="text-xl font-bold text-emerald-600">Free Pass</p>
+ </div>
+ <div class="space-y-2">
+ <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em]">Vacancy</p>
+ <p class="text-xl font-bold text-brand">{{ event.spots_left }} <span class="text-slate-300 font-normal">Left</span></p>
+ </div>
+ <div class="space-y-2">
+ <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em]">Status Code</p>
+ <span class="inline-block px-3 py-1 bg-slate-950 text-white rounded-lg text-[9px] font-black tracking-widest">{{ event.status }}</span>
+ </div>
+ </div>
 
-            <!-- Description -->
-            <div class="py-12">
-                <h3 class="font-serif italic text-4xl text-slate-900 mb-8">The Narrative</h3>
-                <div class="prose prose-slate max-w-none text-slate-600 leading-relaxed text-xl font-light italic">
-                    {{ event.description|linebreaks }}
-                </div>
-            </div>
+ <!-- Description -->
+ <div class="py-12">
+ <h3 class="text-4xl text-slate-900 mb-8">Event Details</h3>
+ <div class="prose prose-slate max-w-none text-slate-600 leading-relaxed text-xl">
+ {{ event.description|linebreaks }}
+ </div>
+ </div>
 
-            <!-- Command Center (Staff Only) -->
-            {% if user.is_authenticated and user.profile.role in "STAFF ADMIN" or user.is_superuser %}
-            <div class="mt-12 p-10 bg-slate-50 rounded-[2.5rem] border border-slate-100 group">
-                <div class="flex items-center justify-between mb-8">
-                    <h4 class="text-[10px] font-black uppercase text-slate-400 tracking-[0.4em]">Administrative Hub</h4>
-                    <div class="w-8 h-8 rounded-full bg-slate-900 flex items-center justify-center text-white text-xs group-hover:rotate-45 transition-transform">⚙️</div>
-                </div>
-                <div class="flex flex-wrap gap-4">
-                    <a href="{% url 'event_update' event.pk %}" class="px-8 py-4 bg-white border border-slate-200 rounded-2xl text-xs font-black uppercase tracking-widest shadow-sm hover:shadow-lg transition-all">✏️ Edit Intel</a>
-                    <a href="{% url 'participant_list' event.pk %}" class="px-8 py-4 bg-white border border-slate-200 rounded-2xl text-xs font-black uppercase tracking-widest shadow-sm hover:shadow-lg transition-all">👥 Guest List</a>
-                    {% if event.status == 'PENDING' %}
-                        <form action="{% url 'approve_event' event.pk %}" method="post">{% csrf_token %}
-                            <button type="submit" class="px-8 py-4 bg-brand text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-brand hover:brightness-110 transition-all">✅ Approve</button>
-                        </form>
-                    {% endif %}
-                </div>
-            </div>
-            {% endif %}
-        </div>
+ <!-- Command Center (Staff Only) -->
+ {% if user.is_authenticated and user.profile.role in "STAFF ADMIN" or user.is_superuser %}
+ <div class="mt-12 p-10 bg-slate-50 rounded-[2.5rem] border border-slate-200 group">
+ <div class="flex items-center justify-between mb-8">
+ <h4 class="text-[10px] font-black uppercase text-slate-400 tracking-[0.4em]">Admin Actions</h4>
+ <div class="w-8 h-8 rounded-full bg-slate-900 flex items-center justify-center text-white text-xs transition-transform"></div>
+ </div>
+ <div class="flex flex-wrap gap-4">
+ <a href="{% url 'event_update' event.pk %}" class="px-8 py-4 bg-white border border-slate-200 rounded-2xl text-xs font-black uppercase tracking-widest shadow-sm hover:shadow-md transition-all"> Edit Event</a>
+ <a href="{% url 'participant_list' event.pk %}" class="px-8 py-4 bg-white border border-slate-200 rounded-2xl text-xs font-black uppercase tracking-widest shadow-sm hover:shadow-md transition-all"> Participants</a>
+ {% if event.status == 'PENDING' %}
+ <form action="{% url 'approve_event' event.pk %}" method="post">{% csrf_token %}
+ <button type="submit" class="px-8 py-4 bg-brand text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-brand hover:brightness-110 transition-all"> Approve</button>
+ </form>
+ {% endif %}
+ </div>
+ </div>
+ {% endif %}
+ </div>
 
-        <!-- SOCIAL WALL -->
-        <section class="bg-white rounded-[3rem] p-12 shadow-premium border border-slate-100">
-            <div class="flex items-center justify-between mb-12">
-                <h3 class="font-serif italic text-4xl text-slate-900">Institutional Wall</h3>
-                <div class="px-4 py-2 bg-brand/5 border border-brand/10 rounded-full text-[10px] font-black text-brand uppercase tracking-widest">{{ event.comments.count }} Contributions</div>
-            </div>
+ <!-- SOCIAL WALL -->
+ <section class="bg-white rounded-[3rem] p-12 shadow-sm border border-slate-200">
+ <div class="flex items-center justify-between mb-12">
+ <h3 class="text-4xl text-slate-900">Comments</h3>
+ <div class="px-4 py-2 bg-brand/5 border border-brand/10 rounded-full text-[10px] font-black text-brand uppercase tracking-widest">{{ event.comments.count }} Comments</div>
+ </div>
 
-            {% if user.is_authenticated %}
-            <form action="{% url 'add_comment' event.pk %}" method="post" class="mb-16">
-                {% csrf_token %}
-                <div class="relative group">
-                    <textarea name="text" rows="4" placeholder="Document your expectations or feedback here..." 
-                        class="w-full rounded-[2rem] border border-slate-100 bg-slate-50 p-8 text-slate-700 text-lg focus:outline-none focus:border-brand/30 focus:ring-8 focus:ring-brand/5 transition-all resize-none"></textarea>
-                    <button type="submit" class="absolute bottom-6 right-6 bg-brand text-white px-8 py-3 rounded-2xl text-xs font-black uppercase tracking-widest shadow-brand hover:shadow-brand-dark transition-all">Publish</button>
-                </div>
-            </form>
-            {% endif %}
+ {% if user.is_authenticated %}
+ <form action="{% url 'add_comment' event.pk %}" method="post" class="mb-16">
+ {% csrf_token %}
+ <div class="relative group">
+ <textarea name="text" rows="4" placeholder="Write a comment..." 
+ class="w-full rounded-[2rem] border border-slate-200 bg-slate-50 p-8 text-slate-700 text-lg focus:outline-none focus:border-brand/30 focus:ring-4 focus:ring-brand/5 transition-all resize-none"></textarea>
+ <button type="submit" class="absolute bottom-6 right-6 bg-brand text-white px-8 py-3 rounded-2xl text-xs font-black uppercase tracking-widest shadow-brand hover:shadow-brand-dark transition-all">Publish</button>
+ </div>
+ </form>
+ {% endif %}
 
-            <div class="space-y-4">
-                {% for c in event.comments.all|dictsortreversed:"created_at" %}
-                <div class="flex gap-8 p-8 rounded-[2rem] hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100 group">
-                    <div class="w-16 h-16 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-2xl font-bold shadow-xl group-hover:scale-110 transition-transform">
-                        {{ c.user.username|first|upper }}
-                    </div>
-                    <div class="flex-1">
-                        <div class="flex justify-between items-start mb-2">
-                            <div>
-                                <span class="text-sm font-black text-slate-900 uppercase tracking-widest">@{{ c.user.username }}</span>
-                                <span class="mx-3 text-slate-200">/</span>
-                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{{ c.created_at|timesince }} ago</span>
-                            </div>
-                            <div class="w-2 h-2 rounded-full bg-slate-100"></div>
-                        </div>
-                        <p class="text-slate-600 text-xl font-light italic leading-relaxed">"{{ c.text }}"</p>
-                    </div>
-                </div>
-                {% empty %}
-                    <div class="text-center py-16 text-slate-400 italic font-serif text-xl opacity-60">The institutional wall is quiet. Start the conversation.</div>
-                {% endfor %}
-            </div>
-        </section>
-    </div>
+ <div class="space-y-4">
+ {% for c in event.comments.all|dictsortreversed:"created_at" %}
+ <div class="flex gap-8 p-8 rounded-[2rem] hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100 group">
+ <div class="w-16 h-16 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-2xl font-bold shadow-xl group-hover:scale-110 transition-transform">
+ {{ c.user.username|first|upper }}
+ </div>
+ <div class="flex-1">
+ <div class="flex justify-between items-start mb-2">
+ <div>
+ <span class="text-sm font-black text-slate-900 uppercase tracking-widest">@{{ c.user.username }}</span>
+ <span class="mx-3 text-slate-200">/</span>
+ <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{{ c.created_at|timesince }} ago</span>
+ </div>
+ <div class="w-2 h-2 rounded-full bg-slate-200"></div>
+ </div>
+ <p class="text-slate-600 text-xl leading-relaxed">"{{ c.text }}"</p>
+ </div>
+ </div>
+ {% empty %}
+ <div class="text-center py-16 text-slate-400 text-xl opacity-60">There are no comments yet.</div>
+ {% endfor %}
+ </div>
+ </section>
+ </div>
 
-    <!-- SIDEBAR (Bento Style) -->
-    <aside class="lg:col-span-4 space-y-12">
-        
-        <!-- Premium Ticket UI -->
-        <div class="bg-white rounded-[3rem] p-10 shadow-premium border border-slate-100 relative overflow-hidden animate-fade-up" style="animation-delay: 0.2s;">
-            <div class="absolute top-0 left-0 w-full h-3 {{ event.gradient|default:'g-blue' }}"></div>
-            
-            {% if event.status == 'PUBLISHED' %}
-                {% if user_registration %}
-                    <!-- ACTIVE TICKET -->
-                    <div class="text-center">
-                        <div class="w-24 h-24 bg-emerald-50 rounded-[2rem] mx-auto flex items-center justify-center text-5xl mb-8 animate-float">🎖️</div>
-                        <h4 class="font-serif italic text-3xl font-bold text-slate-900 mb-2">Entry Secured</h4>
-                        <p class="text-[10px] font-black text-slate-400 mb-10 uppercase tracking-[0.4em]">Personal Admission Pass</p>
-                        
-                        <!-- Premium QR Module -->
-                        <div class="p-8 bg-slate-950 rounded-[3rem] shadow-2xl inline-block mb-10 group">
-                            <div id="qrcode" class="mx-auto" style="padding: 12px; background: white; border-radius: 1.5rem;"></div>
-                            <div class="mt-6 flex flex-col items-center">
-                                <div class="w-12 h-1 bg-white/20 rounded-full mb-3"></div>
-                                <p class="text-[8px] font-black text-white/40 uppercase tracking-[0.5em]">AUTH-TOKEN: {{ user_registration.id|truncatechars:8 }}</p>
-                            </div>
-                        </div>
+ <!-- SIDEBAR (Bento Style) -->
+ <aside class="lg:col-span-4 space-y-12">
+ 
+ <!-- Premium Ticket UI -->
+ <div class="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-200 relative overflow-hidden">
+ <div class="absolute top-0 left-0 w-full h-3"></div>
+ 
+ {% if event.status == 'PUBLISHED' %}
+ {% if user_registration %}
+ <!-- ACTIVE TICKET -->
+ <div class="text-center">
+ <div class="w-24 h-24 bg-emerald-50 rounded-[2rem] mx-auto flex items-center justify-center text-5xl mb-8"></div>
+ <h4 class="text-3xl font-bold text-slate-900 mb-2">Registered</h4>
+ <p class="text-[10px] font-black text-slate-400 mb-10 uppercase tracking-[0.4em]">Entry Pass</p>
+ 
+ <!-- Premium QR Module -->
+ <div class="p-8 bg-slate-950 rounded-[3rem] shadow-2xl inline-block mb-10 group">
+ <div id="qrcode" class="mx-auto" style="padding: 12px; background: white; border-radius: 1.5rem;"></div>
+ <div class="mt-6 flex flex-col items-center">
+ <div class="w-12 h-1 bg-white/20 rounded-full mb-3"></div>
+ <p class="text-[8px] font-black text-white/40 uppercase tracking-[0.5em]">AUTH-TOKEN: {{ user_registration.id|truncatechars:8 }}</p>
+ </div>
+ </div>
 
-                        <a href="{% url 'student_dashboard' %}" class="flex items-center justify-center gap-3 w-full py-5 text-sm font-black uppercase tracking-widest text-slate-500 hover:text-brand transition-all">
-                            Manage Credentials <span class="text-xl">→</span>
-                        </a>
-                    </div>
-                    
-                    <script>
-                        document.addEventListener('DOMContentLoaded', () => {
-                            const qrContainer = document.getElementById("qrcode");
-                            const verifyUrl = window.location.origin + "{% url 'verify_registration' user_registration.pk %}";
-                            new QRCode(qrContainer, {
-                                text: verifyUrl,
-                                width: 160,
-                                height: 160,
-                                colorDark : "#0f172a",
-                                colorLight : "#ffffff",
-                                correctLevel : QRCode.CorrectLevel.H
-                            });
-                        });
-                    </script>
+ <a href="{% url 'student_dashboard' %}" class="flex items-center justify-center gap-3 w-full py-5 text-sm font-black uppercase tracking-widest text-slate-500 hover:text-brand transition-all">
+ Manage Credentials <span class="text-xl">→</span>
+ </a>
+ </div>
+ 
+ <script>
+ document.addEventListener('DOMContentLoaded', () => {
+ const qrContainer = document.getElementById("qrcode");
+ const verifyUrl = window.location.origin + "{% url 'verify_registration' user_registration.pk %}";
+ new QRCode(qrContainer, {
+ text: verifyUrl,
+ width: 160,
+ height: 160,
+ colorDark : "#0f172a",
+ colorLight : "#ffffff",
+ correctLevel : QRCode.CorrectLevel.H
+ });
+ });
+ </script>
 
-                {% else %}
-                    <!-- ENROLLMENT CTA -->
-                    <div class="text-center">
-                        <div class="flex justify-between items-end mb-4">
-                            <h4 class="font-serif italic text-4xl font-bold text-slate-900">Attend</h4>
-                            <span class="text-[9px] font-black text-brand uppercase tracking-widest">Public Access</span>
-                        </div>
-                        <div class="h-3 bg-slate-50 border border-slate-100 rounded-full mb-4 overflow-hidden p-0.5">
-                            <div class="h-full bg-brand rounded-full transition-all duration-1000" style="width: {% widthratio event.get_registered_count event.capacity|default:1 100 %}%"></div>
-                        </div>
-                        <div class="flex justify-between text-[9px] font-black text-slate-400 mb-10 uppercase tracking-widest">
-                            <span>Reserved: {{ event.get_registered_count }}</span>
-                            <span>Limit: {{ event.capacity }}</span>
-                        </div>
-                        
-                        {% if event.is_full %}
-                            <div class="py-6 bg-rose-50 text-rose-600 rounded-[2rem] font-black text-xs uppercase tracking-widest border border-rose-100">⚠️ Registration Terminated</div>
-                        {% else %}
-                            <a href="{% url 'register_event' event.pk %}" class="block w-full py-6 bg-brand text-white font-black uppercase tracking-widest rounded-[2rem] shadow-brand hover:shadow-brand-dark hover:-translate-y-1 transition-all">
-                                Secure Entry →
-                            </a>
-                        {% endif %}
-                    </div>
-                {% endif %}
-            {% else %}
-                <!-- UNAVAILABLE STATE -->
-                <div class="text-center py-16">
-                    <div class="w-20 h-20 bg-slate-50 rounded-full mx-auto flex items-center justify-center text-4xl mb-6">🔒</div>
-                    <h4 class="font-serif italic text-3xl text-slate-300">Discovery Locked</h4>
-                    <p class="text-[10px] font-black text-slate-400 mt-4 uppercase tracking-[0.2em]">Institutional Review Pending</p>
-                </div>
-            {% endif %}
-        </div>
+ {% else %}
+ <!-- ENROLLMENT CTA -->
+ <div class="text-center">
+ <div class="flex justify-between items-end mb-4">
+ <h4 class="text-4xl font-bold text-slate-900">Attend</h4>
+ <span class="text-[9px] font-black text-brand uppercase tracking-widest">Public Access</span>
+ </div>
+ <div class="h-3 bg-slate-50 border border-slate-100 rounded-full mb-4 overflow-hidden p-0.5">
+ <div class="h-full bg-brand rounded-full transition-all duration-1000" style="width: {% widthratio event.get_registered_count event.capacity|default:1 100 %}%"></div>
+ </div>
+ <div class="flex justify-between text-[9px] font-black text-slate-400 mb-10 uppercase tracking-widest">
+ <span>Reserved: {{ event.get_registered_count }}</span>
+ <span>Limit: {{ event.capacity }}</span>
+ </div>
+ 
+ {% if event.is_full %}
+ <div class="py-6 bg-rose-50 text-rose-600 rounded-[2rem] font-black text-xs uppercase tracking-widest border border-rose-100"> Registration Terminated</div>
+ {% else %}
+ <a href="{% url 'register_event' event.pk %}" class="block w-full py-6 bg-brand text-white font-black uppercase tracking-widest rounded-[2rem] shadow-brand hover:shadow-brand-dark hover:-translate-y-1 transition-all">
+ Secure Entry →
+ </a>
+ {% endif %}
+ </div>
+ {% endif %}
+ {% else %}
+ <!-- UNAVAILABLE STATE -->
+ <div class="text-center py-16">
+ <div class="w-20 h-20 bg-slate-50 rounded-full mx-auto flex items-center justify-center text-4xl mb-6"></div>
+ <h4 class="text-3xl text-slate-300">Not Available</h4>
+ <p class="text-[10px] font-black text-slate-400 mt-4 uppercase tracking-[0.2em]">Pending Approval</p>
+ </div>
+ {% endif %}
+ </div>
 
-        <!-- Meta Section (Bento Grid) -->
-        <div class="space-y-6 animate-fade-up" style="animation-delay: 0.4s;">
-            <!-- Organizer Info -->
-            <div class="bg-slate-950 rounded-[3rem] p-8 text-white relative overflow-hidden group">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700"></div>
-                <p class="text-[9px] font-black uppercase text-white/30 tracking-[0.4em] mb-8">Lead Institution</p>
-                <div class="flex items-center gap-6">
-                    <div class="w-16 h-16 rounded-[1.5rem] bg-white text-slate-950 flex items-center justify-center text-2xl font-black">
-                        {{ event.college.name|first }}
-                    </div>
-                    <div>
-                        <h5 class="font-serif italic text-2xl">{{ event.college.name }}</h5>
-                        <p class="text-[9px] text-white/40 font-black uppercase tracking-widest">{{ event.college.slug }} network</p>
-                    </div>
-                </div>
-            </div>
+ <!-- Meta Section (Bento Grid) -->
+ <div class="space-y-6">
+ <!-- Organizer Info -->
+ <div class="bg-slate-900 rounded-[3rem] p-8 text-white relative overflow-hidden group">
+ <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 transition-transform"></div>
+ <p class="text-[9px] font-black uppercase text-white/30 tracking-[0.4em] mb-8">Lead Institution</p>
+ <div class="flex items-center gap-6">
+ <div class="w-16 h-16 rounded-[1.5rem] bg-white text-slate-950 flex items-center justify-center text-2xl font-black">
+ {{ event.college.name|first }}
+ </div>
+ <div>
+ <h5 class="text-2xl">{{ event.college.name }}</h5>
+ <p class="text-[9px] text-white/40 font-black uppercase tracking-widest">{{ event.college.slug }} network</p>
+ </div>
+ </div>
+ </div>
 
-            <!-- Navigation Links -->
-            <div class="bg-white rounded-[3rem] p-8 shadow-premium border border-slate-100">
-                <p class="text-[9px] font-black uppercase text-slate-400 tracking-[0.4em] mb-6">Discovery Tools</p>
-                <div class="space-y-3">
-                    <a href="https://www.google.com/maps/search/?api=1&query={{ event.venue|urlencode }}" target="_blank" 
-                        class="flex items-center justify-between group p-6 bg-slate-50 rounded-[2rem] hover:bg-white border border-transparent hover:border-slate-200 transition-all">
-                        <div class="flex items-center gap-4">
-                            <span class="text-2xl group-hover:rotate-12 transition-transform">🧭</span>
-                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-700">Get Directions</span>
-                        </div>
-                        <span class="text-slate-300 group-hover:text-brand transition-all">→</span>
-                    </a>
-                    <a href="{% url 'event_list' %}" class="block text-center text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 hover:text-slate-900 transition-colors py-4">Return to Repository</a>
-                </div>
-            </div>
+ <!-- Navigation Links -->
+ <div class="bg-white rounded-[3rem] p-8 shadow-sm border border-slate-200">
+ <p class="text-[9px] font-black uppercase text-slate-400 tracking-[0.4em] mb-6">Location Map</p>
+ <div class="space-y-3">
+ <a href="https://www.google.com/maps/search/?api=1&query={{ event.venue|urlencode }}" target="_blank" 
+ class="flex items-center justify-between group p-6 bg-slate-50 rounded-[2rem] hover:bg-slate-100 border border-slate-200 transition-all">
+ <div class="flex items-center gap-4">
+ <span class="text-2xl transition-transform"></span>
+ <span class="text-[10px] font-black uppercase tracking-widest text-slate-700">Get Directions</span>
+ </div>
+ <span class="text-slate-400 group-hover:text-brand transition-all">→</span>
+ </a>
+ <a href="{% url 'event_list' %}" class="block text-center text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 hover:text-slate-900 transition-colors py-4">Back to Events</a>
+ </div>
+ </div>
 
-            <!-- Network Amplification (Social) -->
-            <div class="bg-gradient-to-br from-brand to-indigo-600 rounded-[3rem] p-8 text-white shadow-xl relative overflow-hidden group">
-                <div class="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-all duration-700"></div>
-                
-                <p class="text-[9px] font-black uppercase text-white/50 tracking-[0.4em] mb-6 relative z-10">Network Amplification</p>
-                
-                <div class="space-y-3 relative z-10">
-                    <!-- WhatsApp -->
-                    <a href="https://wa.me/?text=Join me at {{ event.title|urlencode }}! %0A%0ARegister here: {{ request.build_absolute_uri|urlencode }}" target="_blank"
-                       class="flex items-center justify-between p-5 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-[2rem] border border-white/5 transition-all">
-                        <div class="flex items-center gap-4">
-                            <span class="text-xl">💬</span>
-                            <span class="text-[10px] font-black uppercase tracking-widest">WhatsApp</span>
-                        </div>
-                    </a>
-                    
-                    <!-- Email -->
-                    <a href="mailto:?subject=Join me at {{ event.title|urlencode }}&body=Check out this event: {{ request.build_absolute_uri|urlencode }}"
-                       class="flex items-center justify-between p-5 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-[2rem] border border-white/5 transition-all">
-                        <div class="flex items-center gap-4">
-                            <span class="text-xl">📧</span>
-                            <span class="text-[10px] font-black uppercase tracking-widest">Email Invite</span>
-                        </div>
-                    </a>
+ <!-- Network Amplification (Social) -->
+ <div class="rounded-[3rem] p-8 text-white shadow-sm bg-slate-900 relative overflow-hidden group">
+ <div class="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl transition-all"></div>
+ 
+ <p class="text-[9px] font-black uppercase text-white/50 tracking-[0.4em] mb-6 relative z-10">Share Event</p>
+ 
+ <div class="space-y-3 relative z-10">
+ <!-- WhatsApp -->
+ <a href="https://wa.me/?text=Join me at {{ event.title|urlencode }}! %0A%0ARegister here: {{ request.build_absolute_uri|urlencode }}" target="_blank"
+ class="flex items-center justify-between p-5 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-[2rem] border border-white/5 transition-all">
+ <div class="flex items-center gap-4">
+ <span class="text-xl"></span>
+ <span class="text-[10px] font-black uppercase tracking-widest">WhatsApp</span>
+ </div>
+ </a>
+ 
+ <!-- Email -->
+ <a href="mailto:?subject=Join me at {{ event.title|urlencode }}&body=Check out this event: {{ request.build_absolute_uri|urlencode }}"
+ class="flex items-center justify-between p-5 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-[2rem] border border-white/5 transition-all">
+ <div class="flex items-center gap-4">
+ <span class="text-xl"></span>
+ <span class="text-[10px] font-black uppercase tracking-widest">Email Invite</span>
+ </div>
+ </a>
 
-                    <!-- Copy Link -->
-                    <button onclick="navigator.clipboard.writeText('{{ request.build_absolute_uri }}'); alert('Link Copied to Clipboard!');"
-                       class="w-full flex items-center justify-between p-5 bg-black/20 hover:bg-black/30 backdrop-blur-md rounded-[2rem] border border-white/5 transition-all">
-                        <div class="flex items-center gap-4">
-                            <span class="text-xl">🔗</span>
-                            <span class="text-[10px] font-black uppercase tracking-widest">Copy URL</span>
-                        </div>
-                    </button>
-                </div>
-            </div>
-        </div>
+ <!-- Copy Link -->
+ <button onclick="navigator.clipboard.writeText('{{ request.build_absolute_uri }}'); alert('Link Copied to Clipboard!');"
+ class="w-full flex items-center justify-between p-5 bg-black/20 hover:bg-black/30 backdrop-blur-md rounded-[2rem] border border-white/5 transition-all">
+ <div class="flex items-center gap-4">
+ <span class="text-xl"></span>
+ <span class="text-[10px] font-black uppercase tracking-widest">Copy URL</span>
+ </div>
+ </button>
+ </div>
+ </div>
+ </div>
 
-    </aside>
+ </aside>
 </main>
 {% endblock %}

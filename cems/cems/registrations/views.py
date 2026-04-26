@@ -13,19 +13,23 @@ from events.models import Event
 from registrations.models import Registration
 
 
-def _send_confirmation_email(registration):
+def _send_confirmation_email(request, registration):
     """
     Sends a high-fidelity confirmation email to the student upon successful registration.
     """
     event = registration.event
     user = registration.user
     
+    from django.urls import reverse
+    ticket_url = request.build_absolute_uri(reverse('print_ticket', args=[event.id]))
+    
     subject = f'Registration Confirmed: {event.title}'
     context = {
         'user': user,
         'event': event,
         'registration': registration,
-        'college': event.college
+        'college': event.college,
+        'ticket_url': ticket_url
     }
     
     html_message = render_to_string('emails/registration_success.html', context)
@@ -75,7 +79,7 @@ def register_event(request, event_id):
                 existing.save()
                 
                 if status == 'REGISTERED':
-                    _send_confirmation_email(existing)
+                    _send_confirmation_email(request, existing)
                     messages.success(request, f"Successfully registered for {event.title}!")
                 else:
                     messages.info(request, "Registration submitted. This event requires admin approval.")
@@ -96,7 +100,7 @@ def register_event(request, event_id):
         reg = Registration.objects.create(user=request.user, event=event, status=status)
         
         if status == 'REGISTERED':
-            _send_confirmation_email(reg)
+            _send_confirmation_email(request, reg)
             messages.success(request, f'Successfully registered for "{event.title}"!')
         else:
             messages.info(request, "Registration submitted. This event requires admin approval.")
@@ -182,10 +186,10 @@ def approve_registration(request, registration_id):
     if reg.status == 'PENDING':
         reg.status = 'REGISTERED'
         reg.save()
-        _send_confirmation_email(reg)
+        _send_confirmation_email(request, reg)
         messages.success(request, f"Approved registration for {reg.user.get_full_name() or reg.user.username}.")
     
-    return redirect(request.META.get('HTTP_REFERER', 'participant_list'))
+    return redirect(request.META.get('HTTP_REFERER') or '/')
 
 
 @login_required
@@ -202,7 +206,7 @@ def reject_registration(request, registration_id):
         reg.save()
         messages.warning(request, f"Rejected registration for {reg.user.get_full_name() or reg.user.username}.")
     
-    return redirect(request.META.get('HTTP_REFERER', 'participant_list'))
+    return redirect(request.META.get('HTTP_REFERER') or '/')
 
 
 @login_required
@@ -259,8 +263,9 @@ def export_participants_csv(request, event_id):
 
     regs = Registration.objects.filter(event=event).select_related('user', 'user__profile').order_by('-registered_at')
 
+    safe_name = event.title.lower().replace(' ', '_')[:40]
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = f'attachment; filename="{event.slug|default:"event"}_participants.csv"'
+    response['Content-Disposition'] = f'attachment; filename="{safe_name}_participants.csv"'
 
     writer = csv.writer(response)
     writer.writerow(['Name', 'Username/ID', 'Email', 'Department', 'Status', 'Registration Date'])
@@ -283,7 +288,7 @@ def print_ticket(request, event_id):
     """View to return a printer-optimized ticket for a specific event registration."""
     registration = get_object_or_404(Registration, event_id=event_id, user=request.user)
 
-    if registration.status != 'PUBLISHED' and registration.status not in ['REGISTERED', 'ATTENDED']:
+    if registration.status not in ['REGISTERED', 'ATTENDED']:
         messages.error(request, 'Only confirmed registrations can be printed.')
         return redirect('student_dashboard')
 

@@ -5,114 +5,114 @@
 {% block content %}
 <div class="min-h-screen flex items-stretch bg-slate-50">
 
-  <!-- FLAGSHIP BRAND PANEL -->
-  <div class="hidden lg:flex w-[500px] flex-shrink-0 flex-col justify-between bg-slate-950 p-16 relative overflow-hidden">
-    <!-- Ambient Glow Removed -->
-    <div class="relative z-10 animate-fade-up">
-      <div class="flex items-center gap-4 mb-20">
-        <div class="w-14 h-14 rounded-2xl bg-brand flex items-center justify-center text-white font-black text-3xl shadow-brand">C</div>
-        <span class="font-serif italic text-4xl text-white tracking-tight">CEMS</span>
-      </div>
-      <h2 class="font-serif italic text-6xl text-white font-bold leading-[1.05] mb-10 tracking-tight">
-        Discovery<br>Starts<br>Within.
-      </h2>
-      <p class="text-slate-500 leading-relaxed text-lg italic font-light max-w-sm">
-        Enter the unified gateway for academic summits, cultural festivals, and institutional intelligence.
-      </p>
-    </div>
+ <!-- FLAGSHIP BRAND PANEL -->
+ <div class="hidden lg:flex w-[500px] flex-shrink-0 flex-col justify-between bg-slate-950 p-16 relative overflow-hidden">
+ <!-- Ambient Glow Removed -->
+ <div class="relative z-10 animate-fade-up">
+ <div class="flex items-center gap-4 mb-20">
+ <div class="w-14 h-14 rounded-2xl bg-brand flex items-center justify-center text-white font-black text-3xl shadow-brand">C</div>
+ <span class="text-4xl text-white tracking-tight">CEMS</span>
+ </div>
+ <h2 class="text-6xl text-white font-bold leading-[1.05] mb-10 tracking-tight">
+ Discovery<br>Starts<br>Within.
+ </h2>
+ <p class="text-slate-500 leading-relaxed text-lg italic font-light max-w-sm">
+ Enter the unified gateway for academic summits, cultural festivals, and institutional intelligence.
+ </p>
+ </div>
 
-    <!-- Trust Module (High Fidelity) -->
-    <div class="relative z-10 border-t border-white/5 pt-10 mt-auto animate-fade-in" style="animation-delay: 0.3s;">
-        <div class="flex items-center gap-6">
-            <div class="flex -space-x-4">
-                <div class="w-10 h-10 rounded-full border-2 border-slate-950 bg-slate-800 flex items-center justify-center text-sm">🎓</div>
-                <div class="w-10 h-10 rounded-full border-2 border-slate-950 bg-slate-800 flex items-center justify-center text-sm">🧪</div>
-                <div class="w-10 h-10 rounded-full border-2 border-slate-950 bg-slate-800 flex items-center justify-center text-sm">🎨</div>
-            </div>
-            <p class="text-[10px] font-black uppercase text-slate-500 tracking-[0.3em]">Network Active<br>24/7 Verified</p>
-        </div>
-    </div>
-  </div>
+ <!-- Trust Module (High Fidelity) -->
+ <div class="relative z-10 border-t border-white/5 pt-10 mt-auto animate-fade-in" style="animation-delay: 0.3s;">
+ <div class="flex items-center gap-6">
+ <div class="flex -space-x-4">
+ <div class="w-10 h-10 rounded-full border-2 border-slate-950 bg-slate-800 flex items-center justify-center text-sm"></div>
+ <div class="w-10 h-10 rounded-full border-2 border-slate-950 bg-slate-800 flex items-center justify-center text-sm"></div>
+ <div class="w-10 h-10 rounded-full border-2 border-slate-950 bg-slate-800 flex items-center justify-center text-sm"></div>
+ </div>
+ <p class="text-[10px] font-black uppercase text-slate-500 tracking-[0.3em]">Network Active<br>24/7 Verified</p>
+ </div>
+ </div>
+ </div>
 
-  <!-- AUTH FORM ENGINE -->
-  <div class="flex-1 flex items-center justify-center p-8 lg:p-24 relative overflow-hidden">
-    <div class="w-full max-w-[460px] relative z-10 animate-reveal">
-      <div class="bg-white rounded-[3rem] shadow-premium border border-slate-100 p-12 md:p-16 relative">
-        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-1.5 g-blue rounded-b-full"></div>
-        
-        <div class="mb-12">
-            <h1 class="font-serif italic text-4xl font-bold text-slate-900 mb-3 leading-none">Intelligence Check</h1>
-            <p class="text-slate-400 text-xs font-black uppercase tracking-widest">Sign in to your institutional account</p>
-        </div>
+ <!-- AUTH FORM ENGINE -->
+ <div class="flex-1 flex items-center justify-center p-8 lg:p-24 relative overflow-hidden">
+ <div class="w-full max-w-[460px] relative z-10 animate-reveal">
+ <div class="bg-white rounded-[3rem] shadow-premium border border-slate-100 p-12 md:p-16 relative">
+ <div class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-1.5 rounded-b-full"></div>
+ 
+ <div class="mb-12">
+ <h1 class="text-4xl font-bold text-slate-900 mb-3 leading-none">Intelligence Check</h1>
+ <p class="text-slate-400 text-xs font-black uppercase tracking-widest">Sign in to your institutional account</p>
+ </div>
 
-        <form method="post" action="{% url 'login' %}" id="login-form" class="space-y-8">
-          {% csrf_token %}
-          
-          <div class="space-y-3">
-            <label class="block text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] ml-2" for="id_username">Identifier</label>
-            <div class="relative group">
-                <span class="absolute left-6 top-1/2 -translate-y-1/2 text-xl grayscale group-focus-within:grayscale-0 transition-all opacity-40">👤</span>
-                <input type="text" id="id_username" name="username" autocomplete="username" autofocus required
-                       placeholder="Institutional Username"
-                       class="w-full pl-16 pr-6 py-5 bg-slate-50 border border-slate-100 rounded-[1.5rem] text-sm font-bold text-slate-900 focus:outline-none focus:border-brand/40 focus:ring-8 focus:ring-brand/5 transition-all">
-            </div>
-          </div>
+ <form method="post" action="{% url 'login' %}" id="login-form" class="space-y-8">
+ {% csrf_token %}
+ 
+ <div class="space-y-3">
+ <label class="block text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] ml-2" for="id_username">Identifier</label>
+ <div class="relative group">
+ <span class="absolute left-6 top-1/2 -translate-y-1/2 text-xl grayscale group-focus-within:grayscale-0 transition-all opacity-40"></span>
+ <input type="text" id="id_username" name="username" autocomplete="username" autofocus required
+ placeholder="Institutional Username"
+ class="w-full pl-16 pr-6 py-5 bg-slate-50 border border-slate-100 rounded-[1.5rem] text-sm font-bold text-slate-900 focus:outline-none focus:border-brand/40 focus:ring-8 focus:ring-brand/5 transition-all">
+ </div>
+ </div>
 
-          <div class="space-y-3">
-            <div class="flex justify-between items-center ml-2">
-                <label class="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em]" for="id_password">Credential</label>
-                <a href="#" class="text-[8px] font-black text-brand uppercase tracking-widest hover:brightness-110">Recover Key</a>
-            </div>
-            <div class="relative group">
-                <span class="absolute left-6 top-1/2 -translate-y-1/2 text-xl grayscale group-focus-within:grayscale-0 transition-all opacity-40">🔒</span>
-                <input type="password" id="id_password" name="password" autocomplete="current-password" required
-                       placeholder="••••••••••••"
-                       class="w-full pl-16 pr-14 py-5 bg-slate-50 border border-slate-100 rounded-[1.5rem] text-sm font-bold text-slate-900 focus:outline-none focus:border-brand/40 focus:ring-8 focus:ring-brand/5 transition-all">
-                <button type="button" id="toggle-pw" class="absolute right-6 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-900 transition-colors">👁️</button>
-            </div>
-          </div>
+ <div class="space-y-3">
+ <div class="flex justify-between items-center ml-2">
+ <label class="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em]" for="id_password">Credential</label>
+ <a href="#" class="text-[8px] font-black text-brand uppercase tracking-widest hover:brightness-110">Recover Key</a>
+ </div>
+ <div class="relative group">
+ <span class="absolute left-6 top-1/2 -translate-y-1/2 text-xl grayscale group-focus-within:grayscale-0 transition-all opacity-40"></span>
+ <input type="password" id="id_password" name="password" autocomplete="current-password" required
+ placeholder="••••••••••••"
+ class="w-full pl-16 pr-14 py-5 bg-slate-50 border border-slate-100 rounded-[1.5rem] text-sm font-bold text-slate-900 focus:outline-none focus:border-brand/40 focus:ring-8 focus:ring-brand/5 transition-all">
+ <button type="button" id="toggle-pw" class="absolute right-6 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-900 transition-colors"></button>
+ </div>
+ </div>
 
-          <div class="pt-4">
-              <button type="submit" id="login-btn"
-                class="w-full py-6 bg-slate-950 text-white text-xs font-black uppercase tracking-[0.3em] rounded-[1.5rem] shadow-xl hover:brightness-125 hover:-translate-y-1 active:translate-y-0 transition-all">
-                Access Hub →
-              </button>
-          </div>
-        </form>
+ <div class="pt-4">
+ <button type="submit" id="login-btn"
+ class="w-full py-6 bg-slate-950 text-white text-xs font-black uppercase tracking-[0.3em] rounded-[1.5rem] shadow-xl hover:brightness-125 hover:-translate-y-1 active:translate-y-0 transition-all">
+ Access Hub →
+ </button>
+ </div>
+ </form>
 
-        <div class="mt-12 pt-10 border-t border-slate-50 space-y-6">
-          <p class="text-xs text-slate-400 text-center uppercase tracking-widest">New Intelligence? <a href="{% url 'register' %}" class="font-black text-brand hover:underline px-1">Join Network</a></p>
-          
-          <a href="{% url 'admin_gateway' %}" class="group flex items-center justify-between p-6 bg-slate-50 rounded-[2rem] hover:bg-slate-950 hover:text-white transition-all">
-              <div class="flex items-center gap-4">
-                  <span class="text-2xl group-hover:scale-110 transition-transform">🏛️</span>
-                  <div>
-                      <p class="text-[8px] font-black uppercase tracking-[0.2em] opacity-40">Administrative</p>
-                      <p class="text-[10px] font-black uppercase tracking-widest">Gateway Access</p>
-                  </div>
-              </div>
-              <span class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center group-hover:bg-brand group-hover:border-brand transition-all">→</span>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
+ <div class="mt-12 pt-10 border-t border-slate-50 space-y-6">
+ <p class="text-xs text-slate-400 text-center uppercase tracking-widest">New Intelligence? <a href="{% url 'register' %}" class="font-black text-brand hover:underline px-1">Join Network</a></p>
+ 
+ <a href="{% url 'admin_gateway' %}" class="group flex items-center justify-between p-6 bg-slate-50 rounded-[2rem] hover:bg-slate-950 hover:text-white transition-all">
+ <div class="flex items-center gap-4">
+ <span class="text-2xl group-hover:scale-110 transition-transform"></span>
+ <div>
+ <p class="text-[8px] font-black uppercase tracking-[0.2em] opacity-40">Administrative</p>
+ <p class="text-[10px] font-black uppercase tracking-widest">Gateway Access</p>
+ </div>
+ </div>
+ <span class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center group-hover:bg-brand group-hover:border-brand transition-all">→</span>
+ </a>
+ </div>
+ </div>
+ </div>
+ </div>
 
 </div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-  // Toggle password visibility
-  document.getElementById('toggle-pw').addEventListener('click', function () {
-    const inp = document.getElementById('id_password');
-    inp.type = inp.type === 'password' ? 'text' : 'password';
-  });
-  // Loading states
-  document.getElementById('login-form').addEventListener('submit', function () {
-    const btn = document.getElementById('login-btn');
-    btn.innerHTML = `<span class="animate-pulse">Authenticating Session...</span>`;
-    btn.disabled = true;
-  });
+ // Toggle password visibility
+ document.getElementById('toggle-pw').addEventListener('click', function () {
+ const inp = document.getElementById('id_password');
+ inp.type = inp.type === 'password' ? 'text' : 'password';
+ });
+ // Loading states
+ document.getElementById('login-form').addEventListener('submit', function () {
+ const btn = document.getElementById('login-btn');
+ btn.innerHTML = `<span class="animate-pulse">Authenticating Session...</span>`;
+ btn.disabled = true;
+ });
 </script>
 {% endblock %}

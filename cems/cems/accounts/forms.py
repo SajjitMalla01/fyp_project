@@ -21,7 +21,7 @@ class UserRegisterForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         from tenants.models import College
-        self.fields['college'].queryset = College.objects.filter(status__in=['ACTIVE', 'TRIAL'])
+        self.fields['college'].queryset = College.objects.filter(status__in=['ACTIVE'])
         self.fields['college'].widget.attrs.update({
             'class': 'w-full px-4 py-3 bg-ink-50 border border-ink-200 rounded-xl text-sm text-ink-800 focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all'
         })

@@ -1,117 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All Colleges | CEMS</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['"DM Sans"','sans-serif'],serif:['"Instrument Serif"','serif']}}}}</script>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>All Colleges | CEMS</title>
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+ <script src="https://cdn.tailwindcss.com"></script>
+ <script>tailwind.config={theme:{extend:{fontFamily:{sans:['"DM Sans"','sans-serif'],serif:['"Instrument Serif"','serif']}}}}</script>
 </head>
 <body class="min-h-screen bg-slate-900 font-sans antialiased">
 
-  <!-- NAV -->
-  <nav class="border-b border-white/5 px-6 py-4 flex items-center justify-between max-w-7xl mx-auto">
-    <div class="flex items-center gap-2">
-      <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-violet-600 flex items-center justify-center text-white font-black text-sm">C</div>
-      <span class="font-serif italic text-xl text-white">CEMS</span>
-    </div>
-    <div class="flex items-center gap-4">
-      <a href="/" class="text-sm text-slate-400 hover:text-white transition-colors">← Back to Home</a>
-      {% if user.is_superuser %}
-      <a href="{% url 'register_college' %}" class="text-sm font-bold px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-500 transition-colors">+ Add College</a>
-      {% endif %}
-    </div>
-  </nav>
+ <!-- NAV -->
+ <nav class="border-b border-white/5 px-6 py-4 flex items-center justify-between max-w-7xl mx-auto">
+ <div class="flex items-center gap-2">
+ <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white font-black text-sm">C</div>
+ <span class="text-xl text-white">CEMS</span>
+ </div>
+ <div class="flex items-center gap-4">
+ <a href="/" class="text-sm text-slate-400 hover:text-white transition-colors">← Back to Home</a>
+ {% if user.is_superuser %}
+ <a href="{% url 'register_college' %}" class="text-sm font-bold px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-500 transition-colors">+ Add College</a>
+ {% endif %}
+ </div>
+ </nav>
 
-  <!-- HEADER -->
-  <div class="max-w-7xl mx-auto px-6 py-16 text-center">
-    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-widest mb-6">
-      <span class="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse"></span>
-      Multi-Tenant Platform
-    </div>
-    <h1 class="font-serif italic text-5xl md:text-6xl text-white font-bold mb-4">Choose Your College</h1>
-    <p class="text-slate-400 text-lg max-w-xl mx-auto">Each college has its own dedicated portal. Open them side-by-side in separate tabs.</p>
-  </div>
+ <!-- HEADER -->
+ <div class="max-w-7xl mx-auto px-6 py-16 text-center">
+ <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-widest mb-6">
+ <span class="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
+ Multi-Tenant Platform
+ </div>
+ <h1 class="text-5xl md:text-6xl text-white font-bold mb-4">Choose Your College</h1>
+ <p class="text-slate-400 text-lg max-w-xl mx-auto">Each college has its own dedicated portal. Open them side-by-side in separate tabs.</p>
+ </div>
 
-  <!-- COLLEGE GRID -->
-  <div class="max-w-7xl mx-auto px-6 pb-24">
-    {% if colleges %}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {% for college in colleges %}
-      <div class="college-card group relative bg-white/[0.03] border border-white/10 rounded-3xl p-8 hover:bg-white/[0.07] hover:border-white/20 hover:-translate-y-2 transition-all duration-500 flex flex-col" data-pc="{{ college.primary_color }}" data-ac="{{ college.accent_color }}">
-        <!-- Top shine line -->
-        <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-t-3xl"></div>
+ <!-- COLLEGE GRID -->
+ <div class="max-w-7xl mx-auto px-6 pb-24">
+ {% if colleges %}
+ <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+ {% for college in colleges %}
+ <div class="college-card group relative bg-white/[0.03] border border-white/10 rounded-3xl p-8 hover:bg-white/[0.07] hover:border-white/20 transition-all flex flex-col" data-pc="{{ college.primary_color }}" data-ac="{{ college.accent_color }}">
+ <!-- Top shine line -->
+ <div class="absolute inset-x-0 top-0 h-px /20 opacity-0 group-hover:opacity-100 transition-opacity rounded-t-3xl"></div>
 
-        <!-- College badge -->
-        <div class="c-logo w-16 h-16 rounded-2xl flex items-center justify-center text-3xl font-black text-white mb-6 shadow-lg flex-shrink-0">
-          {{ college.name|first|upper }}
-        </div>
+ <!-- College badge -->
+ <div class="c-logo w-16 h-16 rounded-2xl flex items-center justify-center text-3xl font-black text-white mb-6 shadow-lg flex-shrink-0">
+ {{ college.name|first|upper }}
+ </div>
 
-        <h3 class="font-serif italic text-2xl text-white font-bold mb-2 group-hover:opacity-90 transition-opacity">{{ college.name }}</h3>
-        {% if college.address %}
-        <p class="text-slate-500 text-sm mb-1">📍 {{ college.address }}</p>
-        {% endif %}
+ <h3 class="text-2xl text-white font-bold mb-2 group-hover:opacity-90 transition-opacity">{{ college.name }}</h3>
+ {% if college.address %}
+ <p class="text-slate-500 text-sm mb-1"> {{ college.address }}</p>
+ {% endif %}
 
-        <div class="flex gap-4 my-5 text-center">
-          <div class="flex-1 bg-white/5 rounded-xl py-2">
-            <div class="font-bold text-lg text-white">{{ college.get_event_count }}</div>
-            <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Events</div>
-          </div>
-          <div class="flex-1 bg-white/5 rounded-xl py-2">
-            <div class="font-bold text-lg text-white">{{ college.get_user_count }}</div>
-            <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Members</div>
-          </div>
-        </div>
+ <div class="flex gap-4 my-5 text-center">
+ <div class="flex-1 bg-white/5 rounded-xl py-2">
+ <div class="font-bold text-lg text-white">{{ college.get_event_count }}</div>
+ <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Events</div>
+ </div>
+ <div class="flex-1 bg-white/5 rounded-xl py-2">
+ <div class="font-bold text-lg text-white">{{ college.get_user_count }}</div>
+ <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Members</div>
+ </div>
+ </div>
 
-        <!-- URL Badge — this is the key feature -->
-        <div class="mb-5 px-3 py-2 bg-slate-800 rounded-lg">
-          <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-0.5">Direct Portal URL</p>
-          <p class="text-xs text-blue-400 font-mono break-all">127.0.0.1:8000/colleges/{{ college.slug }}/</p>
-        </div>
+ <!-- URL Badge — this is the key feature -->
+ <div class="mb-5 px-3 py-2 bg-slate-800 rounded-lg">
+ <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-0.5">Direct Portal URL</p>
+ <p class="text-xs text-blue-400 font-mono break-all">127.0.0.1:8000/colleges/{{ college.slug }}/</p>
+ </div>
 
-        <div class="mt-auto grid grid-cols-2 gap-2">
-          <a href="/colleges/{{ college.slug }}/"
-             class="py-2.5 text-center text-sm font-bold text-white rounded-xl border border-white/10 hover:bg-white/10 transition-all">
-            Open Portal ↗
-          </a>
-          <a href="/colleges/{{ college.slug }}/login/"
-             class="c-btn py-2.5 text-center text-sm font-bold text-white rounded-xl transition-all hover:brightness-110">
-            Sign In →
-          </a>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
+ <div class="mt-auto grid grid-cols-2 gap-2">
+ <a href="/colleges/{{ college.slug }}/"
+ class="py-2.5 text-center text-sm font-bold text-white rounded-xl border border-white/10 hover:bg-white/10 transition-all">
+ Open Portal 
+ </a>
+ <a href="/colleges/{{ college.slug }}/login/"
+ class="c-btn py-2.5 text-center text-sm font-bold text-white rounded-xl transition-all hover:brightness-110">
+ Sign In →
+ </a>
+ </div>
+ </div>
+ {% endfor %}
+ </div>
 
-    <!-- TIP BOX -->
-    <div class="mt-10 p-6 bg-blue-500/10 border border-blue-500/20 rounded-2xl flex items-start gap-4 max-w-3xl mx-auto">
-      <span class="text-2xl flex-shrink-0">💡</span>
-      <div>
-        <p class="text-blue-300 font-bold text-sm mb-1">Open two colleges side-by-side</p>
-        <p class="text-slate-400 text-sm leading-relaxed">
-          Copy a college's portal URL shown above and open it in a <strong class="text-white">new browser tab</strong>.
-          Open the second college in another tab. Each tab is completely independent — log in with different accounts simultaneously!
-        </p>
-      </div>
-    </div>
+ <!-- TIP BOX -->
+ <div class="mt-10 p-6 bg-blue-500/10 border border-blue-500/20 rounded-2xl flex items-start gap-4 max-w-3xl mx-auto">
+ <span class="text-2xl flex-shrink-0"></span>
+ <div>
+ <p class="text-blue-300 font-bold text-sm mb-1">Open two colleges side-by-side</p>
+ <p class="text-slate-400 text-sm leading-relaxed">
+ Copy a college's portal URL shown above and open it in a <strong class="text-white">new browser tab</strong>.
+ Open the second college in another tab. Each tab is completely independent — log in with different accounts simultaneously!
+ </p>
+ </div>
+ </div>
 
-    {% else %}
-    <div class="text-center py-24">
-      <div class="text-5xl mb-4">🏫</div>
-      <h3 class="font-serif italic text-3xl text-white mb-2">No colleges yet</h3>
-      <p class="text-slate-500">Contact a superadmin to register your college.</p>
-    </div>
-    {% endif %}
-  </div>
+ {% else %}
+ <div class="text-center py-24">
+ <div class="text-5xl mb-4"></div>
+ <h3 class="text-3xl text-white mb-2">No colleges yet</h3>
+ <p class="text-slate-500">Contact a superadmin to register your college.</p>
+ </div>
+ {% endif %}
+ </div>
 
 <script>
-  document.querySelectorAll('.college-card').forEach(card => {
-    const pc = card.getAttribute('data-pc'), ac = card.getAttribute('data-ac');
-    card.querySelector('.c-logo').style.background = 'linear-gradient(135deg, ' + pc + ', ' + ac + ')';
-    card.querySelector('.c-btn').style.background = pc;
-  });
+ document.querySelectorAll('.college-card').forEach(card => {
+ const pc = card.getAttribute('data-pc'), ac = card.getAttribute('data-ac');
+ card.querySelector('.c-logo').style.background = pc;
+ card.querySelector('.c-btn').style.background = pc;
+ });
 </script>
 </body>
 </html>

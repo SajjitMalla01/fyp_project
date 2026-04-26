@@ -3,143 +3,143 @@
 
 {% block content %}
 <div class="min-h-screen bg-slate-50 py-16 px-6">
-    <div class="max-w-4xl mx-auto">
-        
-        <!-- Header Section -->
-        <div class="mb-12 text-center">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-[10px] font-black uppercase tracking-widest mb-4">
-                Institutional Setup
-            </div>
-            <h1 class="font-serif italic text-5xl font-black text-slate-900 mb-4 tracking-tight">Register Your College</h1>
-            <p class="text-slate-500 max-w-lg mx-auto leading-relaxed">
-                Connect your campus to the CEMS network. Configure your institution's profile, contact details, and custom branding below.
-            </p>
-        </div>
+ <div class="max-w-4xl mx-auto">
+ 
+ <!-- Header Section -->
+ <div class="mb-12 text-center">
+ <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-[10px] font-black uppercase tracking-widest mb-4">
+ Institutional Setup
+ </div>
+ <h1 class="text-5xl font-black text-slate-900 mb-4 tracking-tight">Register Your College</h1>
+ <p class="text-slate-500 max-w-lg mx-auto leading-relaxed">
+ Connect your campus to the CEMS network. Configure your institution's profile, contact details, and custom branding below.
+ </p>
+ </div>
 
-        <div class="bg-white rounded-[3rem] shadow-[0_30px_70px_rgba(0,0,0,0.05)] border border-slate-100 overflow-hidden">
-            <div class="bg-slate-900 px-10 py-6 flex items-center justify-between">
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center text-white text-xl shadow-lg shadow-blue-500/20">🏛️</div>
-                    <div>
-                        <h2 class="text-white font-bold text-lg">College Identity</h2>
-                        <p class="text-slate-400 text-xs tracking-wide">Step 1 of 1: Configuration</p>
-                    </div>
-                </div>
-            </div>
+ <div class="bg-white rounded-[3rem] shadow-[0_30px_70px_rgba(0,0,0,0.05)] border border-slate-100 overflow-hidden">
+ <div class="bg-slate-900 px-10 py-6 flex items-center justify-between">
+ <div class="flex items-center gap-4">
+ <div class="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center text-white text-xl shadow-lg shadow-blue-500/20"></div>
+ <div>
+ <h2 class="text-white font-bold text-lg">College Identity</h2>
+ <p class="text-slate-400 text-xs tracking-wide">Step 1 of 1: Configuration</p>
+ </div>
+ </div>
+ </div>
 
-            <form method="POST" class="p-10 md:p-14">
-                {% csrf_token %}
+ <form method="POST" class="p-10 md:p-14">
+ {% csrf_token %}
 
-                <!-- Primary Info Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                    <div class="group">
-                        <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3 group-focus-within:text-blue-600 transition-colors">College Name</label>
-                        {{ form.name }}
-                        {% if form.name.errors %}<p class="mt-2 text-xs text-red-500 font-bold">{{ form.name.errors|first }}</p>{% endif %}
-                    </div>
-                    <div class="group">
-                        <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3 group-focus-within:text-blue-600 transition-colors">Unique URL Slug</label>
-                        {{ form.slug }}
-                        <p class="mt-2 text-[10px] text-slate-400 font-medium">Used for: your-college.localhost:8000</p>
-                        {% if form.slug.errors %}<p class="mt-2 text-xs text-red-500 font-bold">{{ form.slug.errors|first }}</p>{% endif %}
-                    </div>
-                </div>
+ <!-- Primary Info Grid -->
+ <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+ <div class="group">
+ <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3 group-focus-within:text-blue-600 transition-colors">College Name</label>
+ {{ form.name }}
+ {% if form.name.errors %}<p class="mt-2 text-xs text-red-500 font-bold">{{ form.name.errors|first }}</p>{% endif %}
+ </div>
+ <div class="group">
+ <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3 group-focus-within:text-blue-600 transition-colors">Unique URL Slug</label>
+ {{ form.slug }}
+ <p class="mt-2 text-[10px] text-slate-400 font-medium">Used for: your-college.localhost:8000</p>
+ {% if form.slug.errors %}<p class="mt-2 text-xs text-red-500 font-bold">{{ form.slug.errors|first }}</p>{% endif %}
+ </div>
+ </div>
 
-                <!-- Contact Info Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-                    <div class="group">
-                        <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3 group-focus-within:text-blue-600 transition-colors">Official Email</label>
-                        {{ form.email }}
-                    </div>
-                    <div class="group">
-                        <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3 group-focus-within:text-blue-600 transition-colors">Phone</label>
-                        {{ form.phone }}
-                    </div>
-                    <div class="group">
-                        <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3 group-focus-within:text-blue-600 transition-colors">Website</label>
-                        {{ form.website }}
-                    </div>
-                </div>
+ <!-- Contact Info Grid -->
+ <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+ <div class="group">
+ <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3 group-focus-within:text-blue-600 transition-colors">Official Email</label>
+ {{ form.email }}
+ </div>
+ <div class="group">
+ <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3 group-focus-within:text-blue-600 transition-colors">Phone</label>
+ {{ form.phone }}
+ </div>
+ <div class="group">
+ <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3 group-focus-within:text-blue-600 transition-colors">Website</label>
+ {{ form.website }}
+ </div>
+ </div>
 
-                <!-- Address Section -->
-                <div class="group mb-12">
-                    <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3 group-focus-within:text-blue-600 transition-colors">Campus Address</label>
-                    {{ form.address }}
-                </div>
+ <!-- Address Section -->
+ <div class="group mb-12">
+ <label class="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3 group-focus-within:text-blue-600 transition-colors">Campus Address</label>
+ {{ form.address }}
+ </div>
 
-                <!-- Branding Section -->
-                <div class="bg-slate-50 rounded-[2rem] p-8 mb-12 border border-slate-100">
-                    <div class="flex items-center gap-3 mb-8">
-                        <span class="text-2xl">🎨</span>
-                        <div>
-                            <h3 class="text-slate-900 font-bold">Campus Branding</h3>
-                            <p class="text-slate-500 text-[10px] font-medium tracking-wide">Choose colors that represent your institution.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div class="flex items-center gap-4 bg-white p-4 rounded-2xl border border-slate-200">
-                            <div class="color-wrap relative w-12 h-12 rounded-xl overflow-hidden shadow-sm shrink-0">
-                                {{ form.primary_color }}
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Primary Color</label>
-                                <p class="text-xs font-bold text-slate-700">Buttons & Headers</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4 bg-white p-4 rounded-2xl border border-slate-200">
-                            <div class="color-wrap relative w-12 h-12 rounded-xl overflow-hidden shadow-sm shrink-0">
-                                {{ form.accent_color }}
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Accent Color</label>
-                                <p class="text-xs font-bold text-slate-700">Links & Overlays</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+ <!-- Branding Section -->
+ <div class="bg-slate-50 rounded-[2rem] p-8 mb-12 border border-slate-100">
+ <div class="flex items-center gap-3 mb-8">
+ <span class="text-2xl"></span>
+ <div>
+ <h3 class="text-slate-900 font-bold">Campus Branding</h3>
+ <p class="text-slate-500 text-[10px] font-medium tracking-wide">Choose colors that represent your institution.</p>
+ </div>
+ </div>
+ 
+ <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+ <div class="flex items-center gap-4 bg-white p-4 rounded-2xl border border-slate-200">
+ <div class="color-wrap relative w-12 h-12 rounded-xl overflow-hidden shadow-sm shrink-0">
+ {{ form.primary_color }}
+ </div>
+ <div>
+ <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Primary Color</label>
+ <p class="text-xs font-bold text-slate-700">Buttons & Headers</p>
+ </div>
+ </div>
+ <div class="flex items-center gap-4 bg-white p-4 rounded-2xl border border-slate-200">
+ <div class="color-wrap relative w-12 h-12 rounded-xl overflow-hidden shadow-sm shrink-0">
+ {{ form.accent_color }}
+ </div>
+ <div>
+ <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Accent Color</label>
+ <p class="text-xs font-bold text-slate-700">Links & Overlays</p>
+ </div>
+ </div>
+ </div>
+ </div>
 
-                <!-- Footer Actions -->
-                <div class="flex flex-col sm:flex-row justify-end items-center gap-4 pt-8 border-t border-slate-100">
-                    <a href="{% url 'home' %}" class="px-8 py-4 text-slate-400 font-bold hover:text-slate-900 transition-colors">Cancel</a>
-                    <button type="submit" class="w-full sm:w-auto px-12 py-4 bg-slate-900 text-white font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-slate-800 hover:-translate-y-1 active:translate-y-0 shadow-xl shadow-slate-900/10 transition-all text-xs">
-                        Complete Registration →
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
+ <!-- Footer Actions -->
+ <div class="flex flex-col sm:flex-row justify-end items-center gap-4 pt-8 border-t border-slate-100">
+ <a href="{% url 'home' %}" class="px-8 py-4 text-slate-400 font-bold hover:text-slate-900 transition-colors">Cancel</a>
+ <button type="submit" class="w-full sm:w-auto px-12 py-4 bg-slate-900 text-white font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-slate-800 hover:-translate-y-1 active:translate-y-0 shadow-xl shadow-slate-900/10 transition-all text-xs">
+ Complete Registration →
+ </button>
+ </div>
+ </form>
+ </div>
+ </div>
 </div>
 
 <style>
 /* Modern Input Overrides */
 input[type="text"], input[type="email"], input[type="url"], input[type="tel"], textarea {
-    width: 100%;
-    padding: 1rem 1.25rem;
-    background-color: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 1.25rem;
-    font-size: 0.875rem;
-    color: #0f172a;
-    transition: all 0.2s;
+ width: 100%;
+ padding: 1rem 1.25rem;
+ background-color: #f8fafc;
+ border: 1px solid #e2e8f0;
+ border-radius: 1.25rem;
+ font-size: 0.875rem;
+ color: #0f172a;
+ transition: all 0.2s;
 }
 input:focus, textarea:focus {
-    outline: none;
-    border-color: #2563eb;
-    background-color: #fff;
-    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+ outline: none;
+ border-color: #2563eb;
+ background-color: #fff;
+ box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
 }
 
 /* Color Picker Trick */
 input[type="color"] {
-    position: absolute;
-    width: 200%;
-    height: 200%;
-    top: -50%;
-    left: -50%;
-    cursor: pointer;
-    border: none;
-    padding: 0;
+ position: absolute;
+ width: 200%;
+ height: 200%;
+ top: -50%;
+ left: -50%;
+ cursor: pointer;
+ border: none;
+ padding: 0;
 }
 </style>
 {% endblock %}

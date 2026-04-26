@@ -4,93 +4,93 @@
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-6 lg:px-12 py-32">
-  <div class="mb-16 animate-fade-up">
-    <p class="text-[10px] font-black uppercase tracking-[0.4em] text-brand mb-4">Archive</p>
-    <h1 class="font-serif italic text-6xl font-bold text-slate-900 leading-none">Experience Ledger</h1>
-  </div>
+ <div class="mb-16 animate-fade-up">
+ <p class="text-[10px] font-black uppercase tracking-[0.4em] text-brand mb-4">Archive</p>
+ <h1 class="text-6xl font-bold text-slate-900 leading-none">Experience Ledger</h1>
+ </div>
 
-  <!-- Global Metrics Bento -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16 animate-reveal">
-    <div class="bento-panel p-10 bg-slate-950 text-white relative group overflow-hidden">
-      <div class="absolute inset-0 bg-gradient-to-tr from-brand/20 to-transparent"></div>
-      <p class="text-[9px] font-black text-white/30 uppercase tracking-[0.3em] mb-6">Total Records</p>
-      <h3 class="font-serif italic text-5xl font-bold leading-none mb-1">{{ registrations|length }}</h3>
-      <p class="text-[10px] font-black uppercase tracking-widest text-brand">Institutional Entries</p>
-    </div>
-    <div class="bento-panel p-10 group hover:border-brand/20 transition-all">
-      <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6">Pending Access</p>
-      <h3 class="font-serif italic text-5xl font-bold text-slate-900 leading-none mb-1">{{ upcoming_count|default:0 }}</h3>
-      <p class="text-[10px] font-black uppercase tracking-widest text-indigo-500">Upcoming Experiences</p>
-    </div>
-    <div class="bento-panel p-10 group hover:border-brand/20 transition-all">
-      <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6">Verified History</p>
-      <h3 class="font-serif italic text-5xl font-bold text-slate-900 leading-none mb-1">{{ attended_count|default:0 }}</h3>
-      <p class="text-[10px] font-black uppercase tracking-widest text-emerald-500">Completed Sessions</p>
-    </div>
-  </div>
+ <!-- Global Metrics Bento -->
+ <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16 animate-reveal">
+ <div class="bento-panel p-10 bg-slate-950 text-white relative group overflow-hidden">
+ <div class="absolute inset-0 /20 "></div>
+ <p class="text-[9px] font-black text-white/30 uppercase tracking-[0.3em] mb-6">Total Records</p>
+ <h3 class="text-5xl font-bold leading-none mb-1">{{ registrations|length }}</h3>
+ <p class="text-[10px] font-black uppercase tracking-widest text-brand">Institutional Entries</p>
+ </div>
+ <div class="bento-panel p-10 group hover:border-brand/20 transition-all">
+ <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6">Pending Access</p>
+ <h3 class="text-5xl font-bold text-slate-900 leading-none mb-1">{{ upcoming_count|default:0 }}</h3>
+ <p class="text-[10px] font-black uppercase tracking-widest text-indigo-500">Upcoming Experiences</p>
+ </div>
+ <div class="bento-panel p-10 group hover:border-brand/20 transition-all">
+ <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6">Verified History</p>
+ <h3 class="text-5xl font-bold text-slate-900 leading-none mb-1">{{ attended_count|default:0 }}</h3>
+ <p class="text-[10px] font-black uppercase tracking-widest text-emerald-500">Completed Sessions</p>
+ </div>
+ </div>
 
-  {% if registrations %}
-  <div class="bento-panel animate-reveal" style="animation-delay: 0.2s;">
-    <div class="overflow-x-auto">
-      <table class="w-full text-left">
-        <thead>
-          <tr class="bg-slate-50 border-b border-slate-100">
-            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Experience Node</th>
-            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Temporal Date</th>
-            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Venue Point</th>
-            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Validation</th>
-            <th class="px-8 py-6 text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 text-right">Commands</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-50">
-          {% for reg in registrations %}
-          <tr class="group hover:bg-slate-50/50 transition-all">
-            <td class="px-8 py-6">
-              <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-2xl shadow-sm group-hover:scale-110 transition-transform">
-                    {{ reg.event.emoji|default:'🎉' }}
-                </div>
-                <div>
-                  <p class="font-serif italic text-xl font-bold text-slate-900 leading-none mb-1">{{ reg.event.title }}</p>
-                  <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ reg.event.get_category_display }}</p>
-                </div>
-              </div>
-            </td>
-            <td class="px-8 py-6">
-                <p class="text-xs font-bold text-slate-700 font-mono text-center">{{ reg.event.date_time|date:"M d, Y" }}</p>
-            </td>
-            <td class="px-8 py-6">
-                <p class="text-xs text-slate-400 max-w-[180px] truncate">{{ reg.event.venue }}</p>
-            </td>
-            <td class="px-8 py-6">
-              <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest
-                {% if reg.status == 'ATTENDED' %}bg-emerald-50 text-emerald-600 border border-emerald-100
-                {% elif reg.status == 'REGISTERED' %}bg-blue-50 text-blue-600 border border-blue-100
-                {% else %}bg-slate-50 text-slate-400 border border-slate-200{% endif %}">
-                {{ reg.status }}
-              </span>
-            </td>
-            <td class="px-8 py-6 text-right">
-              <div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                <a href="{% url 'event_detail' reg.event.pk %}" class="px-5 py-2.5 bg-slate-900 text-white rounded-xl text-[9px] font-black uppercase tracking-widest shadow-xl hover:brightness-125 transition-all text-center">Inspect Ticket</a>
-                {% if reg.status == 'REGISTERED' %}
-                <a href="{% url 'cancel_registration' reg.pk %}" class="px-5 py-2.5 bg-rose-50 text-rose-600 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-rose-600 hover:text-white transition-all text-center">Cancel</a>
-                {% endif %}
-              </div>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </div>
-  {% else %}
-  <div class="text-center py-32 bento-panel animate-reveal">
-    <div class="text-6xl mb-8 grayscale opacity-20">🎟️</div>
-    <p class="font-serif italic text-3xl text-slate-900 mb-4 font-bold">Registry Dormant</p>
-    <p class="text-slate-400 text-sm max-w-sm mx-auto mb-10 leading-relaxed font-medium">Your experience archive is currently void. Connect with institutional nodes to populate your timeline.</p>
-    <a href="{% url 'event_list' %}" class="inline-block px-10 py-5 bg-slate-950 text-white text-[10px] font-black uppercase tracking-[0.3em] rounded-2xl shadow-2xl hover:brightness-125 transition-all">Browse Matrix →</a>
-  </div>
-  {% endif %}
+ {% if registrations %}
+ <div class="bento-panel animate-reveal" style="animation-delay: 0.2s;">
+ <div class="overflow-x-auto">
+ <table class="w-full text-left">
+ <thead>
+ <tr class="bg-slate-50 border-b border-slate-100">
+ <th class="px-8 py-6 text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Experience Node</th>
+ <th class="px-8 py-6 text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Temporal Date</th>
+ <th class="px-8 py-6 text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Venue Point</th>
+ <th class="px-8 py-6 text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Validation</th>
+ <th class="px-8 py-6 text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 text-right">Commands</th>
+ </tr>
+ </thead>
+ <tbody class="divide-y divide-slate-50">
+ {% for reg in registrations %}
+ <tr class="group hover:bg-slate-50/50 transition-all">
+ <td class="px-8 py-6">
+ <div class="flex items-center gap-4">
+ <div class="w-12 h-12 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-2xl shadow-sm group-hover:scale-110 transition-transform">
+ {{ reg.event.emoji|default:'' }}
+ </div>
+ <div>
+ <p class="text-xl font-bold text-slate-900 leading-none mb-1">{{ reg.event.title }}</p>
+ <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ reg.event.get_category_display }}</p>
+ </div>
+ </div>
+ </td>
+ <td class="px-8 py-6">
+ <p class="text-xs font-bold text-slate-700 font-mono text-center">{{ reg.event.date_time|date:"M d, Y" }}</p>
+ </td>
+ <td class="px-8 py-6">
+ <p class="text-xs text-slate-400 max-w-[180px] truncate">{{ reg.event.venue }}</p>
+ </td>
+ <td class="px-8 py-6">
+ <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest
+ {% if reg.status == 'ATTENDED' %}bg-emerald-50 text-emerald-600 border border-emerald-100
+ {% elif reg.status == 'REGISTERED' %}bg-blue-50 text-blue-600 border border-blue-100
+ {% else %}bg-slate-50 text-slate-400 border border-slate-200{% endif %}">
+ {{ reg.status }}
+ </span>
+ </td>
+ <td class="px-8 py-6 text-right">
+ <div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+ <a href="{% url 'event_detail' reg.event.pk %}" class="px-5 py-2.5 bg-slate-900 text-white rounded-xl text-[9px] font-black uppercase tracking-widest shadow-xl hover:brightness-125 transition-all text-center">Inspect Ticket</a>
+ {% if reg.status == 'REGISTERED' %}
+ <a href="{% url 'cancel_registration' reg.pk %}" class="px-5 py-2.5 bg-rose-50 text-rose-600 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-rose-600 hover:text-white transition-all text-center">Cancel</a>
+ {% endif %}
+ </div>
+ </td>
+ </tr>
+ {% endfor %}
+ </tbody>
+ </table>
+ </div>
+ </div>
+ {% else %}
+ <div class="text-center py-32 bento-panel animate-reveal">
+ <div class="text-6xl mb-8 grayscale opacity-20"></div>
+ <p class="text-3xl text-slate-900 mb-4 font-bold">Registry Dormant</p>
+ <p class="text-slate-400 text-sm max-w-sm mx-auto mb-10 leading-relaxed font-medium">Your experience archive is currently void. Connect with institutional nodes to populate your timeline.</p>
+ <a href="{% url 'event_list' %}" class="inline-block px-10 py-5 bg-slate-950 text-white text-[10px] font-black uppercase tracking-[0.3em] rounded-2xl shadow-2xl hover:brightness-125 transition-all">Browse Matrix →</a>
+ </div>
+ {% endif %}
 </div>
 {% endblock %}

@@ -17,7 +17,7 @@ def college_context(request):
         except: pass
         
     if request.user.is_authenticated and request.user.is_superuser:
-        context['all_colleges'] = College.objects.filter(status__in=['ACTIVE', 'TRIAL'])
+        context['all_colleges'] = College.objects.filter(status='ACTIVE')
             
     return context
 

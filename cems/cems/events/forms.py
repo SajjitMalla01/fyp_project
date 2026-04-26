@@ -7,7 +7,7 @@ class EventForm(forms.ModelForm):
         model  = Event
         fields = [
             'title', 'description', 'date_time', 'end_time',
-            'venue', 'capacity', 'category', 'image', 'emoji', 'gradient',
+            'venue', 'capacity', 'category', 'image', 'requires_approval',
         ]
         widgets = {
             'title': forms.TextInput(attrs={
@@ -39,11 +39,8 @@ class EventForm(forms.ModelForm):
             'category': forms.Select(attrs={
                 'class': 'w-full px-4 py-3 bg-ink-50 border border-ink-200 rounded-xl text-sm text-ink-800 focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all'
             }),
-            'emoji': forms.TextInput(attrs={
-                'class': 'w-full px-4 py-3 bg-ink-50 border border-ink-200 rounded-xl text-sm text-ink-800 text-center text-2xl focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all'
-            }),
-            'gradient': forms.Select(attrs={
-                'class': 'w-full px-4 py-3 bg-ink-50 border border-ink-200 rounded-xl text-sm text-ink-800 focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all'
+            'requires_approval': forms.CheckboxInput(attrs={
+                'class': 'w-5 h-5 text-brand bg-slate-100 border-slate-300 rounded focus:ring-brand focus:ring-2 cursor-pointer'
             }),
             'description': forms.Textarea(attrs={
                 'rows': 4,

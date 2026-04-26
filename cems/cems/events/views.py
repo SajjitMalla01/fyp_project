@@ -145,8 +145,21 @@ def admin_dashboard(request):
     all_events = event_qs.annotate(reg_count=Count('registrations')).order_by('-date_time')
     attendance_log = reg_qs.select_related('user', 'event').order_by('-registered_at')[:50]
 
-    from tenants.models import College
-    colleges = College.objects.all()
+    pending_list  = event_qs.filter(status='PENDING').order_by('date_time').select_related('created_by')
+    
+    colleges = College.objects.all() if request.user.is_superuser else College.objects.none()
+    if college:
+        colleges = College.objects.filter(id=college.id)
+    
+    # Staff for approval
+    pending_staff = Profile.objects.filter(role='STAFF', is_approved=False).select_related('user', 'college')
+
+    status_items = [
+        {'label': 'Published', 'count': stats['published'], 'color': '#059669'},
+        {'label': 'Pending',   'count': stats['pending'],   'color': '#f59e0b'},
+        {'label': 'Approved',  'count': stats['approved'],  'color': '#2563eb'},
+        {'label': 'Rejected',  'count': stats['rejected'],  'color': '#ef4444'},
+    ]
 
     context = {
         **stats,
@@ -156,6 +169,8 @@ def admin_dashboard(request):
         'recent_events': recent_events,
         'all_events': all_events,
         'pending_list': pending_list,
+        'pending_staff': pending_staff,
+        'pending_staff_count': pending_staff.count(),
         'attendance_log': attendance_log,
         'monthly_data': json.dumps(monthly_data),
         'category_data_json': json.dumps(category_data),
@@ -165,6 +180,7 @@ def admin_dashboard(request):
         'total_comments': recent_comments.count(),
         'college': college,
         'colleges': colleges,
+        'status_items': status_items,
     }
     return render(request, 'events/admin_dashboard.html', context)
 
@@ -178,7 +194,7 @@ def add_comment(request, pk):
         from accounts.models import EventComment
         is_pre = timezone.now() < event.date_time
         EventComment.objects.create(event=event, user=request.user, text=text, is_pre_event=is_pre)
-        messages.success(request, 'Your thought has been added to the community wall!')
+        messages.success(request, 'Your comment has been added.')
     return redirect('event_detail', pk=pk)
 
 
@@ -234,7 +250,7 @@ def staff_dashboard(request):
     for ev in all_my_events:
         events_data.append({
             'id': ev.pk, 'title': ev.title, 'date': ev.date_time.strftime('%Y-%m-%d'),
-            'status': ev.status.lower(), 'emoji': getattr(ev, 'emoji', '📅'), 'grad': getattr(ev, 'gradient', 'g-blue'),
+            'status': ev.status.lower(), 'grad': getattr(ev, 'gradient', 'g-blue'),
         })
 
     from accounts.models import EventComment
@@ -278,7 +294,6 @@ def student_dashboard(request):
                 'title': ev.title,
                 'date': ev.date_time.strftime('%Y-%m-%d'),
                 'status': 'published' if r.status == 'ATTENDED' else 'pending',
-                'emoji': getattr(ev, 'emoji', '🎉'),
                 'grad': getattr(ev, 'gradient', 'g-blue'),
             })
 
@@ -304,10 +319,12 @@ def student_dashboard(request):
         college_wall = EventComment.objects.none()
 
     context = {
+        'registrations':    regs,
         'registered_count': len(registered_events),
         'attended_count':   len(attended_events),
         'total_events':     len(registered_events) + len(attended_events),
         'upcoming_events':  [e for e in registered_events if e.date_time > timezone.now()],
+        'upcoming_registrations': [r for r in regs if r.status == 'REGISTERED' and r.event.date_time > timezone.now()],
         'events_data':      json.dumps(events_data),
         'recent_comments':  college_wall,
         'my_comments':      my_comments,
@@ -391,7 +408,7 @@ def event_create(request):
                 msg = f'"{event.title}" has been published successfully!'
             else:
                 event.status = 'PENDING'
-                msg = f'"{event.title}" has been submitted for review. It will appearing on the portal once approved.'
+                msg = f'"{event.title}" has been submitted for review. It will appear on the portal once approved.'
                 
             event.save()
             messages.success(request, msg)
