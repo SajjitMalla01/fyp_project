@@ -16,7 +16,7 @@
  
  <!-- ADMIN COMMAND RAIL (FULL RESTORATION) -->
  <aside class="lg:w-72 flex-shrink-0">
- <div class="sticky top-32 space-y-2 bg-white/50 backdrop-blur-xl p-4 rounded-[2.5rem] border border-white/50 shadow-premium">
+ <div class="sticky top-32 space-y-2 bg-white/50 backdrop-blur-xl p-4 rounded-[2.5rem] border border-white/50 shadow-md">
  <p class="text-[9px] font-black uppercase text-slate-400 tracking-[0.4em] px-4 mb-4">Command Rail</p>
  <button onclick="goTab('dashboard', this)" class="sb-btn active w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
  <span class="text-lg">⊞</span> Overview
@@ -64,11 +64,11 @@
  <div class="flex-1 min-w-0">
  
  <!-- PAGE: OVERVIEW -->
- <div class="space-y-12 animate-reveal" id="tab-dashboard">
+ <div class="space-y-12" id="tab-dashboard">
  <!-- Global Stats Bento -->
  <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
  <div class="bento-panel p-10 bg-slate-950 text-white relative group overflow-hidden">
- <div class="absolute inset-0 /40 "></div>
+ <div class="absolute inset-0 /40"></div>
  <p class="text-[9px] font-black text-white/40 uppercase tracking-[0.3em] mb-6">Global Registry</p>
  <h3 class="text-6xl font-bold leading-none mb-1 group-hover:scale-110 transition-transform">{{ total_events }}</h3>
  <p class="text-[10px] font-black uppercase tracking-widest text-brand">Institutional Events</p>
@@ -159,13 +159,13 @@
  </div>
 
  <!-- PAGE: CALENDAR (RESTORED) -->
- <div class="hidden animate-reveal space-y-12" id="tab-calendar">
+ <div class="hidden space-y-12" id="tab-calendar">
  <h3 class="text-4xl text-slate-900 px-4">Logistics Timeline</h3>
  <div class="bento-panel p-10"><div id="calendar" style="min-height: 700px;"></div></div>
  </div>
 
  <!-- PAGE: ALL EVENTS (RESTORED GRID) -->
- <div class="hidden animate-reveal space-y-12" id="tab-events">
+ <div class="hidden space-y-12" id="tab-events">
  <div class="flex items-center justify-between px-4">
  <h3 class="text-4xl text-slate-900">Event Matrix</h3>
  <div class="relative w-72">
@@ -175,10 +175,10 @@
  </div>
  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="eventsGrid">
  {% for e in all_events %}
- <div class="bento-panel group cursor-pointer hover:-translate-y-2 transition-all p-2" data-id="{{ e.pk }}" onclick="openDrawer(this)">
+ <div class="bento-panel group cursor-pointer transition-all p-2" data-id="{{ e.pk }}" onclick="openDrawer(this)">
  <div class="h-40 rounded-[2rem] bg-slate-950 flex items-center justify-center text-4xl relative overflow-hidden">
- <div class="absolute inset-0 opacity-20 "></div>
- <span class="relative z-10">{{ e.emoji|default:'' }}</span>
+ <div class="absolute inset-0 opacity-20"></div>
+  <span class="relative z-10">{% if e.emoji %}{{ e.emoji }}{% else %}{{ e.get_category_display }}{% endif %}</span>
  <div class="absolute top-4 right-4 px-3 py-1 glass-dark text-[8px] font-black uppercase tracking-widest text-white rounded-lg">{{ e.status }}</div>
  </div>
  <div class="p-6">
@@ -197,7 +197,7 @@
  </div>
 
  <!-- PAGE: MODERATION -->
- <div class="hidden animate-reveal space-y-12" id="tab-pending">
+ <div class="hidden space-y-12" id="tab-pending">
  <h3 class="text-4xl text-slate-900 px-4">System Moderation</h3>
  <div class="bento-panel">
  <table class="w-full text-left">
@@ -232,7 +232,7 @@
  </div>
 
  <!-- PAGE: ANALYTICS -->
- <div class="hidden animate-reveal space-y-12" id="tab-analytics">
+ <div class="hidden space-y-12" id="tab-analytics">
  <h3 class="text-4xl text-slate-900 px-4">Institutional Insights</h3>
  <div class="bento-panel p-12">
  <div class="h-96"><canvas id="cAnalytics"></canvas></div>
@@ -263,7 +263,7 @@
  </div>
 
  <!-- PAGE: ATTENDANCE (RESTORED) -->
- <div class="hidden animate-reveal space-y-12" id="tab-attendance">
+ <div class="hidden space-y-12" id="tab-attendance">
  <h3 class="text-4xl text-slate-900 px-4">Operational Ledger</h3>
  <div class="bento-panel">
  <table class="w-full text-left">
@@ -284,10 +284,7 @@
  </td>
  <td class="px-8 py-6 text-lg text-slate-600">{{ r.event.title|truncatechars:30 }}</td>
  <td class="px-8 py-6">
- <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest
- {% if r.status == 'ATTENDED' %}bg-emerald-50 text-emerald-600 border border-emerald-100
- {% elif r.status == 'CANCELLED' %}bg-rose-50 text-rose-600 border border-rose-100
- {% else %}bg-blue-50 text-blue-600 border border-blue-100{% endif %}">
+ <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest {% if r.status == 'ATTENDED' %}bg-emerald-50 text-emerald-600 border border-emerald-100 {% elif r.status == 'CANCELLED' %}bg-rose-50 text-rose-600 border border-rose-100 {% else %}bg-blue-50 text-blue-600 border border-blue-100{% endif %}">
  {{ r.status }}
  </span>
  </td>
@@ -300,7 +297,7 @@
  </div>
 
  <!-- PAGE: SOCIAL (RESTORED) -->
- <div class="hidden animate-reveal space-y-12" id="tab-social">
+ <div class="hidden space-y-12" id="tab-social">
  <h3 class="text-4xl text-slate-900 px-4">Collective Pulse</h3>
  <div class="grid gap-8 max-w-4xl mx-auto">
  {% for c in recent_comments %}
@@ -332,13 +329,13 @@
  </div>
 
  <!-- PAGE: NOTIFICATIONS (RESTORED) -->
- <div class="hidden animate-reveal space-y-12" id="tab-notifications">
+ <div class="hidden space-y-12" id="tab-notifications">
  <h3 class="text-4xl text-slate-900 px-4">Intelligence Alerts</h3>
  <div class="grid gap-6">
  {% if pending_events > 0 %}
  <div class="bento-panel p-10 bg-amber-50 border-amber-100 flex items-center justify-between group">
  <div class="flex items-center gap-8">
- <div class="text-4xl animate-bounce"></div>
+ <div class="text-4xl"></div>
  <div>
  <h4 class="text-lg font-bold text-amber-900">{{ pending_events }} Protocol{{ pending_events|pluralize }} Awaiting Moderation</h4>
  <p class="text-xs text-amber-700/60 uppercase tracking-widest font-black mt-1">Institutional Review Required</p>
@@ -358,7 +355,7 @@
  </div>
 
  <!-- PAGE: REPORTS (RESTORED) -->
- <div class="hidden animate-reveal space-y-12" id="tab-reports">
+ <div class="hidden space-y-12" id="tab-reports">
  <h3 class="text-4xl text-slate-900 px-4">Analytical Snapshot</h3>
  <div class="bento-panel">
  <table class="w-full text-left">
@@ -382,7 +379,7 @@
  </div>
 
  <!-- PAGE: TENANTS (COLLEGES) -->
- <div class="hidden animate-reveal space-y-12" id="tab-tenants">
+ <div class="hidden space-y-12" id="tab-tenants">
  <div class="flex items-center justify-between px-4">
  <h3 class="text-4xl text-slate-900">Institutional Network</h3>
  <a href="{% url 'register_college' %}" class="px-8 py-4 bg-indigo-600 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-xl hover:brightness-110 transition-all">+ Add Institutional Node</a>
@@ -421,9 +418,9 @@
 </div>
 
 <!-- DRAWER & MODALS -->
-<div class="fixed inset-0 z-[1000] hidden flex items-center justify-center p-6 bg-slate-950/40 backdrop-blur-sm animate-fade-in" id="ticket-modal">
- <div class="relative bg-white rounded-[3.5rem] shadow-2xl w-full max-w-sm overflow-hidden border border-slate-100 animate-fade-up">
- <div class="h-4 "></div>
+<div class="fixed inset-0 z-[1000] hidden flex items-center justify-center p-6 bg-slate-950/40 backdrop-blur-sm" id="ticket-modal">
+ <div class="relative bg-white rounded-[3.5rem] shadow-2xl w-full max-w-sm overflow-hidden border border-slate-100">
+ <div class="h-4"></div>
  <div class="p-12 text-center">
  <h3 class="text-4xl font-bold text-slate-900 mb-2" id="drTitle">Discovery Hub</h3>
  <p id="drBadge" class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-12">Institutional Node</p>

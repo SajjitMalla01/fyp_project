@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Admin Gateway{% endblock %}
+{% block title %}Admin Portal{% endblock %}
 
 {% block content %}
 <div class="min-h-[calc(100vh-64px)] bg-slate-50 flex flex-col items-center justify-center p-6 relative overflow-hidden">
@@ -7,7 +7,7 @@
  </div>
 
  <div class="relative z-10 w-full max-w-5xl text-center">
- <div class="mb-12 animate-fade-in">
+ <div class="mb-12">
  <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white border border-slate-200 shadow-sm mb-6">
  <span class="w-2 h-2 rounded-full bg-brand"></span>
  <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Administrative Portal</span>
@@ -19,7 +19,7 @@
  <!-- COLLEGES SIDE BY SIDE -->
  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16 px-4">
  {% for college in colleges %}
- <div class="bento-panel group relative p-10 hover:-translate-y-2 flex flex-col items-center text-center">
+ <div class="bento-panel group relative p-10 flex flex-col items-center text-center">
  
  <div class="w-24 h-24 rounded-[2rem] bg-slate-50 border border-slate-100 flex items-center justify-center text-4xl mb-8 group-hover:bg-white transition-colors">
  {% if college.logo_url %}

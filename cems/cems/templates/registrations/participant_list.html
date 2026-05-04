@@ -6,7 +6,7 @@
 <div class="pt-32 pb-24 px-6 lg:px-12 max-w-[1400px] mx-auto space-y-12">
  
  <!-- Header -->
- <div class="flex flex-col md:flex-row justify-between items-end gap-8 border-b border-slate-100 pb-12 animate-reveal">
+ <div class="flex flex-col md:flex-row justify-between items-end gap-8 border-b border-slate-100 pb-12">
  <div>
  <div class="flex items-center gap-4 mb-4">
  <span class="px-4 py-1.5 bg-brand/10 text-brand text-[10px] font-black uppercase tracking-widest rounded-lg">Operational Node</span>
@@ -30,7 +30,7 @@
  </div>
 
  <!-- Quick Stats -->
- <div class="grid grid-cols-1 md:grid-cols-4 gap-6 animate-reveal" style="animation-delay: 0.1s;">
+ <div class="grid grid-cols-1 md:grid-cols-4 gap-6" style="animation-delay: 0.1s;">
  <div class="bento-panel p-10 bg-slate-50 border-white shadow-sm flex flex-col justify-between">
  <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Total Enrollment</p>
  <h3 class="text-5xl font-bold text-slate-900 mt-6">{{ total }}</h3>
@@ -50,7 +50,7 @@
  </div>
 
  <!-- Registry Matrix -->
- <div class="bento-panel animate-reveal" style="animation-delay: 0.2s;">
+ <div class="bento-panel" style="animation-delay: 0.2s;">
  <div class="overflow-x-auto">
  <table class="w-full text-left">
  <thead>
@@ -80,10 +80,7 @@
  </td>
  <td class="px-10 py-8 text-xs font-mono text-slate-400">{{ reg.registered_at|date:"M d, H:i" }}</td>
  <td class="px-10 py-8">
- <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border
- {% if reg.status == 'ATTENDED' %}bg-emerald-50 text-emerald-600 border-emerald-100
- {% elif reg.status == 'REGISTERED' %}bg-blue-50 text-blue-600 border-blue-100
- {% else %}bg-slate-50 text-slate-400 border-slate-100{% endif %}">
+ <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border {% if reg.status == 'ATTENDED' %}bg-emerald-50 text-emerald-600 border-emerald-100 {% elif reg.status == 'REGISTERED' %}bg-blue-50 text-blue-600 border-blue-100 {% else %}bg-slate-50 text-slate-400 border-slate-100{% endif %}">
  {{ reg.status }}
  </span>
  </td>

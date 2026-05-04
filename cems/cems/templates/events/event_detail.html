@@ -19,7 +19,7 @@
  <div class="absolute inset-0 opacity-80"></div>
  {% endif %}
  
- <div class="absolute inset-0 "></div>
+ <div class="absolute inset-0"></div>
  
  <!-- Content -->
  <div class="relative z-10 max-w-5xl mx-auto px-6 text-center">
@@ -159,7 +159,7 @@
  <!-- SIDEBAR (Bento Style) -->
  <aside class="lg:col-span-4 space-y-12">
  
- <!-- Premium Ticket UI -->
+ <!-- Standard Ticket UI -->
  <div class="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-200 relative overflow-hidden">
  <div class="absolute top-0 left-0 w-full h-3"></div>
  
@@ -171,7 +171,7 @@
  <h4 class="text-3xl font-bold text-slate-900 mb-2">Registered</h4>
  <p class="text-[10px] font-black text-slate-400 mb-10 uppercase tracking-[0.4em]">Entry Pass</p>
  
- <!-- Premium QR Module -->
+ <!-- Standard QR Module -->
  <div class="p-8 bg-slate-950 rounded-[3rem] shadow-2xl inline-block mb-10 group">
  <div id="qrcode" class="mx-auto" style="padding: 12px; background: white; border-radius: 1.5rem;"></div>
  <div class="mt-6 flex flex-col items-center">
@@ -218,7 +218,7 @@
  {% if event.is_full %}
  <div class="py-6 bg-rose-50 text-rose-600 rounded-[2rem] font-black text-xs uppercase tracking-widest border border-rose-100"> Registration Terminated</div>
  {% else %}
- <a href="{% url 'register_event' event.pk %}" class="block w-full py-6 bg-brand text-white font-black uppercase tracking-widest rounded-[2rem] shadow-brand hover:shadow-brand-dark hover:-translate-y-1 transition-all">
+ <a href="{% url 'register_event' event.pk %}" class="block w-full py-6 bg-brand text-white font-black uppercase tracking-widest rounded-[2rem] shadow-brand hover:shadow-brand-dark transition-all">
  Secure Entry →
  </a>
  {% endif %}

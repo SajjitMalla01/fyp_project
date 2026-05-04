@@ -4,16 +4,16 @@
 
 {% block content %}
 <div class="pt-32 pb-24 px-6 lg:px-12 max-w-4xl mx-auto">
- <div class="bento-panel overflow-hidden animate-reveal">
+ <div class="bento-panel overflow-hidden">
  <div class="h-64 relative overflow-hidden">
  {% if event.image %}
  <img src="{{ event.image.url }}" class="absolute inset-0 w-full h-full object-cover" alt="">
  {% else %}
- <div class="absolute inset-0 {{ event.gradient|default:'' }} flex items-center justify-center text-7xl animate-float">
- {{ event.emoji|default:'' }}
+ <div class="absolute inset-0 {{ event.gradient|default:'' }} flex items-center justify-center text-7xl">
+  {% if event.emoji %}{{ event.emoji }}{% else %}{{ event.get_category_display }}{% endif %}
  </div>
  {% endif %}
- <div class="absolute inset-0 /80 /20 "></div>
+ <div class="absolute inset-0 /80 /20"></div>
  <div class="absolute bottom-10 left-10">
  <p class="text-[10px] font-black text-brand uppercase tracking-[0.4em] mb-2">Protocol Entry Request</p>
  <h1 class="text-4xl font-bold text-white leading-none">{{ event.title }}</h1>

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Create Account — Discovery Gateway{% endblock %}
+{% block title %}Create Account — Discovery Portal{% endblock %}
 
 {% block content %}
 <div class="min-h-screen flex items-stretch bg-slate-50">
@@ -8,10 +8,10 @@
  <!-- FLAGSHIP BRAND PANEL -->
  <div class="hidden lg:flex w-[500px] flex-shrink-0 flex-col justify-between bg-slate-950 p-16 relative overflow-hidden">
  <!-- Ambient Glow Removed -->
- <div class="relative z-10 animate-fade-up">
+ <div class="relative z-10">
  <div class="flex items-center gap-4 mb-20">
  <div class="w-14 h-14 rounded-2xl bg-brand flex items-center justify-center text-white font-black text-3xl shadow-brand">C</div>
- <span class="text-4xl text-white tracking-tight">CEMS</span>
+ <span class="text-4xl text-white tracking-tight">Agora</span>
  </div>
  <h2 class="text-6xl text-white font-bold leading-[1.05] mb-10 tracking-tight">
  Join the<br>Institutional<br>Future.
@@ -22,7 +22,7 @@
  </div>
 
  {% if college %}
- <div class="relative z-10 p-8 rounded-[2.5rem] glass-dark animate-fade-in" style="animation-delay: 0.2s;">
+ <div class="relative z-10 p-8 rounded-[2.5rem] glass-dark" style="animation-delay: 0.2s;">
  <p class="text-[9px] font-black uppercase tracking-[0.4em] text-brand mb-4">Discovery Node</p>
  <p class="text-white font-bold text-2xl flex items-center gap-4 leading-tight">
  <span class="text-3xl"></span>
@@ -34,8 +34,8 @@
 
  <!-- AUTH FORM ENGINE -->
  <div class="flex-1 flex items-center justify-center p-8 lg:p-24 relative overflow-y-auto">
- <div class="w-full max-w-[560px] relative z-10 animate-reveal py-12">
- <div class="bg-white rounded-[3rem] shadow-premium border border-slate-100 p-12 md:p-16 relative">
+ <div class="w-full max-w-[560px] relative z-10 py-12">
+ <div class="bg-white rounded-[3rem] shadow-md border border-slate-100 p-12 md:p-16 relative">
  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-1.5 rounded-b-full"></div>
  
  <div class="mb-12 text-center">
@@ -122,14 +122,14 @@
 
  <div class="pt-6">
  <button type="submit" id="reg-btn"
- class="w-full py-6 bg-slate-950 text-white text-xs font-black uppercase tracking-[0.3em] rounded-[2rem] shadow-xl hover:brightness-125 hover:-translate-y-1 transition-all">
+ class="w-full py-6 bg-slate-950 text-white text-xs font-black uppercase tracking-[0.3em] rounded-[2rem] shadow-xl hover:brightness-125 transition-all">
  Initialize Account →
  </button>
  </div>
  </form>
 
  <p class="mt-12 text-center text-xs text-slate-400 uppercase tracking-widest">
- Existing Identity? <a href="{% url 'login' %}" class="font-black text-brand hover:underline px-1">Access Gateway</a>
+ Existing Identity? <a href="{% url 'login' %}" class="font-black text-brand hover:underline px-1">Access Portal</a>
  </p>
  </div>
  </div>
@@ -183,7 +183,7 @@ document.querySelectorAll('.role-opt').forEach(opt => {
 
 document.getElementById('register-form').addEventListener('submit', function() {
  const btn = document.getElementById('reg-btn');
- btn.innerHTML = `<span class="animate-pulse">Building Identity...</span>`;
+ btn.innerHTML = `<span>Building Identity...</span>`;
  btn.disabled = true;
 });
 </script>

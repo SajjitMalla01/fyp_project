@@ -4,7 +4,7 @@
 <head>
  <meta charset="UTF-8">
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>CEMS | Student Dashboard</title>
+ <title>Agora | Student Dashboard</title>
  
  <link rel="preconnect" href="https://fonts.googleapis.com">
  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -61,7 +61,7 @@
  <div class="p-6 border-b border-gray-700/50 flex items-center gap-3">
  <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white text-xl font-bold shadow-lg">C</div>
  <div>
- <h2 class="text-2xl font-bold text-white leading-none">CEMS</h2>
+ <h2 class="text-2xl font-bold text-white leading-none">Agora</h2>
  <span class="text-[0.65rem] font-bold uppercase tracking-widest text-blue-300">Student Portal</span>
  </div>
  </div>
@@ -127,7 +127,7 @@
  {% endif %}
 
  <!-- WELCOME BANNER -->
- <div class=" rounded-2xl p-8 text-white shadow-lg mb-8 relative overflow-hidden">
+ <div class="rounded-2xl p-8 text-white shadow-lg mb-8 relative overflow-hidden">
  <div class="absolute right-0 top-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
  <h2 class="text-3xl font-bold mb-2 relative z-10">Hello, {{ user.get_full_name|default:user.username }}! </h2>
  <p class="text-emerald-100 max-w-xl text-sm relative z-10">Discover new events on campus and keep track of your registrations directly from your dashboard.</p>
@@ -163,7 +163,7 @@
  {% for event in upcoming_events|slice:":3" %}
  <div class="flex items-start gap-4 mb-4 last:mb-0 pb-4 last:pb-0 border-b border-gray-100 last:border-0">
  <div class="w-12 h-12 rounded-xl {{ event.gradient|default:' ' }} flex items-center justify-center text-xl text-white shadow-sm flex-shrink-0">
- {{ event.emoji|default:'' }}
+  {% if event.emoji %}{{ event.emoji }}{% else %}{{ event.get_category_display }}{% endif %}
  </div>
  <div class="flex-1">
  <p class="font-bold text-gray-900 text-sm mb-0.5 line-clamp-1">{{ event.title }}</p>
@@ -193,9 +193,9 @@
  {% for event in available_events|slice:":2" %}
  <a href="{% url 'event_detail' event.pk %}" class="block relative rounded-xl overflow-hidden group cursor-pointer border border-gray-200 hover:shadow-md transition-shadow">
  <div class="h-24 {{ event.gradient|default:' ' }} flex items-center justify-center text-4xl group-hover:scale-105 transition-transform duration-500">
- {{ event.emoji|default:'' }}
+  {% if event.emoji %}{{ event.emoji }}{% else %}{{ event.get_category_display }}{% endif %}
  </div>
- <div class="absolute inset-0 bg-black/40 /80 /20 "></div>
+ <div class="absolute inset-0 bg-black/40 /80 /20"></div>
  <div class="absolute bottom-0 left-0 w-full p-4">
  <div class="flex justify-between items-end">
  <div>
@@ -239,7 +239,7 @@
  <tr class="hover:bg-gray-50 transition-colors">
  <td class="px-6 py-4 font-bold text-gray-900">
  <div class="flex items-center gap-3">
- <span class="text-2xl">{{ event.emoji|default:'' }}</span>
+  <span class="text-2xl">{% if event.emoji %}{{ event.emoji }}{% else %}{{ event.get_category_display }}{% endif %}</span>
  <div class="line-clamp-1">{{ event.title }}</div>
  </div>
  </td>
@@ -274,7 +274,7 @@
  {% for event in available_events %}
  <div class="glass-card overflow-hidden group transition-all duration-300 flex flex-col">
  <div class="h-32 {{ event.gradient|default:' ' }} flex items-center justify-center text-4xl relative">
- {{ event.emoji|default:'' }}
+  {% if event.emoji %}{{ event.emoji }}{% else %}{{ event.get_category_display }}{% endif %}
  <div class="absolute top-2 right-2 bg-white/95 px-2 py-0.5 rounded text-[0.55rem] font-bold text-gray-900 uppercase shadow">{{ event.date_time|date:"M d" }}</div>
  </div>
  <div class="p-5 flex flex-col flex-1">
@@ -288,7 +288,7 @@
  <div class="w-full flex justify-between items-center text-[0.65rem] font-bold text-gray-400 mb-3 uppercase tracking-wider">
  <span>{{ event.spots_left }} spots left</span>
  </div>
- <a href="{% url 'register_event' event.pk %}" class="block w-full text-center px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 border border-emerald-600 text-white shadow-sm text-sm font-bold rounded-xl transition-colors">Register Now</a>
+<a href="{% url 'register_event' event.pk %}" class="block w-full text-center px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 border border-emerald-600 text-white shadow-sm text-sm font-bold rounded-xl transition-colors">Register</a>
  </div>
  </div>
  {% endfor %}

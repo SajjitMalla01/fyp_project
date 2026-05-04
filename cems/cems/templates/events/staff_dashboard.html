@@ -16,7 +16,7 @@
  
  <!-- STAFF NAVIGATION RAIL -->
  <aside class="lg:w-64 flex-shrink-0">
- <div class="sticky top-32 space-y-2 bg-white/50 backdrop-blur-xl p-4 rounded-[2.5rem] border border-white/50 shadow-premium">
+ <div class="sticky top-32 space-y-2 bg-white/50 backdrop-blur-xl p-4 rounded-[2.5rem] border border-white/50 shadow-md">
  <p class="text-[9px] font-black uppercase text-slate-400 tracking-[0.4em] px-4 mb-4">Operations Rail</p>
  <button onclick="goTab('dashboard', this)" class="sb-btn active w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
  <span class="text-lg"></span> Performance
@@ -44,11 +44,11 @@
  <div class="flex-1 min-w-0">
  
  <!-- PAGE: PERFORMANCE -->
- <div class="space-y-12 animate-reveal" id="tab-dashboard">
+ <div class="space-y-12" id="tab-dashboard">
  <!-- Stats Bento -->
  <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
  <div class="bento-panel p-8 text-center bg-emerald-600 text-white relative overflow-hidden">
- <div class="absolute inset-0 /20 "></div>
+ <div class="absolute inset-0 /20"></div>
  <p class="text-[9px] font-black text-white/50 uppercase tracking-widest mb-4">Operational Status</p>
  <h3 class="text-5xl font-bold leading-none mb-1">{{ total_events }}</h3>
  <p class="text-[10px] font-black uppercase tracking-widest opacity-60">Events Managed</p>
@@ -90,7 +90,7 @@
  </div>
 
  <!-- PAGE: HUB (MANAGEMENT) -->
- <div class="hidden animate-reveal space-y-12" id="tab-events">
+ <div class="hidden space-y-12" id="tab-events">
  <div class="flex items-center justify-between px-4">
  <h3 class="text-4xl text-slate-900">Executive Hub</h3>
  <a href="{% url 'event_create' %}" class="px-6 py-3 bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-xl hover:brightness-125 transition-all">Launch New Proposal</a>
@@ -115,10 +115,7 @@
  <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ e.get_category_display }}</p>
  </td>
  <td class="px-8 py-6">
- <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest 
- {% if e.status == 'PUBLISHED' %}bg-emerald-50 text-emerald-600 border border-emerald-100
- {% elif e.status == 'PENDING' %}bg-amber-50 text-amber-600 border border-amber-100
- {% else %}bg-blue-50 text-blue-600 border border-blue-100{% endif %}">
+ <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest {% if e.status == 'PUBLISHED' %}bg-emerald-50 text-emerald-600 border border-emerald-100 {% elif e.status == 'PENDING' %}bg-amber-50 text-amber-600 border border-amber-100 {% else %}bg-blue-50 text-blue-600 border border-blue-100{% endif %}">
  {{ e.status }}
  </span>
  </td>
@@ -142,7 +139,7 @@
  </div>
 
  <!-- PAGE: GUEST LIST (PARTICIPANTS) -->
- <div class="hidden animate-reveal space-y-12" id="tab-participants">
+ <div class="hidden space-y-12" id="tab-participants">
  <h3 class="text-4xl text-slate-900 px-4">Registry Intelligence</h3>
  <div class="grid gap-12">
  {% for event in published_events_list %}
@@ -185,13 +182,13 @@
  </div>
 
  <!-- PAGE: CALENDAR -->
- <div class="hidden animate-reveal space-y-12" id="tab-calendar">
+ <div class="hidden space-y-12" id="tab-calendar">
  <h3 class="text-4xl text-slate-900 px-4">Logistics Timeline</h3>
  <div class="bento-panel p-10"><div id="calendar" style="min-height: 500px;"></div></div>
  </div>
 
  <!-- PAGE: SOCIAL (COMMUNITY) -->
- <div class="hidden animate-reveal space-y-12" id="tab-social">
+ <div class="hidden space-y-12" id="tab-social">
  <h3 class="text-4xl text-slate-900 px-4">Portal Discourse</h3>
  <div class="grid gap-8 max-w-4xl mx-auto">
  {% for c in recent_comments %}

@@ -10,12 +10,6 @@
   --cems-border: #e2e8f0;
 }
 
-.dark {
-  --cems-surface: #0f172a;
-  --cems-text: #f8fafc;
-  --cems-border: #1e293b;
-}
-
 html {
   font-family: 'DM Sans', 'Inter', sans-serif;
   scroll-behavior: smooth;
@@ -28,28 +22,8 @@ body {
   transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.dark body {
-  background-color: #0f172a;
-}
-
 /* Typography Polish */
-h1, h2, h3, h4, .font-serif {
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
-}
-
-/* ============================================================
-   ANIMATIONS
-   ============================================================ */
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
+/* Removed cursive font */
 
 /* ============================================================
    UI COMPONENTS
@@ -81,18 +55,9 @@ h1, h2, h3, h4, .font-serif {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
-.dark .glass-panel {
-  background-color: rgba(15, 23, 42, 0.9);
-  border-color: rgba(255, 255, 255, 0.05);
-}
-
 /* Professional Mesh */
 .bg-mesh {
   background-color: #ffffff;
-}
-
-.dark .bg-mesh {
-  background-color: #020617;
 }
 
 /* Scrollbar Customization */
@@ -107,10 +72,6 @@ h1, h2, h3, h4, .font-serif {
 ::-webkit-scrollbar-thumb {
   background: #e2e8f0;
   border-radius: 20px;
-}
-
-.dark ::-webkit-scrollbar-thumb {
-  background: #1e293b;
 }
 
 /* Table Enhancements */
@@ -132,11 +93,6 @@ h1, h2, h3, h4, .font-serif {
   background-color: #f8fafc;
 }
 
-.dark .cems-table th {
-  background-color: #1e293b;
-  color: #94a3b8;
-}
-
 .cems-table td {
   padding: 1.25rem 1.5rem;
   font-size: 0.875rem;
@@ -144,10 +100,12 @@ h1, h2, h3, h4, .font-serif {
 }
 
 .bento-panel {
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+  background-color: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 2.5rem;
+  transition: all 0.5s ease;
 }
 
 .bento-panel:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
 }

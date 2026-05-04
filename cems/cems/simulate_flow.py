@@ -40,19 +40,20 @@ def simulate():
         print("   OK - Staff Logged in successfully!")
 
     # 2. Staff Creates an Event
-    print("[Step 3] Staff creating a new event 'Agentic AI Revolution'...")
+    print("[Step 3] Staff creating a new event 'Automated Systems Workshop'...")
     create_url = f"{BASE_URL}/events/create/"
     csrf = get_csrf_token(staff_session, create_url)
     resp = staff_session.post(create_url, data={
         'csrfmiddlewaretoken': csrf,
-        'title': 'Agentic AI Revolution',
-        'description': 'A fully automated simulation of event creation workflows driven by an LLM backend.',
+        'title': 'Automated Systems Workshop',
+        'description': 'A workshop demonstrating automated event creation and approval workflows for evaluation purposes.',
         'date_time': '2026-10-15T10:00',
         'end_time': '2026-10-15T17:00',
         'venue': 'Virtual Matrix Hub',
         'capacity': '300',
         'category': 'technology',
-        'emoji': 'AI',
+        # Use a neutral glyph or leave blank; avoid 'AI' which looks synthetic
+        'emoji': '📌',
         'gradient': 'g-slate'
     }, headers={'Referer': create_url})
     

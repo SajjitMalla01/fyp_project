@@ -6,11 +6,11 @@
 <div class="max-w-7xl mx-auto px-6 lg:px-12 py-32">
  <!-- Header -->
  <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
- <div class="animate-fade-up">
+ <div>
  <p class="text-[10px] font-black uppercase tracking-[0.4em] text-brand mb-4">Discovery</p>
  <h1 class="text-6xl font-bold text-slate-900 leading-none">Campus Events</h1>
  </div>
- <div class="flex flex-wrap items-center gap-4 animate-fade-in" style="animation-delay: 0.2s;">
+ <div class="flex flex-wrap items-center gap-4">
  {% if user.is_authenticated and user.profile.role in "STAFF ADMIN" or user.is_superuser %}
  <a href="{% url 'event_create' %}" class="group px-6 py-3.5 bg-brand text-white font-bold text-sm rounded-2xl shadow-brand hover:shadow-brand-dark transition-all flex items-center gap-2">
  <span>+ Organize Event</span>
@@ -22,8 +22,8 @@
  </div>
 
  <!-- Search & Filters Bar (Floating Glass) -->
- <div class="sticky top-28 z-40 mb-16 animate-fade-in" style="animation-delay: 0.3s;">
- <div class="bg-white/70 backdrop-blur-2xl border border-white/40 shadow-premium rounded-[2.5rem] p-3 flex flex-wrap gap-3 items-center">
+ <div class="sticky top-28 z-40 mb-16">
+ <div class="bg-white/90 backdrop-blur-2xl border border-white/40 shadow-sm rounded-[2.5rem] p-3 flex flex-wrap gap-3 items-center">
  <div class="flex-1 relative min-w-[240px]">
  <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></span>
  <input type="text" id="search-input" placeholder="Search experiences, academy summits..."
@@ -53,8 +53,7 @@
  {% if events %}
  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10" id="events-grid">
  {% for event in events %}
- <div class="event-listing group relative bg-white rounded-[2.5rem] p-4 border border-slate-100 shadow-sm hover:shadow-premium transition-all duration-700 animate-fade-up"
- style="animation-delay: {{ forloop.counter0|add:4 }}00ms;"
+ <div class="event-listing group relative bg-white rounded-[2.5rem] p-4 border border-slate-100 shadow-sm transition-all duration-700"
  data-status="{{ event.status|lower }}" data-cat="{{ event.category|lower }}" data-title="{{ event.title|lower }}">
 
  <div class="relative h-64 rounded-[2rem] overflow-hidden mb-8">
@@ -62,10 +61,10 @@
  <img src="{{ event.image.url }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="{{ event.title }}">
  {% else %}
  <div class="absolute inset-0 {{ event.gradient|default:'' }} flex items-center justify-center text-6xl group-hover:scale-110 transition-transform duration-700">
- {{ event.emoji|default:'' }}
+  {% if event.emoji %}{{ event.emoji }}{% else %}{{ event.get_category_display }}{% endif %}
  </div>
  {% endif %}
- <div class="absolute inset-0 /70 "></div>
+ <div class="absolute inset-0 /70"></div>
  
  <!-- Date Badge -->
  <div class="absolute top-4 left-4 bg-white rounded-[1.25rem] px-3.5 py-2.5 text-center shadow-xl">
@@ -73,13 +72,13 @@
  <p class="text-2xl font-black text-slate-900 leading-none">{{ event.date_time|date:"d" }}</p>
  </div>
 
- <!-- Float Status Badges -->
+ <!-- Status Badges -->
  <div class="absolute top-4 right-4 flex flex-col gap-2 items-end">
  <span class="px-3 py-1 bg-white/20 backdrop-blur-md rounded-xl text-[9px] font-black uppercase tracking-widest border border-white/20 text-white shadow-xl">
  {{ event.status }}
  </span>
  {% if event.is_featured %}
- <span class="bg-amber-400 text-amber-950 text-[8px] font-black px-2.5 py-1 rounded-lg shadow-xl animate-float"> FEATURED</span>
+ <span class="bg-amber-400 text-amber-950 text-[8px] font-black px-2.5 py-1 rounded-lg shadow-xl"> FEATURED</span>
  {% endif %}
  </div>
  </div>
@@ -88,7 +87,7 @@
  <div class="flex items-center gap-2 mb-4">
  <span class="px-3 py-1 bg-slate-100 text-slate-500 text-[9px] font-black uppercase tracking-widest rounded-lg">{{ event.get_category_display|default:event.category }}</span>
  {% if event.spots_left < 10 and event.spots_left > 0 %}
- <span class="text-[9px] font-black text-rose-500 uppercase tracking-widest animate-pulse">● Almost Full</span>
+ <span class="text-[9px] font-black text-rose-500 uppercase tracking-widest">● Almost Full</span>
  {% endif %}
  </div>
 
@@ -105,7 +104,7 @@
  </div>
  </div>
 
- <!-- Premium Capacity Gauge -->
+ <!-- Capacity -->
  <div class="mb-10">
  <div class="flex justify-between items-end mb-2.5">
  <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Enrollment</span>
@@ -121,7 +120,7 @@
  <a href="{% url 'event_detail' event.pk %}" class="flex-1 text-center py-4 text-xs font-bold text-slate-700 bg-slate-50 hover:bg-slate-100 rounded-2xl transition-all">Details</a>
  {% if user.is_authenticated %}
  {% if user.profile.role == 'STUDENT' and event.status == 'PUBLISHED' and not event.is_full %}
- <a href="{% url 'register_event' event.pk %}" class="flex-1 text-center py-4 text-xs font-bold text-white bg-brand hover:brightness-110 rounded-2xl shadow-brand hover:shadow-brand-dark transition-all">Register</a>
+<a href="{% url 'register_event' event.pk %}" class="flex-1 text-center py-4 text-xs font-bold text-white bg-brand hover:brightness-110 rounded-2xl shadow-brand hover:shadow-brand-dark transition-all">Register</a>
  {% elif user.profile.role in "STAFF ADMIN" or user.is_superuser %}
  <a href="{% url 'event_update' event.pk %}" class="flex-1 text-center py-4 text-xs font-bold text-brand bg-brand/10 hover:bg-brand/20 rounded-2xl transition-all">Portal Edit</a>
  {% endif %}
@@ -136,14 +135,14 @@
  </div>
 
  <!-- Empty states -->
- <div id="no-results" class="hidden text-center py-32 bg-slate-50 rounded-[3rem] border-2 border-dashed border-slate-200 mt-12 animate-fade-in">
+ <div id="no-results" class="hidden text-center py-32 bg-slate-50 rounded-[3rem] border-2 border-dashed border-slate-200 mt-12">
  <p class="text-6xl mb-6"></p>
  <h3 class="text-3xl text-slate-700 mb-3">No experiences found</h3>
  <p class="text-slate-400">Try adjusting your filters or search keywords.</p>
  </div>
  {% else %}
  <div class="text-center py-32 bg-slate-50 rounded-[3rem] border-2 border-dashed border-slate-200 mt-12">
- <p class="text-7xl mb-8 animate-float"></p>
+ <p class="text-7xl mb-8"></p>
  <h3 class="text-3xl text-slate-800 mb-4">Discovery Archive Empty</h3>
  <p class="text-slate-400 max-w-sm mx-auto mb-12">Institutional events will appear here once published by college admins.</p>
  {% if user.is_authenticated and user.profile.role == 'STAFF' or user.is_superuser %}

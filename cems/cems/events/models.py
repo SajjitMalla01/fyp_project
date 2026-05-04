@@ -47,7 +47,8 @@ class Event(models.Model):
     updated_at  = models.DateTimeField(auto_now=True)
 
     # Visual fields
-    emoji    = models.CharField(max_length=10, default='📅')
+    # Default to empty string to avoid forcing emoji content in templates
+    emoji    = models.CharField(max_length=10, default='')
     gradient = models.CharField(max_length=20, default='g-blue')
 
     class Meta:

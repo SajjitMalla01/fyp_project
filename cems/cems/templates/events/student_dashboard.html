@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Student Hub | CEMS Intelligence{% endblock %}
+{% block title %}Student Hub | Agora Intelligence{% endblock %}
 
 {% block extra_head %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -17,7 +17,7 @@
  
  <!-- DASHBOARD NAVIGATION -->
  <aside class="lg:w-64 flex-shrink-0">
- <div class="sticky top-32 space-y-2 bg-white/50 backdrop-blur-xl p-4 rounded-[2.5rem] border border-white/50 shadow-premium">
+ <div class="sticky top-32 space-y-2 bg-white/50 backdrop-blur-xl p-4 rounded-[2.5rem] border border-white/50 shadow-md">
  <p class="text-[9px] font-black uppercase text-slate-400 tracking-[0.4em] px-4 mb-4">Activity Rail</p>
  <button onclick="goTab('dashboard', this)" class="sb-btn active w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
  <span class="text-lg"></span> Intelligence
@@ -42,7 +42,7 @@
  <div class="flex-1 min-w-0">
  
  <!-- PAGE: INTELLIGENCE -->
- <div class="space-y-12 animate-reveal" id="tab-dashboard">
+ <div class="space-y-12" id="tab-dashboard">
  <!-- Stats Bento -->
  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
  <div class="bento-panel p-8 group hover:border-brand/20 transition-all">
@@ -56,7 +56,7 @@
  <p class="text-xs font-bold text-slate-500 uppercase tracking-tight">Verified Attendances</p>
  </div>
  <div class="bento-panel p-8 bg-slate-950 text-white relative overflow-hidden group">
- <div class="absolute inset-0 /20 "></div>
+ <div class="absolute inset-0 /20"></div>
  <p class="text-[9px] font-black text-white/30 uppercase tracking-widest mb-6">Upcoming Focus</p>
  <h3 class="text-3xl font-bold text-white mb-2 leading-tight">{{ upcoming_events.0.title|default:"Silence" }}</h3>
  <p class="text-[10px] font-black text-brand uppercase tracking-[0.2em]">{{ upcoming_events.0.date_time|date:"M d, H:i"|default:"Repository Empty" }}</p>
@@ -72,13 +72,13 @@
  
  <div class="space-y-4" id="agenda-list">
  {% for e in upcoming_events %}
- <div class="ev-item group bento-panel p-4 flex items-center justify-between gap-6 hover:shadow-premium transition-all">
+ <div class="ev-item group bento-panel p-4 flex items-center justify-between gap-6 hover:shadow-md transition-all">
  <div class="flex items-center gap-6">
  <div class="w-20 h-20 rounded-3xl overflow-hidden shadow-lg flex-shrink-0">
  {% if e.image %}
  <img src="{{ e.image.url }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="">
  {% else %}
- <div class="w-full h-full {{ e.gradient|default:'' }} flex items-center justify-center text-3xl">{{ e.emoji|default:'' }}</div>
+  <div class="w-full h-full {{ e.gradient|default:'' }} flex items-center justify-center text-3xl">{% if e.emoji %}{{ e.emoji }}{% else %}{{ e.get_category_display }}{% endif %}</div>
  {% endif %}
  </div>
  <div>
@@ -117,18 +117,18 @@
  </div>
 
  <!-- PAGE: CALENDAR -->
- <div class="hidden animate-reveal space-y-8" id="tab-calendar">
+ <div class="hidden space-y-8" id="tab-calendar">
  <h3 class="text-4xl text-slate-900">Schedule Intel</h3>
  <div class="bento-panel p-10"><div id="calendar" style="min-height: 500px;"></div></div>
  </div>
 
  <!-- PAGE: HISTORY (RESTORED) -->
- <div class="hidden animate-reveal space-y-12" id="tab-history">
+ <div class="hidden space-y-12" id="tab-history">
  <h3 class="text-4xl text-slate-900">Experience Archive</h3>
  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
  {% for e in attended_events %}
  <div class="bento-panel p-6 flex items-center gap-6 group hover:translate-y-[-4px] transition-all">
- <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl">{{ e.emoji|default:'' }}</div>
+  <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl">{% if e.emoji %}{{ e.emoji }}{% else %}{{ e.get_category_display }}{% endif %}</div>
  <div>
  <h4 class="text-xl font-bold text-slate-900">{{ e.title }}</h4>
  <p class="text-[9px] font-black text-slate-300 uppercase tracking-widest">{{ e.date_time|date:"M d, Y" }} • Verified Attendance</p>
@@ -144,11 +144,11 @@
  </div>
 
  <!-- PAGE: SOCIAL -->
- <div class="hidden animate-reveal space-y-8" id="tab-social">
+ <div class="hidden space-y-8" id="tab-social">
  <h3 class="text-4xl text-slate-900">Institutional Wall</h3>
  <div class="grid gap-8 max-w-2xl mx-auto">
  {% for c in recent_comments %}
- <div class="bento-panel p-8 hover:shadow-premium transition-all">
+ <div class="bento-panel p-8 hover:shadow-md transition-all">
  <div class="flex gap-6">
  <div class="w-14 h-14 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-xl font-bold">{{ c.user.username|first|upper }}</div>
  <div class="flex-1">
@@ -172,9 +172,9 @@
 </div>
 
 <!-- TICKET MODAL -->
-<div id="ticket-modal" class="fixed inset-0 z-[1000] hidden flex items-center justify-center p-6 bg-slate-950/40 backdrop-blur-sm animate-fade-in">
- <div class="relative bg-white rounded-[3.5rem] shadow-2xl w-full max-w-sm overflow-hidden border border-slate-100 animate-fade-up">
- <div class="h-4 "></div>
+<div id="ticket-modal" class="fixed inset-0 z-[1000] hidden flex items-center justify-center p-6 bg-slate-950/40 backdrop-blur-sm">
+ <div class="relative bg-white rounded-[3.5rem] shadow-2xl w-full max-w-sm overflow-hidden border border-slate-100">
+ <div class="h-4"></div>
  <div class="p-12 text-center">
  <h3 class="text-4xl font-bold text-slate-900 mb-2" id="modal-title">Entry Pass</h3>
  <div class="p-8 bg-slate-950 rounded-[3rem] shadow-2xl inline-block mb-10">

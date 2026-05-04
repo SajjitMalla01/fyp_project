@@ -4,15 +4,15 @@
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-6 lg:px-12 py-32">
- <div class="mb-16 animate-fade-up">
+ <div class="mb-16">
  <p class="text-[10px] font-black uppercase tracking-[0.4em] text-brand mb-4">Archive</p>
  <h1 class="text-6xl font-bold text-slate-900 leading-none">Experience Ledger</h1>
  </div>
 
  <!-- Global Metrics Bento -->
- <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16 animate-reveal">
+ <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
  <div class="bento-panel p-10 bg-slate-950 text-white relative group overflow-hidden">
- <div class="absolute inset-0 /20 "></div>
+ <div class="absolute inset-0 /20"></div>
  <p class="text-[9px] font-black text-white/30 uppercase tracking-[0.3em] mb-6">Total Records</p>
  <h3 class="text-5xl font-bold leading-none mb-1">{{ registrations|length }}</h3>
  <p class="text-[10px] font-black uppercase tracking-widest text-brand">Institutional Entries</p>
@@ -30,7 +30,7 @@
  </div>
 
  {% if registrations %}
- <div class="bento-panel animate-reveal" style="animation-delay: 0.2s;">
+ <div class="bento-panel" style="animation-delay: 0.2s;">
  <div class="overflow-x-auto">
  <table class="w-full text-left">
  <thead>
@@ -48,7 +48,7 @@
  <td class="px-8 py-6">
  <div class="flex items-center gap-4">
  <div class="w-12 h-12 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-2xl shadow-sm group-hover:scale-110 transition-transform">
- {{ reg.event.emoji|default:'' }}
+  {% if reg.event.emoji %}{{ reg.event.emoji }}{% else %}{{ reg.event.get_category_display }}{% endif %}
  </div>
  <div>
  <p class="text-xl font-bold text-slate-900 leading-none mb-1">{{ reg.event.title }}</p>
@@ -63,10 +63,7 @@
  <p class="text-xs text-slate-400 max-w-[180px] truncate">{{ reg.event.venue }}</p>
  </td>
  <td class="px-8 py-6">
- <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest
- {% if reg.status == 'ATTENDED' %}bg-emerald-50 text-emerald-600 border border-emerald-100
- {% elif reg.status == 'REGISTERED' %}bg-blue-50 text-blue-600 border border-blue-100
- {% else %}bg-slate-50 text-slate-400 border border-slate-200{% endif %}">
+ <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest {% if reg.status == 'ATTENDED' %}bg-emerald-50 text-emerald-600 border border-emerald-100 {% elif reg.status == 'REGISTERED' %}bg-blue-50 text-blue-600 border border-blue-100 {% else %}bg-slate-50 text-slate-400 border border-slate-200{% endif %}">
  {{ reg.status }}
  </span>
  </td>
@@ -85,7 +82,7 @@
  </div>
  </div>
  {% else %}
- <div class="text-center py-32 bento-panel animate-reveal">
+ <div class="text-center py-32 bento-panel">
  <div class="text-6xl mb-8 grayscale opacity-20"></div>
  <p class="text-3xl text-slate-900 mb-4 font-bold">Registry Dormant</p>
  <p class="text-slate-400 text-sm max-w-sm mx-auto mb-10 leading-relaxed font-medium">Your experience archive is currently void. Connect with institutional nodes to populate your timeline.</p>

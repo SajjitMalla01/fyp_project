@@ -6,15 +6,15 @@
 
 {% if user.is_authenticated %}
 <!-- AUTHENTICATED HERO -->
-<div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+<div class="bg-white border-b border-slate-200">
  <div class="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
  <div>
- <p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-widest mb-2">Authenticated User</p>
- <h1 class="text-4xl md:text-5xl font-bold mb-3 leading-tight text-slate-900 dark:text-white">
+ <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-2">Authenticated User</p>
+ <h1 class="text-4xl md:text-5xl font-bold mb-3 leading-tight text-slate-900">
  {{ user.get_full_name|default:user.username }}
  </h1>
  <div class="flex flex-wrap items-center gap-3">
- <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold uppercase tracking-wide text-slate-700 dark:text-slate-300">
+ <span class="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-xs font-bold uppercase tracking-wide text-slate-700">
  {% if user.is_superuser or user.profile.role == 'ADMIN' %} Administrator
  {% elif user.profile.role == 'STAFF' %} Staff Member
  {% else %} Student{% endif %}
@@ -27,7 +27,7 @@
  <a href="{% url 'admin_dashboard' %}" class="px-6 py-3 bg-brand text-white font-bold rounded-xl hover:bg-brand-dark transition-all text-sm">Admin Dashboard</a>
  {% elif user.profile.role == 'STAFF' %}
  <a href="{% url 'staff_dashboard' %}" class="px-6 py-3 bg-brand text-white font-bold rounded-xl hover:bg-brand-dark transition-all text-sm">Staff Dashboard</a>
- <a href="{% url 'event_create' %}" class="px-6 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold rounded-xl transition-all text-sm">Create Event</a>
+ <a href="{% url 'event_create' %}" class="px-6 py-3 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl transition-all text-sm">Create Event</a>
  {% else %}
  <a href="{% url 'student_dashboard' %}" class="px-6 py-3 bg-brand text-white font-bold rounded-xl hover:bg-brand-dark transition-all text-sm">Student Dashboard</a>
  {% endif %}
@@ -36,32 +36,32 @@
 </div>
 {% else %}
 <!-- GUEST HERO -->
-<div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+<div class="bg-white border-b border-slate-200">
  <div class="max-w-5xl mx-auto px-6 py-28 text-center">
- <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-8">
+ <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-widest mb-8">
  Institutional Portal
  </div>
- <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-6 text-slate-900 dark:text-white">
- College Event Management System
+ <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-6 text-slate-900">
+ Agora Institutional Portal
  </h1>
- <p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+ <p class="text-lg text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed">
  Access the official portal to register for campus events, manage attendance, and view institutional schedules.
  </p>
  <div class="flex flex-col sm:flex-row justify-center gap-4">
  <a href="{% url 'register' %}" class="px-8 py-4 bg-brand text-white font-bold rounded-xl hover:bg-brand-dark transition-all text-base">
  Register Account
  </a>
- <a href="{% url 'login' %}" class="px-8 py-4 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-all text-base">
+ <a href="{% url 'login' %}" class="px-8 py-4 bg-slate-100 border border-slate-200 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition-all text-base">
  Portal Login
  </a>
  </div>
  <!-- Floating stats -->
  <div class="mt-16 flex flex-wrap justify-center gap-8 text-center">
- <div><p class="font-mono text-3xl font-bold text-slate-900 dark:text-white">{{ total_events|default:"–" }}</p><p class="text-xs text-slate-500 uppercase tracking-widest">Active Events</p></div>
- <div class="w-px bg-slate-200 dark:bg-slate-700"></div>
- <div><p class="font-mono text-3xl font-bold text-slate-900 dark:text-white">{{ total_colleges|default:"–" }}</p><p class="text-xs text-slate-500 uppercase tracking-widest">Institutions</p></div>
- <div class="w-px bg-slate-200 dark:bg-slate-700"></div>
- <div><p class="font-mono text-3xl font-bold text-slate-900 dark:text-white">{{ total_students|default:"–" }}</p><p class="text-xs text-slate-500 uppercase tracking-widest">Registered Users</p></div>
+ <div><p class="font-mono text-3xl font-bold text-slate-900">{{ total_events|default:"–" }}</p><p class="text-xs text-slate-500 uppercase tracking-widest">Active Events</p></div>
+ <div class="w-px bg-slate-200"></div>
+ <div><p class="font-mono text-3xl font-bold text-slate-900">{{ total_colleges|default:"–" }}</p><p class="text-xs text-slate-500 uppercase tracking-widest">Institutions</p></div>
+ <div class="w-px bg-slate-200"></div>
+ <div><p class="font-mono text-3xl font-bold text-slate-900">{{ total_students|default:"–" }}</p><p class="text-xs text-slate-500 uppercase tracking-widest">Registered Users</p></div>
  </div>
  </div>
 </div>
@@ -72,27 +72,27 @@
  <div class="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
  <div>
  <p class="text-xs font-bold uppercase tracking-widest text-brand mb-2">Event Roster</p>
- <h2 class="text-3xl font-bold text-slate-900 dark:text-white">Scheduled Events</h2>
+ <h2 class="text-3xl font-bold text-slate-900">Scheduled Events</h2>
  </div>
  <!-- Category Filters -->
  <div class="flex flex-wrap gap-2" id="cat-filters">
- <button class="cat-btn active-cat px-4 py-2 rounded-lg text-sm font-semibold bg-slate-900 dark:bg-white text-white dark:text-slate-900 border border-slate-900 dark:border-white transition-all" data-cat="all">All</button>
- <button class="cat-btn px-4 py-2 rounded-lg text-sm font-semibold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 transition-all" data-cat="academic">Academic</button>
- <button class="cat-btn px-4 py-2 rounded-lg text-sm font-semibold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 transition-all" data-cat="cultural">Cultural</button>
- <button class="cat-btn px-4 py-2 rounded-lg text-sm font-semibold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 transition-all" data-cat="sports">Sports</button>
- <button class="cat-btn px-4 py-2 rounded-lg text-sm font-semibold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 transition-all" data-cat="technology">Technology</button>
- <button class="cat-btn px-4 py-2 rounded-lg text-sm font-semibold bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 transition-all" data-cat="music">Music</button>
+ <button class="cat-btn active-cat px-4 py-2 rounded-lg text-sm font-semibold bg-slate-900 text-white border border-slate-900 transition-all" data-cat="all">All</button>
+ <button class="cat-btn px-4 py-2 rounded-lg text-sm font-semibold bg-white text-slate-600 border border-slate-200 transition-all" data-cat="academic">Academic</button>
+ <button class="cat-btn px-4 py-2 rounded-lg text-sm font-semibold bg-white text-slate-600 border border-slate-200 transition-all" data-cat="cultural">Cultural</button>
+ <button class="cat-btn px-4 py-2 rounded-lg text-sm font-semibold bg-white text-slate-600 border border-slate-200 transition-all" data-cat="sports">Sports</button>
+ <button class="cat-btn px-4 py-2 rounded-lg text-sm font-semibold bg-white text-slate-600 border border-slate-200 transition-all" data-cat="technology">Technology</button>
+ <button class="cat-btn px-4 py-2 rounded-lg text-sm font-semibold bg-white text-slate-600 border border-slate-200 transition-all" data-cat="music">Music</button>
  </div>
  </div>
 
  {% if events %}
  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="events-grid">
  {% for event in events %}
- <div class="event-card bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col"
+ <div class="event-card bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col"
  data-cat="{{ event.category|lower }}">
  <!-- Card Header -->
- <div class="h-32 bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-800 relative flex items-center justify-center text-5xl select-none">
- {{ event.emoji|default:'' }}
+ <div class="h-32 bg-slate-100 border-b border-slate-200 relative flex items-center justify-center text-5xl select-none">
+  {% if event.emoji %}{{ event.emoji }}{% else %}{{ event.get_category_display }}{% endif %}
  <!-- Date chip -->
  <div class="absolute top-4 left-4 bg-white/95 backdrop-blur rounded-xl px-3 py-2 text-center shadow-md">
  <p class="text-[0.6rem] font-black uppercase tracking-widest text-brand">{{ event.date_time|date:"M" }}</p>
@@ -103,10 +103,7 @@
  {% endif %}
  <!-- Status -->
  <div class="absolute bottom-4 right-4">
- <span class="px-2 py-1 rounded-full text-[0.6rem] font-black uppercase backdrop-blur-sm
- {% if event.status == 'PUBLISHED' %}bg-emerald-500/90 text-white
- {% elif event.status == 'PENDING' %}bg-amber-500/90 text-white
- {% else %}bg-gray-500/80 text-white{% endif %}">
+ <span class="px-2 py-1 rounded-full text-[0.6rem] font-black uppercase backdrop-blur-sm {% if event.status == 'PUBLISHED' %}bg-emerald-500/90 text-white {% elif event.status == 'PENDING' %}bg-amber-500/90 text-white {% else %}bg-gray-500/80 text-white{% endif %}">
  {{ event.status }}
  </span>
  </div>
@@ -114,31 +111,31 @@
 
  <!-- Card Body -->
  <div class="p-5 flex flex-col flex-1">
- <span class="inline-block mb-2 px-2 py-1 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-xs font-bold uppercase rounded">{{ event.get_category_display|default:event.category }}</span>
- <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-3">{{ event.title }}</h3>
- <div class="space-y-1.5 mb-4 text-sm text-slate-500 dark:text-slate-400 flex-1">
+ <span class="inline-block mb-2 px-2 py-1 bg-slate-100 text-slate-500 text-xs font-bold uppercase rounded">{{ event.get_category_display|default:event.category }}</span>
+ <h3 class="text-lg font-bold text-slate-900 mb-3">{{ event.title }}</h3>
+ <div class="space-y-1.5 mb-4 text-sm text-slate-500 flex-1">
  <div class="flex items-center gap-2"><span></span><span class="font-mono">{{ event.date_time|time:"h:i A" }}{% if event.end_time %} – {{ event.end_time|time:"h:i A" }}{% endif %}</span></div>
  <div class="flex items-center gap-2"><span></span><span class="truncate">{{ event.venue }}</span></div>
  </div>
  <!-- Capacity Bar -->
  <div class="mb-4">
- <div class="flex justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">
+ <div class="flex justify-between text-xs font-semibold text-slate-500 mb-1">
  <span>Capacity</span>
  <span class="font-mono">{{ event.get_registered_count|default:0 }} / {{ event.capacity }}</span>
  </div>
- <div class="h-1 bg-slate-200 dark:bg-slate-700 rounded overflow-hidden">
+ <div class="h-1 bg-slate-200 rounded overflow-hidden">
  <div class="h-full bg-brand progress-fill transition-all duration-1000"
  data-pct="{% widthratio event.get_registered_count|default:0 event.capacity|default:1 100 %}"></div>
  </div>
  </div>
  <!-- Actions -->
  <div class="flex gap-2 mt-auto">
- <a href="{% url 'event_detail' event.pk %}" class="flex-1 text-center py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors">Details</a>
+ <a href="{% url 'event_detail' event.pk %}" class="flex-1 text-center py-2 text-sm font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors">Details</a>
  {% if user.is_authenticated and user.profile.role == 'STUDENT' and event.status == 'PUBLISHED' %}
  {% if not event.is_full %}
  <a href="{% url 'register_event' event.pk %}" class="flex-1 text-center py-2 text-sm font-semibold text-white bg-brand hover:bg-brand-dark rounded-lg transition-all">Register</a>
  {% else %}
- <button disabled class="flex-1 py-2 text-sm font-semibold text-slate-400 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-not-allowed">Full</button>
+ <button disabled class="flex-1 py-2 text-sm font-semibold text-slate-400 bg-slate-100 rounded-lg cursor-not-allowed">Full</button>
  {% endif %}
  {% endif %}
  </div>

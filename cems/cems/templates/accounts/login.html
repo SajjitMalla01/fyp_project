@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Sign In — Discovery Gateway{% endblock %}
+{% block title %}Sign In — Discovery Portal{% endblock %}
 
 {% block content %}
 <div class="min-h-screen flex items-stretch bg-slate-50">
@@ -8,10 +8,10 @@
  <!-- FLAGSHIP BRAND PANEL -->
  <div class="hidden lg:flex w-[500px] flex-shrink-0 flex-col justify-between bg-slate-950 p-16 relative overflow-hidden">
  <!-- Ambient Glow Removed -->
- <div class="relative z-10 animate-fade-up">
+ <div class="relative z-10">
  <div class="flex items-center gap-4 mb-20">
  <div class="w-14 h-14 rounded-2xl bg-brand flex items-center justify-center text-white font-black text-3xl shadow-brand">C</div>
- <span class="text-4xl text-white tracking-tight">CEMS</span>
+ <span class="text-4xl text-white tracking-tight">Agora</span>
  </div>
  <h2 class="text-6xl text-white font-bold leading-[1.05] mb-10 tracking-tight">
  Discovery<br>Starts<br>Within.
@@ -22,7 +22,7 @@
  </div>
 
  <!-- Trust Module (High Fidelity) -->
- <div class="relative z-10 border-t border-white/5 pt-10 mt-auto animate-fade-in" style="animation-delay: 0.3s;">
+ <div class="relative z-10 border-t border-white/5 pt-10 mt-auto" style="animation-delay: 0.3s;">
  <div class="flex items-center gap-6">
  <div class="flex -space-x-4">
  <div class="w-10 h-10 rounded-full border-2 border-slate-950 bg-slate-800 flex items-center justify-center text-sm"></div>
@@ -36,8 +36,8 @@
 
  <!-- AUTH FORM ENGINE -->
  <div class="flex-1 flex items-center justify-center p-8 lg:p-24 relative overflow-hidden">
- <div class="w-full max-w-[460px] relative z-10 animate-reveal">
- <div class="bg-white rounded-[3rem] shadow-premium border border-slate-100 p-12 md:p-16 relative">
+ <div class="w-full max-w-[460px] relative z-10">
+ <div class="bg-white rounded-[3rem] shadow-md border border-slate-100 p-12 md:p-16 relative">
  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-1.5 rounded-b-full"></div>
  
  <div class="mb-12">
@@ -74,7 +74,7 @@
 
  <div class="pt-4">
  <button type="submit" id="login-btn"
- class="w-full py-6 bg-slate-950 text-white text-xs font-black uppercase tracking-[0.3em] rounded-[1.5rem] shadow-xl hover:brightness-125 hover:-translate-y-1 active:translate-y-0 transition-all">
+ class="w-full py-6 bg-slate-950 text-white text-xs font-black uppercase tracking-[0.3em] rounded-[1.5rem] shadow-xl hover:brightness-125 active:translate-y-0 transition-all">
  Access Hub →
  </button>
  </div>
@@ -88,7 +88,7 @@
  <span class="text-2xl group-hover:scale-110 transition-transform"></span>
  <div>
  <p class="text-[8px] font-black uppercase tracking-[0.2em] opacity-40">Administrative</p>
- <p class="text-[10px] font-black uppercase tracking-widest">Gateway Access</p>
+ <p class="text-[10px] font-black uppercase tracking-widest">Portal Access</p>
  </div>
  </div>
  <span class="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center group-hover:bg-brand group-hover:border-brand transition-all">→</span>
@@ -111,7 +111,7 @@
  // Loading states
  document.getElementById('login-form').addEventListener('submit', function () {
  const btn = document.getElementById('login-btn');
- btn.innerHTML = `<span class="animate-pulse">Authenticating Session...</span>`;
+ btn.innerHTML = `<span>Authenticating Session...</span>`;
  btn.disabled = true;
  });
 </script>

@@ -4,14 +4,14 @@
 
 {% block content %}
 <div class="max-w-4xl mx-auto px-6 lg:px-12 py-32">
- <div class="mb-16 animate-fade-up">
+ <div class="mb-16">
  <p class="text-[10px] font-black uppercase tracking-[0.4em] text-brand mb-4">Operations</p>
  <h1 class="text-6xl font-bold text-slate-900 leading-none">
  {% if form.instance.pk %}Refine Entry{% else %}Launch New Event{% endif %}
  </h1>
  </div>
 
- <div class="bg-white rounded-[3rem] shadow-premium border border-slate-100 overflow-hidden animate-reveal">
+ <div class="bg-white rounded-[3rem] shadow-md border border-slate-100 overflow-hidden">
  <div class="px-12 py-8 bg-slate-50 border-b border-slate-100">
  <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Executive Intelligence: Review required for publication</p>
  </div>
@@ -93,7 +93,7 @@
  <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
  <div class="space-y-3">
  <label class="block text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] ml-2">Emoji Fallback</label>
- {{ form.emoji }}
+  {{ form.emoji }}
  </div>
  <div class="space-y-3">
  <label class="block text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] ml-2">Ambient Style</label>
@@ -106,7 +106,7 @@
  <!-- Actions -->
  <div class="pt-12 border-t border-slate-50 flex flex-col md:flex-row gap-4 justify-end">
  <a href="{% url 'event_list' %}" class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 bg-slate-50 rounded-2xl hover:bg-slate-100 transition-all text-center">Abort Operational Entry</a>
- <button type="submit" class="px-10 py-5 text-[10px] font-black uppercase tracking-widest text-white bg-slate-950 rounded-2xl shadow-2xl hover:brightness-125 hover:-translate-y-1 transition-all">
+ <button type="submit" class="px-10 py-5 text-[10px] font-black uppercase tracking-widest text-white bg-slate-950 rounded-2xl shadow-2xl hover:brightness-125 transition-all">
  {% if form.instance.pk %}Synchronize State{% else %}Submit to Repository →{% endif %}
  </button>
  </div>

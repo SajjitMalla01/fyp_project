@@ -38,7 +38,7 @@
  <span class="text-xl text-white">{{ college.name }}</span>
  </a>
  <h2 class="text-4xl text-white font-bold leading-tight mb-4">Create your account.</h2>
- <p class="text-white/60 text-sm leading-relaxed">Create your CEMS account at {{ college.name }} and start registering for events today.</p>
+ <p class="text-white/60 text-sm leading-relaxed">Create your Agora account at {{ college.name }} and start registering for events today.</p>
  </div>
 
  <div class="relative z-10 bg-white/10 border border-white/20 rounded-2xl p-5 backdrop-blur-sm">
@@ -63,10 +63,7 @@
  <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-8">
  {% if messages %}
  {% for message in messages %}
- <div class="mb-5 p-3.5 rounded-xl text-sm font-medium
- {% if message.tags == 'success' %}bg-emerald-50 text-emerald-700 border border-emerald-200
- {% elif message.tags == 'error' %}bg-red-50 text-red-700 border border-red-200
- {% else %}bg-blue-50 text-blue-700 border border-blue-200{% endif %}">
+ <div class="mb-5 p-3.5 rounded-xl text-sm font-medium {% if message.tags == 'success' %}bg-emerald-50 text-emerald-700 border border-emerald-200 {% elif message.tags == 'error' %}bg-red-50 text-red-700 border border-red-200 {% else %}bg-blue-50 text-blue-700 border border-blue-200{% endif %}">
  {{ message }}
  </div>
  {% endfor %}
@@ -149,7 +146,7 @@
  </div>
 
  <button type="submit" id="reg-btn"
- class="btn-p w-full py-3.5 text-white font-bold rounded-xl shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all text-sm">
+ class="btn-p w-full py-3.5 text-white font-bold rounded-xl shadow-lg .5 active:translate-y-0 transition-all text-sm">
  Create My Account →
  </button>
  </form>
